@@ -58,6 +58,17 @@ function starsHtml(note) {
   return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
 }
 
+function svgStarsHtml(note) {
+  const filled = Math.round(note);
+  const d = 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z';
+  let html = `<span class="svg-stars" aria-label="Note ${note} sur 5">`;
+  for (let i = 0; i < 5; i++) {
+    const cls = i < filled ? 'star-on' : 'star-off';
+    html += `<svg class="${cls}" width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="${d}"/></svg>`;
+  }
+  return html + '</span>';
+}
+
 function zoneLabel(zone) {
   const map = { cabinet: 'En cabinet', domicile: 'À domicile', 'les deux': 'Cabinet & domicile' };
   return map[zone] || zone;
@@ -171,17 +182,24 @@ function render(template, p) {
     ? p.langues.filter(l => l.toLowerCase() !== 'fr').join(', ')
     : '';
 
-  // Réseaux sociaux
+  // Réseaux sociaux — icônes SVG inline
+  const SOCIAL_SVG = {
+    instagram_url:      `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+    facebook_url:       `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>`,
+    linkedin_url:       `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+    google_business_url:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+    site_actuel:        `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>`
+  };
   const socialDefs = [
-    { key: 'instagram_url',      label: 'Instagram',      icon: '📸' },
-    { key: 'facebook_url',       label: 'Facebook',       icon: '📘' },
-    { key: 'linkedin_url',       label: 'LinkedIn',       icon: '💼' },
-    { key: 'google_business_url', label: 'Google',        icon: '🔍' },
-    { key: 'site_actuel',        label: 'Mon site',       icon: '🌐' }
+    { key: 'instagram_url',       label: 'Instagram' },
+    { key: 'facebook_url',        label: 'Facebook'  },
+    { key: 'linkedin_url',        label: 'LinkedIn'  },
+    { key: 'google_business_url', label: 'Google'    },
+    { key: 'site_actuel',         label: 'Mon site'  }
   ];
   const socialLinksHtml = socialDefs
     .filter(d => p[d.key])
-    .map(d => `<a href="${escapeHtml(p[d.key])}" class="social-link" target="_blank" rel="noopener">${d.icon} ${d.label}</a>`)
+    .map(d => `<a href="${escapeHtml(p[d.key])}" class="social-link" target="_blank" rel="noopener">${SOCIAL_SVG[d.key]}<span>${d.label}</span></a>`)
     .join('\n          ');
 
   // Substitutions simples
@@ -215,6 +233,7 @@ function render(template, p) {
     avis_google_note:     String(p.avis_google_note || ''),
     avis_google_nb:       String(p.avis_google_nb || ''),
     avis_etoiles:         p.avis_google_note ? starsHtml(p.avis_google_note) : '',
+    avis_etoiles_svg:     p.avis_google_note ? svgStarsHtml(p.avis_google_note) : '',
     google_business_url:  escapeHtml(p.google_business_url || ''),
     social_links_html:    socialLinksHtml
   };
