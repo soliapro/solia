@@ -10,631 +10,818 @@
   <meta property="og:description" content="{{meta_description}}">
   <meta property="og:type" content="website">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <script type="application/ld+json">
   {{schema_org}}
   </script>
 
   <style>
-    /* ============================================
-       RESET & BASE
-    ============================================ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    /* =============================================
+       VARIABLES — THÈMES
+    ============================================= */
     :root {
-      /* Thème lumiere (défaut) */
-      --color-primary:    #C9853A;
-      --color-primary-light: #F0D5B5;
-      --color-bg:         #FFFAF5;
-      --color-surface:    #FFFFFF;
-      --color-text:       #2D2016;
-      --color-text-muted: #7A6652;
-      --color-border:     #EAD8C2;
-      --color-accent:     #E8A45A;
-      --radius:           12px;
-      --shadow:           0 2px 16px rgba(100, 60, 10, 0.08);
+      /* lumiere : or chaud, ambiance spa */
+      --h1: #1E0E04;
+      --h2: #5C2E10;
+      --c-primary:      #B8721A;
+      --c-primary-soft: #F0DCC0;
+      --c-bg:           #FEFAF4;
+      --c-surface:      #FFFFFF;
+      --c-text:         #1A0E04;
+      --c-muted:        #7A5C38;
+      --c-border:       #E8D4B4;
+      --c-tint:         #FBF3E6;
     }
-
-    /* Thème zen */
     body.theme-zen {
-      --color-primary:    #6B8F9E;
-      --color-primary-light: #D4E8EF;
-      --color-bg:         #F5F9FA;
-      --color-surface:    #FFFFFF;
-      --color-text:       #1A2E35;
-      --color-text-muted: #5A7A85;
-      --color-border:     #C8DDE4;
-      --color-accent:     #8BB4C2;
+      /* zen : ardoise bleue, épuré */
+      --h1: #081820;
+      --h2: #143248;
+      --c-primary:      #3D7E98;
+      --c-primary-soft: #C8E2EE;
+      --c-bg:           #F3F8FB;
+      --c-surface:      #FFFFFF;
+      --c-text:         #0A2030;
+      --c-muted:        #3A6880;
+      --c-border:       #BDD8E8;
+      --c-tint:         #E8F4F9;
     }
-
-    /* Thème nature */
     body.theme-nature {
-      --color-primary:    #4A7C5A;
-      --color-primary-light: #C8E0CF;
-      --color-bg:         #F5FAF5;
-      --color-surface:    #FFFFFF;
-      --color-text:       #1A2B1F;
-      --color-text-muted: #5A7A62;
-      --color-border:     #C0D8C6;
-      --color-accent:     #72A882;
+      /* nature : forêt profonde */
+      --h1: #081808;
+      --h2: #143020;
+      --c-primary:      #2E6E48;
+      --c-primary-soft: #BCDECE;
+      --c-bg:           #F3FAF5;
+      --c-surface:      #FFFFFF;
+      --c-text:         #0A2010;
+      --c-muted:        #3A6850;
+      --c-border:       #B8D8C4;
+      --c-tint:         #E6F4EC;
     }
 
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: 'Georgia', 'Times New Roman', serif;
-      background-color: var(--color-bg);
-      color: var(--color-text);
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--c-bg);
+      color: var(--c-text);
       line-height: 1.7;
-      font-size: 17px;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
     }
-
-    a {
-      color: var(--color-primary);
-      text-decoration: none;
-    }
+    a { color: var(--c-primary); text-decoration: none; }
     a:hover { text-decoration: underline; }
-
     img { max-width: 100%; display: block; }
 
-    /* ============================================
-       LAYOUT
-    ============================================ */
-    .container {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 0 24px;
+    /* =============================================
+       ANIMATIONS
+    ============================================= */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
-    section {
-      padding: 48px 0;
-      border-bottom: 1px solid var(--color-border);
-    }
-    section:last-of-type { border-bottom: none; }
+    .hero-avatar  { animation: scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.1s both; }
+    .hero-name    { animation: fadeUp 0.6s ease 0.25s both; }
+    .hero-metier  { animation: fadeUp 0.6s ease 0.35s both; }
+    .hero-loc     { animation: fadeUp 0.6s ease 0.42s both; }
+    .hero-badges  { animation: fadeUp 0.6s ease 0.50s both; }
 
-    .section-label {
-      font-family: 'Arial', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--color-primary);
-      margin-bottom: 12px;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      font-weight: normal;
-      color: var(--color-text);
-      margin-bottom: 20px;
-    }
-
-    p { margin-bottom: 1em; }
-    p:last-child { margin-bottom: 0; }
-
-    /* ============================================
-       HEADER
-    ============================================ */
-    .site-header {
-      background: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
-      box-shadow: var(--shadow);
-      padding: 40px 0 48px;
-    }
-
-    .header-inner {
+    /* =============================================
+       BARRE STICKY (apparaît au scroll)
+    ============================================= */
+    .sticky-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: var(--h2);
+      padding: 12px 32px;
       display: flex;
       align-items: center;
-      gap: 32px;
+      justify-content: space-between;
+      transform: translateY(-100%);
+      transition: transform 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    body.is-scrolled .sticky-bar { transform: translateY(0); }
+
+    .sticky-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.92);
     }
 
-    /* Photo */
-    .photo-wrapper {
-      flex-shrink: 0;
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
+    .sticky-cta {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 8px 20px;
+      border-radius: 100px;
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .sticky-cta:hover { background: rgba(255,255,255,0.12); text-decoration: none; }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    .site-header {
+      position: relative;
+      background: linear-gradient(150deg, var(--h1) 0%, var(--h2) 100%);
+      padding: 80px 0 0;
+      text-align: center;
       overflow: hidden;
-      border: 3px solid var(--color-primary-light);
-      box-shadow: 0 0 0 4px var(--color-bg);
     }
 
-    .photo-wrapper img {
+    /* halos décoratifs */
+    .site-header::before,
+    .site-header::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .site-header::before {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(255,255,255,0.055) 0%, transparent 65%);
+      top: -200px; right: -180px;
+    }
+    .site-header::after {
+      width: 450px; height: 450px;
+      background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%);
+      bottom: 40px; left: -120px;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ---- Photo ---- */
+    .hero-avatar {
+      width: 152px;
+      height: 152px;
+      border-radius: 50%;
+      margin-bottom: 32px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    /* anneau lumineux */
+    .hero-avatar::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: conic-gradient(
+        rgba(255,255,255,0.5),
+        rgba(255,255,255,0.05),
+        rgba(255,255,255,0.4),
+        rgba(255,255,255,0.05),
+        rgba(255,255,255,0.5)
+      );
+      z-index: -1;
+    }
+    .hero-avatar img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-    }
-
-    /* Initiales (fallback photo) */
-    .initials-avatar {
-      width: 110px;
-      height: 110px;
       border-radius: 50%;
-      background: var(--color-primary-light);
-      border: 3px solid var(--color-primary);
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,0.15);
+    }
+    /* initiales */
+    .hero-avatar-initials {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 3px solid rgba(255,255,255,0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      font-family: 'Arial', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--color-primary);
-      letter-spacing: 0.05em;
-    }
-
-    .header-info { flex: 1; }
-
-    .header-name {
-      font-size: 2rem;
-      font-weight: normal;
-      line-height: 1.2;
-      margin-bottom: 4px;
-    }
-
-    .header-metier {
-      font-family: 'Arial', sans-serif;
-      font-size: 1rem;
-      color: var(--color-primary);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.6rem;
       font-weight: 600;
-      margin-bottom: 8px;
+      color: rgba(255,255,255,0.9);
     }
 
-    .header-location {
-      font-family: 'Arial', sans-serif;
-      font-size: 0.875rem;
-      color: var(--color-text-muted);
-      display: flex;
+    .hero-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.8rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-metier {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 14px;
+    }
+
+    .hero-loc {
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 28px;
     }
 
-    .header-badges {
+    .hero-badges {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 8px;
-      margin-top: 14px;
+      margin-bottom: 56px;
     }
 
-    .badge {
-      font-family: 'Arial', sans-serif;
-      font-size: 0.78rem;
-      padding: 4px 12px;
-      border-radius: 20px;
-      background: var(--color-primary-light);
-      color: var(--color-primary);
-      font-weight: 600;
+    .hero-badge {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(6px);
     }
 
-    /* ============================================
+    /* ---- vague de séparation ---- */
+    .hero-wave {
+      line-height: 0;
+      margin-top: -1px;
+    }
+    .hero-wave svg { display: block; width: 100%; }
+    .wave-path { fill: var(--c-bg); }
+
+    /* =============================================
+       SECTIONS
+    ============================================= */
+    section {
+      padding: 64px 0;
+      border-top: 1px solid var(--c-border);
+    }
+    section:first-of-type { border-top: none; }
+
+    .section-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--c-primary);
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    /* ---- section teintée (approche) ---- */
+    section.tinted { background: var(--c-tint); }
+
+    /* =============================================
        BIO
-    ============================================ */
+    ============================================= */
+    .bio-quote {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 4.5rem;
+      line-height: 0.6;
+      color: var(--c-primary-soft);
+      display: block;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+
     .bio-text {
       font-size: 1.05rem;
-      line-height: 1.8;
-      color: var(--color-text);
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--c-text);
+      max-width: 640px;
     }
 
-    /* ============================================
+    /* =============================================
        APPROCHE
-    ============================================ */
-    .approche-text {
+    ============================================= */
+    .approche-quote {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem;
       font-style: italic;
-      font-size: 1.05rem;
-      color: var(--color-text-muted);
-      border-left: 3px solid var(--color-primary);
-      padding-left: 20px;
-      line-height: 1.8;
+      font-weight: 400;
+      line-height: 1.75;
+      color: var(--c-text);
+      padding-left: 24px;
+      position: relative;
+      max-width: 600px;
+    }
+    .approche-quote::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 2px; bottom: 2px;
+      width: 3px;
+      border-radius: 2px;
+      background: linear-gradient(to bottom, var(--c-primary), transparent);
     }
 
-    /* ============================================
-       SPECIALITES
-    ============================================ */
-    .specialites-grid {
+    /* =============================================
+       SPÉCIALITÉS
+    ============================================= */
+    .tags-cloud {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
     }
 
     .specialite-tag {
-      font-family: 'Arial', sans-serif;
-      font-size: 0.875rem;
-      padding: 8px 16px;
-      border-radius: 24px;
-      border: 1.5px solid var(--color-primary);
-      color: var(--color-primary);
-      background: transparent;
-      transition: background 0.15s;
+      font-size: 0.83rem;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 100px;
+      background: var(--c-surface);
+      color: var(--c-primary);
+      border: 1.5px solid var(--c-primary-soft);
+      transition: background 0.18s, border-color 0.18s;
+      cursor: default;
+    }
+    .specialite-tag:hover {
+      background: var(--c-primary-soft);
+      border-color: var(--c-primary);
     }
 
-    /* ============================================
+    /* =============================================
        INFOS PRATIQUES
-    ============================================ */
+    ============================================= */
     .infos-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 14px;
     }
 
     .info-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      box-shadow: var(--shadow);
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 16px;
+      padding: 22px 22px 20px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .info-card:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+      transform: translateY(-3px);
     }
 
-    .info-card-label {
-      font-family: 'Arial', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-      margin-bottom: 6px;
-    }
-
-    .info-card-value {
-      font-size: 0.95rem;
-      color: var(--color-text);
-      font-weight: 500;
-    }
-
-    /* ============================================
-       FORMATIONS
-    ============================================ */
-    .formations-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .formations-list li {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      font-size: 0.95rem;
-    }
-
-    .formations-list li::before {
-      content: '';
+    .info-icon {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
       display: block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--color-primary);
-      flex-shrink: 0;
-      margin-top: 7px;
+      line-height: 1;
     }
 
-    /* ============================================
-       AVIS GOOGLE
-    ============================================ */
-    .avis-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: 24px 28px;
-      box-shadow: var(--shadow);
-      max-width: 320px;
-    }
-
-    .avis-note {
-      font-size: 3rem;
+    .info-label {
+      font-size: 0.68rem;
       font-weight: 700;
-      color: var(--color-primary);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--c-muted);
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--c-text);
+      line-height: 1.4;
+    }
+
+    /* =============================================
+       FORMATIONS — timeline
+    ============================================= */
+    .timeline {
+      list-style: none;
+      position: relative;
+      padding-left: 24px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 4px; top: 8px; bottom: 8px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--c-primary) 0%, var(--c-border) 100%);
+    }
+
+    .timeline li {
+      position: relative;
+      padding: 0 0 22px 24px;
+      font-size: 0.93rem;
+      line-height: 1.5;
+      color: var(--c-text);
+    }
+    .timeline li:last-child { padding-bottom: 0; }
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -3px; top: 5px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--c-primary);
+      box-shadow: 0 0 0 3px var(--c-bg), 0 0 0 5px var(--c-primary-soft);
+    }
+
+    /* =============================================
+       AVIS GOOGLE
+    ============================================= */
+    .avis-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 28px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 20px;
+      padding: 28px 36px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+    }
+
+    .avis-score {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 4rem;
+      font-weight: 600;
+      color: var(--c-primary);
       line-height: 1;
     }
 
     .avis-stars {
+      font-size: 1rem;
       color: #F5A623;
-      font-size: 1.25rem;
-      letter-spacing: 2px;
-      margin-bottom: 2px;
+      letter-spacing: 3px;
+      margin-bottom: 5px;
     }
 
     .avis-count {
-      font-family: 'Arial', sans-serif;
-      font-size: 0.8rem;
-      color: var(--color-text-muted);
+      font-size: 0.78rem;
+      color: var(--c-muted);
+      margin-bottom: 8px;
     }
 
-    .avis-google-logo {
-      font-family: 'Arial', sans-serif;
+    .avis-link {
       font-size: 0.75rem;
-      color: var(--color-text-muted);
-      margin-left: auto;
+      font-weight: 600;
+      color: var(--c-primary);
     }
+    .avis-link:hover { text-decoration: underline; }
 
-    /* ============================================
+    /* =============================================
        CONTACT
-    ============================================ */
+    ============================================= */
     .contact-list {
       display: flex;
       flex-direction: column;
       gap: 14px;
+      margin-bottom: 36px;
     }
 
-    .contact-item {
+    .contact-row {
       display: flex;
       align-items: center;
-      gap: 14px;
-      font-size: 0.95rem;
+      gap: 16px;
     }
 
     .contact-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--color-primary-light);
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: var(--c-tint);
+      border: 1px solid var(--c-primary-soft);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
       font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .contact-text {
+      font-size: 0.95rem;
+      color: var(--c-text);
     }
 
     .contact-cta {
-      display: inline-block;
-      margin-top: 24px;
-      padding: 14px 32px;
-      background: var(--color-primary);
-      color: #fff;
-      border-radius: 8px;
-      font-family: 'Arial', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      transition: opacity 0.15s;
-    }
-    .contact-cta:hover { opacity: 0.88; text-decoration: none; }
-
-    /* ============================================
-       RESEAUX SOCIAUX
-    ============================================ */
-    .social-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .social-link {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      font-family: 'Arial', sans-serif;
-      font-size: 0.875rem;
-      padding: 10px 18px;
-      border-radius: 8px;
-      border: 1.5px solid var(--color-border);
-      color: var(--color-text);
-      background: var(--color-surface);
-      transition: border-color 0.15s, color 0.15s;
+      gap: 10px;
+      padding: 16px 38px;
+      background: var(--c-primary);
+      color: #fff;
+      border-radius: 100px;
+      font-size: 0.93rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+      transition: opacity 0.2s, transform 0.2s;
     }
-    .social-link:hover {
-      border-color: var(--color-primary);
-      color: var(--color-primary);
+    .contact-cta:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
       text-decoration: none;
     }
 
-    /* ============================================
+    /* =============================================
+       RÉSEAUX SOCIAUX
+    ============================================= */
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 100px;
+      border: 1.5px solid var(--c-border);
+      color: var(--c-text);
+      background: var(--c-surface);
+      transition: border-color 0.18s, color 0.18s, background 0.18s;
+    }
+    .social-link:hover {
+      border-color: var(--c-primary);
+      color: var(--c-primary);
+      background: var(--c-tint);
+      text-decoration: none;
+    }
+
+    /* =============================================
        FOOTER
-    ============================================ */
+    ============================================= */
     .site-footer {
-      padding: 32px 0;
+      padding: 36px 0;
       text-align: center;
-      font-family: 'Arial', sans-serif;
-      font-size: 0.8rem;
-      color: var(--color-text-muted);
-      border-top: 1px solid var(--color-border);
+      border-top: 1px solid var(--c-border);
     }
 
-    .site-footer a {
-      color: var(--color-primary);
+    .site-footer p {
+      font-size: 0.78rem;
+      color: var(--c-muted);
     }
+    .site-footer a { color: var(--c-primary); }
 
-    /* ============================================
+    /* =============================================
        RESPONSIVE
-    ============================================ */
+    ============================================= */
     @media (max-width: 600px) {
-      .header-inner {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-      }
-      .header-badges { justify-content: center; }
-      .header-location { justify-content: center; }
+      .hero-name { font-size: 2.1rem; }
       .infos-grid { grid-template-columns: 1fr 1fr; }
-      .avis-wrapper { max-width: 100%; }
+      .avis-card { flex-direction: column; gap: 16px; text-align: center; padding: 24px; width: 100%; }
+      .sticky-bar { padding: 10px 20px; }
+      .section-inner { padding: 0 20px; }
+      .hero-inner { padding: 0 20px; }
     }
-
-    @media (max-width: 420px) {
+    @media (max-width: 380px) {
       .infos-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body class="theme-{{theme}}">
 
-  <!-- ============ HEADER ============ -->
+  <!-- ============ BARRE STICKY ============ -->
+  <div class="sticky-bar" aria-hidden="true">
+    <span class="sticky-name">{{prenom}} {{nom}}</span>
+    <a href="#contact" class="sticky-cta">Prendre rendez-vous</a>
+  </div>
+
+  <!-- ============ HERO ============ -->
   <header class="site-header">
-    <div class="container">
-      <div class="header-inner">
+    <div class="hero-inner">
 
+      <div class="hero-avatar">
         {{#if photo_url}}
-        <div class="photo-wrapper">
-          <img src="{{photo_url}}" alt="Photo de {{prenom}} {{nom}}" loading="lazy">
-        </div>
+        <img src="{{photo_url}}" alt="Photo de {{prenom}} {{nom}}" loading="lazy">
         {{else}}
-        <div class="initials-avatar" aria-label="Initiales de {{prenom}} {{nom}}">{{initiales}}</div>
+        <div class="hero-avatar-initials" aria-label="Initiales de {{prenom}} {{nom}}">{{initiales}}</div>
         {{/if}}
-
-        <div class="header-info">
-          <h1 class="header-name">{{prenom}} {{nom}}</h1>
-          <div class="header-metier">{{metier}}</div>
-          <div class="header-location">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            {{ville}}{{#if departement}}, {{departement}}{{/if}}
-          </div>
-          <div class="header-badges">
-            {{#if annees_experience}}<span class="badge">{{annees_experience}} ans d'expérience</span>{{/if}}
-            {{#if zone_intervention}}<span class="badge">{{zone_intervention_label}}</span>{{/if}}
-            {{#if langues_extra}}<span class="badge">{{langues_extra}}</span>{{/if}}
-          </div>
-        </div>
-
       </div>
+
+      <h1 class="hero-name">{{prenom}} {{nom}}</h1>
+      <p class="hero-metier">{{metier}}</p>
+      <p class="hero-loc">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        {{ville}}{{#if departement}}, {{departement}}{{/if}}
+      </p>
+
+      <div class="hero-badges">
+        {{#if annees_experience}}<span class="hero-badge">{{annees_experience}} ans d'expérience</span>{{/if}}
+        {{#if zone_intervention}}<span class="hero-badge">{{zone_intervention_label}}</span>{{/if}}
+        {{#if avis_google}}<span class="hero-badge">★ {{avis_google_note}} · {{avis_google_nb}} avis</span>{{/if}}
+        {{#if langues_extra}}<span class="hero-badge">{{langues_extra}}</span>{{/if}}
+      </div>
+
+    </div>
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="wave-path" d="M0,36 C240,72 480,0 720,36 C960,72 1200,8 1440,36 L1440,72 L0,72 Z"/>
+      </svg>
     </div>
   </header>
 
   <main>
-    <div class="container">
 
-      <!-- ============ BIO ============ -->
-      <section id="bio">
-        <div class="section-label">À propos</div>
-        <div class="bio-text">{{description}}</div>
-      </section>
+    <!-- ============ BIO ============ -->
+    <section id="bio">
+      <div class="section-inner">
+        <span class="eyebrow">À propos</span>
+        <span class="bio-quote" aria-hidden="true">"</span>
+        <p class="bio-text">{{description}}</p>
+      </div>
+    </section>
 
-      <!-- ============ APPROCHE (optionnel) ============ -->
-      {{#if approche}}
-      <section id="approche">
-        <div class="section-label">Mon approche</div>
-        <blockquote class="approche-text">{{approche}}</blockquote>
-      </section>
-      {{/if}}
+    <!-- ============ APPROCHE (optionnel) ============ -->
+    {{#if approche}}
+    <section id="approche" class="tinted">
+      <div class="section-inner">
+        <span class="eyebrow">Mon approche</span>
+        <blockquote class="approche-quote">{{approche}}</blockquote>
+      </div>
+    </section>
+    {{/if}}
 
-      <!-- ============ SPECIALITES (optionnel) ============ -->
-      {{#if specialites}}
-      <section id="specialites">
-        <div class="section-label">Spécialités</div>
-        <div class="specialites-grid">
-          {{specialites_tags}}
-        </div>
-      </section>
-      {{/if}}
+    <!-- ============ SPÉCIALITÉS (optionnel) ============ -->
+    {{#if specialites}}
+    <section id="specialites">
+      <div class="section-inner">
+        <span class="eyebrow">Spécialités</span>
+        <div class="tags-cloud">{{specialites_tags}}</div>
+      </div>
+    </section>
+    {{/if}}
 
-      <!-- ============ INFOS PRATIQUES ============ -->
-      <section id="infos">
-        <div class="section-label">Infos pratiques</div>
+    <!-- ============ INFOS PRATIQUES ============ -->
+    <section id="infos">
+      <div class="section-inner">
+        <span class="eyebrow">Infos pratiques</span>
         <div class="infos-grid">
 
           <div class="info-card">
-            <div class="info-card-label">Tarif</div>
-            <div class="info-card-value">{{tarif_display}}</div>
+            <span class="info-icon">💰</span>
+            <div class="info-label">Tarif</div>
+            <div class="info-value">{{tarif_display}}</div>
           </div>
 
           {{#if duree_seance}}
           <div class="info-card">
-            <div class="info-card-label">Durée</div>
-            <div class="info-card-value">{{duree_seance}}</div>
+            <span class="info-icon">⏱</span>
+            <div class="info-label">Durée</div>
+            <div class="info-value">{{duree_seance}}</div>
           </div>
           {{/if}}
 
           <div class="info-card">
-            <div class="info-card-label">Horaires</div>
-            <div class="info-card-value">{{horaires_display}}</div>
+            <span class="info-icon">🗓</span>
+            <div class="info-label">Horaires</div>
+            <div class="info-value">{{horaires_display}}</div>
           </div>
 
           {{#if zone_intervention}}
           <div class="info-card">
-            <div class="info-card-label">Lieu</div>
-            <div class="info-card-value">{{zone_intervention_label}}</div>
+            <span class="info-icon">📍</span>
+            <div class="info-label">Lieu</div>
+            <div class="info-value">{{zone_intervention_label}}</div>
           </div>
           {{/if}}
 
           {{#if publics}}
           <div class="info-card">
-            <div class="info-card-label">Publics</div>
-            <div class="info-card-value">{{publics_display}}</div>
+            <span class="info-icon">👥</span>
+            <div class="info-label">Publics</div>
+            <div class="info-value">{{publics_display}}</div>
           </div>
           {{/if}}
 
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ============ FORMATIONS (optionnel) ============ -->
-      {{#if formations_ou_certifications}}
-      <section id="formations">
-        <div class="section-label">Formation &amp; parcours</div>
-        <ul class="formations-list">
+    <!-- ============ FORMATIONS (optionnel) ============ -->
+    {{#if formations_ou_certifications}}
+    <section id="formations" class="tinted">
+      <div class="section-inner">
+        <span class="eyebrow">Formation &amp; parcours</span>
+        <ul class="timeline">
           {{formations_items}}
         </ul>
-      </section>
-      {{/if}}
+      </div>
+    </section>
+    {{/if}}
 
-      <!-- ============ AVIS GOOGLE (optionnel) ============ -->
-      {{#if avis_google}}
-      <section id="avis">
-        <div class="section-label">Avis clients</div>
-        <div class="avis-wrapper">
-          <div class="avis-note">{{avis_google_note}}</div>
+    <!-- ============ AVIS GOOGLE (optionnel) ============ -->
+    {{#if avis_google}}
+    <section id="avis">
+      <div class="section-inner">
+        <span class="eyebrow">Avis clients</span>
+        <div class="avis-card">
+          <div class="avis-score">{{avis_google_note}}</div>
           <div>
             <div class="avis-stars">{{avis_etoiles}}</div>
-            <div class="avis-count">{{avis_google_nb}} avis</div>
+            <div class="avis-count">{{avis_google_nb}} avis Google</div>
+            {{#if google_business_url}}
+            <a href="{{google_business_url}}" class="avis-link" target="_blank" rel="noopener">Voir les avis →</a>
+            {{/if}}
           </div>
-          {{#if google_business_url}}
-          <div class="avis-google-logo">
-            <a href="{{google_business_url}}" target="_blank" rel="noopener">Voir sur Google</a>
-          </div>
-          {{/if}}
         </div>
-      </section>
-      {{/if}}
+      </div>
+    </section>
+    {{/if}}
 
-      <!-- ============ CONTACT ============ -->
-      <section id="contact">
-        <div class="section-label">Contact</div>
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="tinted">
+      <div class="section-inner">
+        <span class="eyebrow">Contact</span>
         <div class="contact-list">
 
-          <div class="contact-item">
-            <span class="contact-icon" aria-hidden="true">✉</span>
-            <a href="mailto:{{email}}">{{email}}</a>
+          <div class="contact-row">
+            <div class="contact-icon">✉</div>
+            <div class="contact-text"><a href="mailto:{{email}}">{{email}}</a></div>
           </div>
 
           {{#if telephone}}
-          <div class="contact-item">
-            <span class="contact-icon" aria-hidden="true">☎</span>
-            <a href="tel:{{telephone_raw}}">{{telephone}}</a>
+          <div class="contact-row">
+            <div class="contact-icon">☎</div>
+            <div class="contact-text"><a href="tel:{{telephone_raw}}">{{telephone}}</a></div>
           </div>
           {{/if}}
 
           {{#if adresse}}
-          <div class="contact-item">
-            <span class="contact-icon" aria-hidden="true">📍</span>
-            <span>{{adresse}}</span>
+          <div class="contact-row">
+            <div class="contact-icon">📍</div>
+            <div class="contact-text">{{adresse}}</div>
           </div>
           {{/if}}
 
         </div>
 
-        <a href="mailto:{{email}}" class="contact-cta">Prendre rendez-vous</a>
-      </section>
+        <a href="mailto:{{email}}" class="contact-cta">
+          Prendre rendez-vous
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </section>
 
-      <!-- ============ RESEAUX SOCIAUX (optionnel) ============ -->
-      {{#if reseaux_sociaux}}
-      <section id="reseaux">
-        <div class="section-label">Retrouvez-moi</div>
-        <div class="social-links">
-          {{social_links_html}}
-        </div>
-      </section>
-      {{/if}}
+    <!-- ============ RÉSEAUX SOCIAUX (optionnel) ============ -->
+    {{#if reseaux_sociaux}}
+    <section id="reseaux">
+      <div class="section-inner">
+        <span class="eyebrow">Retrouvez-moi</span>
+        <div class="social-links">{{social_links_html}}</div>
+      </div>
+    </section>
+    {{/if}}
 
-    </div><!-- .container -->
   </main>
 
-  <!-- ============ FOOTER ============ -->
   <footer class="site-footer">
-    <div class="container">
+    <div class="section-inner">
       <p>Page créée avec <a href="https://solia.fr" rel="noopener">Solia</a> &mdash; Votre présence en ligne, simplement.</p>
     </div>
   </footer>
+
+  <script>
+    // Barre sticky au scroll
+    const threshold = document.querySelector('.site-header').offsetHeight - 60;
+    window.addEventListener('scroll', () => {
+      document.body.classList.toggle('is-scrolled', window.scrollY > threshold);
+    }, { passive: true });
+  </script>
 
 </body>
 </html>
