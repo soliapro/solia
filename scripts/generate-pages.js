@@ -177,9 +177,17 @@ function render(template, p) {
     ...(p.certifications || [])
   ].map(f => `<li>${escapeHtml(f)}</li>`).join('\n          ');
 
-  // Langues affichées (sauf fr)
+  // Langues affichées (sauf fr) — codes ISO → noms complets
+  const LANG_NAMES = {
+    en: 'Anglais', de: 'Allemand', es: 'Espagnol', it: 'Italien',
+    pt: 'Portugais', nl: 'Néerlandais', ar: 'Arabe', zh: 'Mandarin',
+    ja: 'Japonais', ru: 'Russe', pl: 'Polonais', tr: 'Turc'
+  };
   const languesExtra = p.langues
-    ? p.langues.filter(l => l.toLowerCase() !== 'fr').join(', ')
+    ? p.langues
+        .filter(l => l.toLowerCase() !== 'fr')
+        .map(l => LANG_NAMES[l.toLowerCase()] || l)
+        .join(', ')
     : '';
 
   // Réseaux sociaux — icônes SVG inline

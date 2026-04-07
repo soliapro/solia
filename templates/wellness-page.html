@@ -305,10 +305,20 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
-      .hero { grid-template-columns: 1fr; grid-template-rows: 55vw auto; min-height: auto; }
-      .hero-visual--photo { clip-path: none; border-radius: 0 0 28px 28px; }
-      .hero-visual--initials { border-radius: 0 0 28px 28px; }
-      .hero-content { padding: 36px 24px 48px; align-items: center; text-align: center; }
+      /* Hero : section photo plus haute + cercle carré */
+      .hero { grid-template-columns: 1fr; grid-template-rows: auto auto; min-height: auto; }
+      .hero-visual--photo {
+        padding: 40px 24px 32px;
+        border-radius: 0 0 32px 32px;
+        min-height: 300px;
+      }
+      .hero-visual--initials { border-radius: 0 0 32px 32px; min-height: 260px; }
+      /* Forcer le cercle à être carré — width = height explicite */
+      .hero-photo-circle {
+        width: min(240px, 68vw);
+        height: min(240px, 68vw);
+      }
+      .hero-content { padding: 36px 24px 52px; align-items: center; text-align: center; }
       .hero-name { text-align: center; }
       .hero-meta, .hero-chips { justify-content: center; }
       .btn-cta { align-self: center; }
