@@ -1,0 +1,194 @@
+{
+  "_comment": "Schema de référence Solia — tous les champs possibles avec leur type et statut",
+  "_version": "1.0.0",
+
+  "champs_obligatoires": {
+    "slug": {
+      "type": "string",
+      "description": "Identifiant URL-safe unique. Format : prenom-nom-metier-ville",
+      "exemple": "marie-dupont-sophrologue-lyon",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "prenom": {
+      "type": "string",
+      "description": "Prénom du praticien",
+      "exemple": "Marie"
+    },
+    "nom": {
+      "type": "string",
+      "description": "Nom de famille du praticien",
+      "exemple": "Dupont"
+    },
+    "metier": {
+      "type": "string",
+      "description": "Titre professionnel affiché sur la page",
+      "exemple": "Sophrologue"
+    },
+    "ville": {
+      "type": "string",
+      "description": "Ville d'exercice principal",
+      "exemple": "Lyon"
+    },
+    "departement": {
+      "type": "string",
+      "description": "Département (numéro ou nom)",
+      "exemple": "69"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Adresse email de contact",
+      "exemple": "marie.dupont@email.com"
+    },
+    "description": {
+      "type": "string",
+      "description": "Bio du praticien, 30 mots minimum. Affichée dans la section Bio.",
+      "min_words": 30,
+      "exemple": "Sophrologue certifiée RNCP, j'accompagne adultes et adolescents..."
+    },
+    "email_confirme": {
+      "type": "boolean",
+      "description": "OBLIGATOIRE. La page n'est générée que si true. Indique que le praticien a confirmé son email.",
+      "exemple": true
+    }
+  },
+
+  "champs_optionnels": {
+    "photo_url": {
+      "type": "string",
+      "format": "url",
+      "description": "URL d'une photo portrait du praticien. Si absent : initiales affichées en CSS.",
+      "exemple": "https://exemple.com/photo-marie.jpg"
+    },
+    "logo_url": {
+      "type": "string",
+      "format": "url",
+      "description": "URL du logo du cabinet/praticien. Affiché dans le header.",
+      "exemple": "https://exemple.com/logo.png"
+    },
+    "theme": {
+      "type": "string",
+      "enum": ["zen", "nature", "lumiere"],
+      "description": "Thème visuel de la page. Si absent : attribué automatiquement selon le métier. zen=yoga/massage/méditation, nature=naturopathie/diététique, lumiere=tous les autres.",
+      "exemple": "zen"
+    },
+    "telephone": {
+      "type": "string",
+      "description": "Numéro de téléphone affiché dans la section Contact.",
+      "exemple": "06 12 34 56 78"
+    },
+    "adresse": {
+      "type": "string",
+      "description": "Adresse complète du cabinet.",
+      "exemple": "12 rue de la Paix, 69001 Lyon"
+    },
+    "zone_intervention": {
+      "type": "string",
+      "enum": ["cabinet", "domicile", "les deux"],
+      "description": "Zone d'intervention du praticien.",
+      "exemple": "les deux"
+    },
+    "horaires": {
+      "type": "string",
+      "description": "Horaires en texte libre. Si absent : 'Sur rendez-vous — contactez-moi'.",
+      "exemple": "Lun-Ven 9h-19h, Sam 9h-13h"
+    },
+    "langues": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Langues parlées. Codes ISO ou noms complets.",
+      "exemple": ["fr", "en", "de"]
+    },
+    "approche": {
+      "type": "string",
+      "description": "Texte court décrivant l'approche thérapeutique. Distinct de la bio. Si absent : section masquée.",
+      "exemple": "Une approche centrée sur la personne, alliant écoute profonde et techniques de relaxation."
+    },
+    "specialites": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Liste des spécialités ou domaines d'intervention. Si absent : section masquée.",
+      "exemple": ["stress", "sommeil", "confiance en soi", "gestion des émotions"]
+    },
+    "formations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Formations et diplômes obtenus. Si absent : section masquée.",
+      "exemple": ["RNCP Sophrologue — Institut ISEBA, 2017", "Formation Hypnose Ericksonienne — 2020"]
+    },
+    "certifications": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Certifications professionnelles. Si absent : section masquée.",
+      "exemple": ["Membre de la Chambre Syndicale de la Sophrologie"]
+    },
+    "tarif": {
+      "type": "string",
+      "description": "Tarif d'une séance individuelle. Si absent : 'Tarifs sur demande'.",
+      "exemple": "60€ / séance"
+    },
+    "duree_seance": {
+      "type": "string",
+      "description": "Durée d'une séance.",
+      "exemple": "1h"
+    },
+    "publics": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Publics accueillis.",
+      "exemple": ["adultes", "adolescents", "entreprises"]
+    },
+    "annees_experience": {
+      "type": "number",
+      "description": "Nombre d'années d'expérience.",
+      "exemple": 8
+    },
+    "avis_google_note": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Note Google entre 0 et 5. Doit être accompagné de avis_google_nb. Si absent : section masquée.",
+      "exemple": 4.8
+    },
+    "avis_google_nb": {
+      "type": "number",
+      "description": "Nombre d'avis Google. Doit être accompagné de avis_google_note.",
+      "exemple": 34
+    },
+    "site_actuel": {
+      "type": "string",
+      "format": "url",
+      "description": "URL du site web actuel du praticien.",
+      "exemple": "https://marie-dupont-sophrologue.fr"
+    },
+    "instagram_url": {
+      "type": "string",
+      "format": "url",
+      "description": "URL du profil Instagram.",
+      "exemple": "https://instagram.com/marie.sophrologue"
+    },
+    "facebook_url": {
+      "type": "string",
+      "format": "url",
+      "description": "URL de la page Facebook.",
+      "exemple": "https://facebook.com/marie.dupont.sophrologue"
+    },
+    "linkedin_url": {
+      "type": "string",
+      "format": "url",
+      "description": "URL du profil LinkedIn.",
+      "exemple": "https://linkedin.com/in/marie-dupont"
+    },
+    "google_business_url": {
+      "type": "string",
+      "format": "url",
+      "description": "URL de la fiche Google Business.",
+      "exemple": "https://g.page/marie-dupont-sophrologue"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Remarques internes Solia. NON affiché sur la page publique.",
+      "exemple": "Contactée par téléphone le 03/04. Intéressée par l'offre premium."
+    }
+  }
+}

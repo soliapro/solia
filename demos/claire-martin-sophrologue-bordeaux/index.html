@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claire Martin — Sophrologue à Bordeaux</title>
+  <meta name="description" content="Sophrologue certifiée RNCP, j'accompagne adultes et adolescents depuis plus de 8 ans dans la gestion du stress, l'amélioration du sommeil et le renforcement…">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Claire Martin — Sophrologue à Bordeaux">
+  <meta property="og:description" content="Sophrologue certifiée RNCP, j'accompagne adultes et adolescents depuis plus de 8 ans dans la gestion du stress, l'amélioration du sommeil et le renforcement…">
+  <meta property="og:type" content="website">
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Claire Martin",
+  "description": "Sophrologue certifiée RNCP, j'accompagne adultes et adolescents depuis plus de 8 ans dans la gestion du stress, l'amélioration du sommeil et le renforcement de la confiance en soi. Ma pratique s'appuie sur des techniques de relaxation dynamique, de visualisation positive et de pleine conscience,…",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Bordeaux",
+    "addressRegion": "33",
+    "addressCountry": "FR",
+    "streetAddress": "14 rue Sainte-Catherine, 33000 Bordeaux"
+  },
+  "email": "claire.martin@sophro-bordeaux.fr",
+  "priceRange": "65€ / séance",
+  "telephone": "06 78 34 12 90",
+  "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": 4.9,
+    "reviewCount": 47,
+    "bestRating": 5
+  }
+}
+  </script>
+
+  <style>
+    /* ============================================
+       RESET & BASE
+    ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Thème lumiere (défaut) */
+      --color-primary:    #C9853A;
+      --color-primary-light: #F0D5B5;
+      --color-bg:         #FFFAF5;
+      --color-surface:    #FFFFFF;
+      --color-text:       #2D2016;
+      --color-text-muted: #7A6652;
+      --color-border:     #EAD8C2;
+      --color-accent:     #E8A45A;
+      --radius:           12px;
+      --shadow:           0 2px 16px rgba(100, 60, 10, 0.08);
+    }
+
+    /* Thème zen */
+    body.theme-zen {
+      --color-primary:    #6B8F9E;
+      --color-primary-light: #D4E8EF;
+      --color-bg:         #F5F9FA;
+      --color-surface:    #FFFFFF;
+      --color-text:       #1A2E35;
+      --color-text-muted: #5A7A85;
+      --color-border:     #C8DDE4;
+      --color-accent:     #8BB4C2;
+    }
+
+    /* Thème nature */
+    body.theme-nature {
+      --color-primary:    #4A7C5A;
+      --color-primary-light: #C8E0CF;
+      --color-bg:         #F5FAF5;
+      --color-surface:    #FFFFFF;
+      --color-text:       #1A2B1F;
+      --color-text-muted: #5A7A62;
+      --color-border:     #C0D8C6;
+      --color-accent:     #72A882;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    img { max-width: 100%; display: block; }
+
+    /* ============================================
+       LAYOUT
+    ============================================ */
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: normal;
+      color: var(--color-text);
+      margin-bottom: 20px;
+    }
+
+    p { margin-bottom: 1em; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ============================================
+       HEADER
+    ============================================ */
+    .site-header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow);
+      padding: 40px 0 48px;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    /* Photo */
+    .photo-wrapper {
+      flex-shrink: 0;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--color-primary-light);
+      box-shadow: 0 0 0 4px var(--color-bg);
+    }
+
+    .photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Initiales (fallback photo) */
+    .initials-avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      border: 3px solid var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'Arial', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: 0.05em;
+    }
+
+    .header-info { flex: 1; }
+
+    .header-name {
+      font-size: 2rem;
+      font-weight: normal;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .header-metier {
+      font-family: 'Arial', sans-serif;
+      font-size: 1rem;
+      color: var(--color-primary);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .header-location {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.78rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* ============================================
+       BIO
+    ============================================ */
+    .bio-text {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--color-text);
+    }
+
+    /* ============================================
+       APPROCHE
+    ============================================ */
+    .approche-text {
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--color-text-muted);
+      border-left: 3px solid var(--color-primary);
+      padding-left: 20px;
+      line-height: 1.8;
+    }
+
+    /* ============================================
+       SPECIALITES
+    ============================================ */
+    .specialites-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .specialite-tag {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.875rem;
+      padding: 8px 16px;
+      border-radius: 24px;
+      border: 1.5px solid var(--color-primary);
+      color: var(--color-primary);
+      background: transparent;
+      transition: background 0.15s;
+    }
+
+    /* ============================================
+       INFOS PRATIQUES
+    ============================================ */
+    .infos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .info-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .info-card-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 6px;
+    }
+
+    .info-card-value {
+      font-size: 0.95rem;
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    /* ============================================
+       FORMATIONS
+    ============================================ */
+    .formations-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .formations-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 0.95rem;
+    }
+
+    .formations-list li::before {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    /* ============================================
+       AVIS GOOGLE
+    ============================================ */
+    .avis-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      box-shadow: var(--shadow);
+      max-width: 320px;
+    }
+
+    .avis-note {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      line-height: 1;
+    }
+
+    .avis-stars {
+      color: #F5A623;
+      font-size: 1.25rem;
+      letter-spacing: 2px;
+      margin-bottom: 2px;
+    }
+
+    .avis-count {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    .avis-google-logo {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-left: auto;
+    }
+
+    /* ============================================
+       CONTACT
+    ============================================ */
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.95rem;
+    }
+
+    .contact-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .contact-cta {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 14px 32px;
+      background: var(--color-primary);
+      color: #fff;
+      border-radius: 8px;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: opacity 0.15s;
+    }
+    .contact-cta:hover { opacity: 0.88; text-decoration: none; }
+
+    /* ============================================
+       RESEAUX SOCIAUX
+    ============================================ */
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.875rem;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1.5px solid var(--color-border);
+      color: var(--color-text);
+      background: var(--color-surface);
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .social-link:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    /* ============================================
+       FOOTER
+    ============================================ */
+    .site-footer {
+      padding: 32px 0;
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .site-footer a {
+      color: var(--color-primary);
+    }
+
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @media (max-width: 600px) {
+      .header-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+      .header-badges { justify-content: center; }
+      .header-location { justify-content: center; }
+      .infos-grid { grid-template-columns: 1fr 1fr; }
+      .avis-wrapper { max-width: 100%; }
+    }
+
+    @media (max-width: 420px) {
+      .infos-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="theme-zen">
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+
+        
+        <div class="photo-wrapper">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&amp;q=80" alt="Photo de Claire Martin" loading="lazy">
+        </div>
+        
+
+        <div class="header-info">
+          <h1 class="header-name">Claire Martin</h1>
+          <div class="header-metier">Sophrologue</div>
+          <div class="header-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Bordeaux, 33
+          </div>
+          <div class="header-badges">
+            <span class="badge">8 ans d'expérience</span>
+            <span class="badge">Cabinet &amp; domicile</span>
+            <span class="badge">en</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- ============ BIO ============ -->
+      <section id="bio">
+        <div class="section-label">À propos</div>
+        <div class="bio-text">Sophrologue certifiée RNCP, j'accompagne adultes et adolescents depuis plus de 8 ans dans la gestion du stress, l'amélioration du sommeil et le renforcement de la confiance en soi. Ma pratique s'appuie sur des techniques de relaxation dynamique, de visualisation positive et de pleine conscience, adaptées à chaque personne et à sa réalité quotidienne.</div>
+      </section>
+
+      <!-- ============ APPROCHE (optionnel) ============ -->
+      
+      <section id="approche">
+        <div class="section-label">Mon approche</div>
+        <blockquote class="approche-text">Une approche douce et personnalisée, ancrée dans l'écoute active. Chaque séance est construite autour de vos besoins du moment, pour vous accompagner vers un mieux-être durable.</blockquote>
+      </section>
+      
+
+      <!-- ============ SPECIALITES (optionnel) ============ -->
+      
+      <section id="specialites">
+        <div class="section-label">Spécialités</div>
+        <div class="specialites-grid">
+          <span class="specialite-tag">stress &amp; anxiété</span>
+          <span class="specialite-tag">troubles du sommeil</span>
+          <span class="specialite-tag">confiance en soi</span>
+          <span class="specialite-tag">préparation mentale</span>
+          <span class="specialite-tag">gestion des émotions</span>
+        </div>
+      </section>
+      
+
+      <!-- ============ INFOS PRATIQUES ============ -->
+      <section id="infos">
+        <div class="section-label">Infos pratiques</div>
+        <div class="infos-grid">
+
+          <div class="info-card">
+            <div class="info-card-label">Tarif</div>
+            <div class="info-card-value">65€ / séance</div>
+          </div>
+
+          
+          <div class="info-card">
+            <div class="info-card-label">Durée</div>
+            <div class="info-card-value">1h</div>
+          </div>
+          
+
+          <div class="info-card">
+            <div class="info-card-label">Horaires</div>
+            <div class="info-card-value">Lun–Ven 9h–19h · Sam 9h–13h</div>
+          </div>
+
+          
+          <div class="info-card">
+            <div class="info-card-label">Lieu</div>
+            <div class="info-card-value">Cabinet &amp; domicile</div>
+          </div>
+          
+
+          
+          <div class="info-card">
+            <div class="info-card-label">Publics</div>
+            <div class="info-card-value">adultes, adolescents, entreprises</div>
+          </div>
+          
+
+        </div>
+      </section>
+
+      <!-- ============ FORMATIONS (optionnel) ============ -->
+      
+      <section id="formations">
+        <div class="section-label">Formation &amp; parcours</div>
+        <ul class="formations-list">
+          <li>Diplôme de Sophrologue RNCP — Institut ISEBA Bordeaux, 2015</li>
+          <li>Formation Hypnose Ericksonienne — Centre Arche, Paris, 2018</li>
+          <li>Certification Mindfulness MBSR — 2020</li>
+          <li>Membre de la Chambre Syndicale de la Sophrologie (CSS)</li>
+          <li>Praticienne référencée PSSM France</li>
+        </ul>
+      </section>
+      
+
+      <!-- ============ AVIS GOOGLE (optionnel) ============ -->
+      
+      <section id="avis">
+        <div class="section-label">Avis clients</div>
+        <div class="avis-wrapper">
+          <div class="avis-note">4.9</div>
+          <div>
+            <div class="avis-stars">★★★★½</div>
+            <div class="avis-count">47 avis</div>
+          </div>
+          
+          <div class="avis-google-logo">
+            <a href="https://g.page/claire-martin-sophrologue-bordeaux" target="_blank" rel="noopener">Voir sur Google</a>
+          </div>
+          
+        </div>
+      </section>
+      
+
+      <!-- ============ CONTACT ============ -->
+      <section id="contact">
+        <div class="section-label">Contact</div>
+        <div class="contact-list">
+
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true">✉</span>
+            <a href="mailto:claire.martin@sophro-bordeaux.fr">claire.martin@sophro-bordeaux.fr</a>
+          </div>
+
+          
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true">☎</span>
+            <a href="tel:0678341290">06 78 34 12 90</a>
+          </div>
+          
+
+          
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true">📍</span>
+            <span>14 rue Sainte-Catherine, 33000 Bordeaux</span>
+          </div>
+          
+
+        </div>
+
+        <a href="mailto:claire.martin@sophro-bordeaux.fr" class="contact-cta">Prendre rendez-vous</a>
+      </section>
+
+      <!-- ============ RESEAUX SOCIAUX (optionnel) ============ -->
+      
+      <section id="reseaux">
+        <div class="section-label">Retrouvez-moi</div>
+        <div class="social-links">
+          <a href="https://instagram.com/claire.martin.sophro" class="social-link" target="_blank" rel="noopener">📸 Instagram</a>
+          <a href="https://facebook.com/sophro.bordeaux.claire" class="social-link" target="_blank" rel="noopener">📘 Facebook</a>
+          <a href="https://g.page/claire-martin-sophrologue-bordeaux" class="social-link" target="_blank" rel="noopener">🔍 Google</a>
+        </div>
+      </section>
+      
+
+    </div><!-- .container -->
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Page créée avec <a href="https://solia.fr" rel="noopener">Solia</a> &mdash; Votre présence en ligne, simplement.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
