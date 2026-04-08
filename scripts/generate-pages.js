@@ -159,6 +159,7 @@ function render(template, p) {
     avis_google:            !!(p.avis_google_note && p.avis_google_nb),
     google_business_url:    !!p.google_business_url,
     telephone:              !!p.telephone,
+    rdv_url:                !!p.rdv_url,
     adresse:                !!p.adresse,
     reseaux_sociaux:        !!(p.instagram_url || p.facebook_url || p.linkedin_url || p.google_business_url),
     departement:            !!p.departement,
@@ -242,6 +243,7 @@ function render(template, p) {
     avis_google_nb:       String(p.avis_google_nb || ''),
     avis_etoiles:         p.avis_google_note ? starsHtml(p.avis_google_note) : '',
     avis_etoiles_svg:     p.avis_google_note ? svgStarsHtml(p.avis_google_note) : '',
+    rdv_url:              escapeHtml(p.rdv_url || ''),
     google_business_url:  escapeHtml(p.google_business_url || ''),
     social_links_html:    socialLinksHtml
   };

@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "dominique-carry-sophrologue-poitiers",
+    "prenom": "Dominique",
+    "nom": "Carry",
+    "metier": "Sophrologue",
+    "ville": "Poitiers",
+    "departement": "86",
+    "email": "contact@carrysophroconseil.fr",
+    "email_confirme": true,
+
+    "photo_url": "https://api.liberlo.com/storage/49390/conversions/7ce1dd70-b6e9-41ee-bcd7-26c61fd7b640-thumb.webp",
+    "theme": "zen",
+    "telephone": "+33 6 22 24 38 66",
+    "zone_intervention": "les deux",
+    "horaires": "Sur rendez-vous — contactez-moi",
+    "langues": ["fr"],
+    "annees_experience": 35,
+
+    "description": "Sophrologue certifiée RNCP, Dominique vous accompagne avec bienveillance et plus de 35 ans d'expérience en sciences humaines. Passionnée par le bien-être et la qualité de vie au travail, elle propose des séances individuelles et collectives adaptées à vos besoins. Que ce soit pour gérer le stress, préparer un événement important ou retrouver un sommeil réparateur, Dominique met son expertise à votre service.",
+
+    "approche": "Séances disponibles en visio et à domicile sur Poitiers et ses environs. Chaque accompagnement est construit autour de vos besoins : relaxation dynamique, respiration guidée, visualisation et sophronisation pour un lâcher-prise profond.",
+
+    "specialites": [
+      "stress & anxiété",
+      "troubles du sommeil",
+      "préparation mentale",
+      "bien-être au travail",
+      "gestion des émotions",
+      "confiance en soi"
+    ],
+
+    "certifications": [
+      "Sophrologue certifiée RNCP",
+      "Qualité de Vie & Conditions de Travail"
+    ],
+
+    "tarif": "50€ / séance",
+    "duree_seance": "1h",
+    "publics": ["adultes", "entreprises"],
+
+    "avis_google_note": 5,
+    "avis_google_nb": 6,
+
+    "rdv_url": "https://www.resalib.fr/praticien/95624-carrysophroconseil-ei-sophrologue-poitiers"
+  }
+]

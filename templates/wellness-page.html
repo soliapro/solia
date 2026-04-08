@@ -381,10 +381,17 @@
         {{#if langues_extra}}<span class="chip">{{langues_extra}}</span>{{/if}}
       </div>
 
+      {{#if rdv_url}}
+      <a href="{{rdv_url}}" class="btn-cta" id="heroCta" target="_blank" rel="noopener">
+        Prendre rendez-vous
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      {{else}}
       <a href="#contact" class="btn-cta" id="heroCta">
         Prendre rendez-vous
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
+      {{/if}}
     </div>
   </header>
 
@@ -529,10 +536,17 @@
           {{/if}}
         </ul>
 
+        {{#if rdv_url}}
+        <a href="{{rdv_url}}" class="btn-cta btn-cta--lg" id="ctaMain" target="_blank" rel="noopener">
+          Prendre rendez-vous
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        {{else}}
         <a href="mailto:{{email}}" class="btn-cta btn-cta--lg" id="ctaMain">
           Écrire un message
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
+        {{/if}}
 
         {{#if reseaux_sociaux}}
         <div class="social-row">{{social_links_html}}</div>
