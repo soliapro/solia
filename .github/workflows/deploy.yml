@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - 'claude/build-solia-generator-HCV3P'
-    paths:
-      - 'prospects/**'
-      - 'templates/**'
 
 jobs:
   deploy:
@@ -29,29 +26,6 @@ jobs:
             echo "→ $f"
             node scripts/generate-pages.js "$f" --force
           done
-
-      - name: Générer l'index
-        run: |
-          node -e "
-          const fs = require('fs');
-          const path = require('path');
-          const demosDir = 'demos';
-
-          const slugs = fs.readdirSync(demosDir)
-            .filter(f => fs.statSync(path.join(demosDir, f)).isDirectory());
-
-          const items = slugs.map(s => {
-            const html = fs.readFileSync(path.join(demosDir, s, 'index.html'), 'utf8');
-            const m = html.match(/<title>([^<]+)<\/title>/);
-            const title = m ? m[1] : s;
-            return '<li><a href=\"' + s + '/\">' + title + '</a></li>';
-          }).join('\n    ');
-
-          const index = '<!DOCTYPE html>\n<html lang=\"fr\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Solia \u2014 D\u00e9mos</title>\n  <style>\n    body{font-family:Arial,sans-serif;max-width:600px;margin:60px auto;padding:0 24px;color:#2D2016;background:#FFFAF5}\n    h1{font-size:1.5rem;margin-bottom:8px}\n    p{color:#7A6652;margin-bottom:32px;font-size:.95rem}\n    ul{list-style:none;padding:0}\n    li{margin-bottom:12px}\n    a{display:inline-block;padding:10px 20px;background:#C9853A;color:#fff;border-radius:8px;text-decoration:none;font-size:.9rem}\n    a:hover{opacity:.85}\n  </style>\n</head>\n<body>\n  <h1>Solia \u2014 Pages d\u00e9mo</h1>\n  <p>' + slugs.length + ' praticien(s) en ligne.</p>\n  <ul>\n    ' + items + '\n  </ul>\n</body>\n</html>';
-
-          fs.writeFileSync(path.join(demosDir, 'index.html'), index, 'utf8');
-          console.log('Index généré — ' + slugs.length + ' page(s).');
-          "
 
       - name: Déployer sur GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
