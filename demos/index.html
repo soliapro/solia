@@ -525,10 +525,13 @@
       position: relative;
     }
     .demo-frame iframe {
-      width: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      width: 1200px;
       height: 900px;
       border: none;
-      display: block;
+      transform-origin: top left;
+      transform: scale(0.717); /* 860/1200 ≈ 0.717 — remplit le conteneur */
       pointer-events: none;
     }
     .solution-links { text-align: center; }
@@ -546,11 +549,14 @@
 
     @media (max-width: 860px) {
       .problem-cards { grid-template-columns: 1fr; }
-      .demo-frame { height: 420px; }
+      .demo-frame { height: 380px; }
+      /* containerW ≈ viewport - 48px padding */
+      .demo-frame iframe { width: 760px; transform: scale(0.618); }
     }
     @media (max-width: 600px) {
       .section-problem, .section-solution { padding: 64px 0; }
-      .demo-frame { height: 340px; }
+      .demo-frame { height: 300px; }
+      .demo-frame iframe { width: 375px; height: 700px; transform: scale(0.88); }
     }
   </style>
 
