@@ -27,6 +27,10 @@ jobs:
             node scripts/generate-pages.js "$f" --force
           done
 
+      - name: Régénérer le dashboard
+        run: |
+          node scripts/generate-dashboard.js
+
       - name: Déployer sur GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
