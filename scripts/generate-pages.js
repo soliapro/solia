@@ -217,6 +217,7 @@ function render(template, p) {
     nom:                  escapeHtml(p.nom),
     metier:               escapeHtml(p.metier),
     ville:                escapeHtml(p.ville),
+    ville_display:        escapeHtml(p.ville + (p.departement ? `, ${p.departement}` : '')),
     departement:          escapeHtml(p.departement || ''),
     email:                escapeHtml(p.email),
     telephone:            escapeHtml(p.telephone || ''),
@@ -250,18 +251,21 @@ function render(template, p) {
 
   let html = template;
 
-  // 1. Résoudre les blocs conditionnels (itératif pour gérer l'imbrication)
-  //    Traite d'abord {{#if}}...{{else}}...{{/if}}, puis {{#if}}...{{/if}}
-  //    Répète jusqu'à stabilisation (pour les blocs imbriqués).
+  // 1. Résoudre les blocs conditionnels — innermost-first.
+  //    Le lookahead négatif (?!\{\{#if) garantit qu'on ne traite que les blocs
+  //    qui ne contiennent pas de {{#if}} imbriqué. La boucle do/while répète
+  //    jusqu'à stabilisation, résolvant les niveaux de l'intérieur vers l'extérieur.
   let prev;
   do {
     prev = html;
+    // Blocs avec {{else}} sans {{#if}} imbriqué à l'intérieur
     html = html.replace(
-      /\{\{#if (\w+)\}\}([\s\S]*?)\{\{else\}\}([\s\S]*?)\{\{\/if\}\}/g,
+      /\{\{#if (\w+)\}\}((?:(?!\{\{#if)[\s\S])*?)\{\{else\}\}((?:(?!\{\{#if)[\s\S])*?)\{\{\/if\}\}/g,
       (_, key, truthy, falsy) => flags[key] ? truthy : falsy
     );
+    // Blocs sans {{else}} et sans {{#if}} imbriqué
     html = html.replace(
-      /\{\{#if (\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g,
+      /\{\{#if (\w+)\}\}((?:(?!\{\{#if)[\s\S])*?)\{\{\/if\}\}/g,
       (_, key, content) => flags[key] ? content : ''
     );
   } while (html !== prev);
