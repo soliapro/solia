@@ -335,11 +335,13 @@
       background: var(--c-bg);
     }
     .phone-screen iframe {
+      position: absolute;
+      top: 0; left: 0;
       width: 375px;
-      height: 100%;
+      height: 812px;
       border: none;
       transform-origin: top left;
-      transform: scale(0.72);
+      transform: scale(0.736); /* 276px inner / 375px = 0.736 → h: 812*0.736=597px ≈ 596px inner */
       pointer-events: none;
     }
     /* notch */
@@ -377,14 +379,14 @@
     @media (max-width: 900px) {
       .hero-inner { grid-template-columns: 1fr; gap: 48px; }
       .phone-frame { width: 260px; height: 530px; }
-      .phone-screen iframe { transform: scale(0.62); }
+      .phone-screen iframe { transform: scale(0.629); } /* 236/375 → h: 812*0.629=511px ≈ 506px inner */
     }
     @media (max-width: 600px) {
       .hero { padding: 48px 0 40px; min-height: auto; }
       .hero-headline { font-size: clamp(1.9rem, 8vw, 2.4rem); }
       .hero-ctas { flex-direction: column; align-items: flex-start; }
       .phone-frame { width: 220px; height: 450px; }
-      .phone-screen iframe { transform: scale(0.53); }
+      .phone-screen iframe { transform: scale(0.523); } /* 196/375 → h: 812*0.523=425px ≈ 426px inner */
     }
   </style>
 
@@ -522,10 +524,10 @@
       position: relative;
     }
     .demo-frame iframe {
-      width: 100%; height: 200%; border: none;
-      transform-origin: top left;
-      transform: scale(0.6);
-      width: calc(100% / 0.6);
+      width: 100%;
+      height: 900px;
+      border: none;
+      display: block;
       pointer-events: none;
     }
     .solution-links { text-align: center; }
@@ -543,12 +545,11 @@
 
     @media (max-width: 860px) {
       .problem-cards { grid-template-columns: 1fr; }
-      .demo-frame { height: 400px; }
+      .demo-frame { height: 420px; }
     }
     @media (max-width: 600px) {
       .section-problem, .section-solution { padding: 64px 0; }
-      .demo-frame { height: 300px; }
-      .demo-frame iframe { transform: scale(0.45); width: calc(100% / 0.45); }
+      .demo-frame { height: 340px; }
     }
   </style>
 
