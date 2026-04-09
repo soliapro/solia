@@ -1,0 +1,32 @@
+{
+  "slug": "bernardeau-virginie-psychologue-psychopraticien-schiltigheim",
+  "prenom": "BERNARDEAU",
+  "nom": "Virginie Psychologue",
+  "metier": "Psychopraticien",
+  "ville": "Schiltigheim",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJDS04qu1EkUcRptr4Vma1NVM/photos/AU_ZVEGFU_7oYBs_WhGlXR1KePpuGbOKGHR0fWRRENDJRgBpgcg2F79gaxrDuboaHH6NMXVQ2jvwIrzsIwxYxZ-YHcLeWKlqoIAY67lV-11kU-attqmDMtk56CZAZfXKC6vvpJ81myzBhXgXQ-0IwuNOa2uLaxOKF17VA1IYlgEGOQ5-YzjWiMWXgLs0jmH8Ex4KPZHGuEVZB777zdWkv0Nk6JAiodoFLgEKvMsI4mUWzSKHowKslnS7lXdp-Q9b-UX-ktt7gXrdL4_T0bHuaHDVJVc7MHkAmgcpQuC0G3oIwKkxMA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "07 82 22 09 70",
+  "adresse": "23 Rue de la Lune, 67300 Schiltigheim, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: 09:00 – 18:00 | mardi: 09:00 – 18:00 | mercredi: Fermé",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5.0,
+  "avis_google_nb": 8,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "fleur-ribeiro-de-praticien-reiki-ribeauville",
+  "prenom": "Fleur",
+  "nom": "Ribeiro De",
+  "metier": "Praticien reiki",
+  "ville": "Ribeauvillé",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJd6LsJ99dkUcRSRMark4AW1Q/photos/AU_ZVEFYlJhx8Yz_vS--VTEIM8Gty7BAN6TwQQpGIRQEaI6DzYRZdkhAu5ywsuZ4P1NFTxVCNataFjmYVmS0-qclHmsKVGxARJaNiLKQ-U1xYsG6Y8RYDcv14ciLj169PgK3OU8V7f7VMrmzcqfzAsCCDV_kv9ZZseYiP-2NYxXKmq5xQnNayNuq7-8U7EhEIfiUjimy6J7U67f6eu2wnY_EQZPMgBzJILA0tRu7aTwP1HBsMUGEnecQ_R1CrD9N23lygjCK41YWCn6Wa-rtMfFppYKn5gT_idmTezsaBTJ4tKcoBQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "06 21 76 63 39",
+  "adresse": "Domaine Ostermann, 5 Rue du Cimetière, 68150 Ribeauvillé, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: 09:00 – 18:30 | mardi: 09:00 – 18:30 | mercredi: 09:00 – 18:30",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5.0,
+  "avis_google_nb": 29,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

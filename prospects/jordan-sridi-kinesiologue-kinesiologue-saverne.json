@@ -1,0 +1,32 @@
+{
+  "slug": "jordan-sridi-kinesiologue-kinesiologue-saverne",
+  "prenom": "Jordan",
+  "nom": "Sridi Kinésiologue",
+  "metier": "Kinésiologue",
+  "ville": "Saverne",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJG0nwlXyhlkcRLYYH9RSLEcU/photos/AU_ZVEHYplaRv4mq1YleaDFJMvoU8cBJy6BB4fUxiZRHfSmitVxbQAd-95ngh5DAn-ApDBw_ctZ5BLv6mfExR13UN3FkIaCtNSf5cMm03PZuwjX2VTTA8uAAXSNZIQ5qpYN7MLx_q8B9HDcnMqvThtkOSgvIPde8b3ofJ-Wa4Ty8qZy8PRFHWZJd2ns_pFgdHgSFqbrsnqKM0sGWCceI2KYXfQsvX8Vi9zWqQIAMcxUCLhismekw3BrRgxXj7eEIUdZRQxES16kRS-F0diQJ4ccn_YvDs4LD9vx-WmJ_YAYnBIP4lA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "07 81 46 31 66",
+  "adresse": "8b Rue Neuve, 67700 Saverne, France",
+  "zone_intervention": "les deux",
+  "horaires": "Sur rendez-vous",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5.0,
+  "avis_google_nb": 11,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

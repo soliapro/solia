@@ -1,0 +1,32 @@
+{
+  "slug": "marie-salome-praticien-shiatsu-strasbourg",
+  "prenom": "Marie",
+  "nom": "Salomé",
+  "metier": "Praticien shiatsu",
+  "ville": "Strasbourg",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJl19UWPbU8aYRQoE0bynZhuI/photos/AU_ZVEGfFeg0XFNWn1usPltCS33OXHiqKnKK582EF18-77-8t__Ab8-xB95jDtMXPkfVcOXp9kQxYwaSUHbDZasMcm_I6FLudWnKFLpAJ8MED7d6mTbOmg9ta0nWDguTZN7-8qWt-qbhRLgsPbAaHg6yWehqUITq8llVL6pjJUT0ZjoxYUbFv8ibOFKIXMpYRzihXvEsmh9TrSqv3j9ras1x82IgJf8T7gNUHsFIE5PApATqxaXyY7CY93sRtcIZfiYYOfyWd0_U8GQX_cl6wmdW-sqB86Jqmf--ydIkHYukjweiPw/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "06 89 49 68 17",
+  "adresse": "2 Rue des Roses, 67100 Strasbourg, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: 09:00 – 17:30 | mardi: 09:00 – 17:30 | mercredi: Fermé",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5.0,
+  "avis_google_nb": 4,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

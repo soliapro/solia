@@ -1,0 +1,32 @@
+{
+  "slug": "clement-loyau-reflexologue-illkirch-graffenstaden",
+  "prenom": "Clément",
+  "nom": "Loyau",
+  "metier": "Réflexologue",
+  "ville": "Illkirch-Graffenstaden",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJh3Wmqsa1lkcRhlS379YIEOY/photos/AU_ZVEGL84kznSXB4CtjYlW80HlrN9q5eRx2682SomWsNs93MA85yv1uf05hYmRkMgYbjPsgEdda_Nb3yXj88WWwREQQshCowxLGHDto617xaLLJRtbsFcYNdHFvXPO5RGt7btPHak-zvg9ILkJktPbftcqEJ-aAW-jV8wN2XVn9eEtsXFQDjysnl95ZOL6yaTefIVEXOvf7dJO7Fh1FjrWNGGPxcUL-svVyGON9zpN39L8ONn66VjeaGTFQgbkZZiQxDQ4-FXMLHSvcO3RLpy6VWsa8JLveriYaw-FrsN1GFwnJ2g/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "06 30 99 57 21",
+  "adresse": "Bâtiment La Gravière, 17 Rte d'Eschau, 67400 Illkirch-Graffenstaden, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 09:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5.0,
+  "avis_google_nb": 9,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

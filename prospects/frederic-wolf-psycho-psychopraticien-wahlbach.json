@@ -1,0 +1,32 @@
+{
+  "slug": "frederic-wolf-psycho-psychopraticien-wahlbach",
+  "prenom": "Frédéric",
+  "nom": "Wolf Psycho",
+  "metier": "Psychopraticien",
+  "ville": "Wahlbach",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJo-FhjmKRkUcRBWUB1847MDM/photos/AU_ZVEGMkyxOXJcc7LlES5-yhMx91fDVnOOVLIEI5YhY-VMLItHfBCzZwFDcwsXR3shnzsDwRhS8_P3cc-8ZTPphFM7-KjkPsNCw5UHsBxtUSmOfbBzACgG1_4pTc94m5HxZZ7_46YEYEx6O3_6MAWnVw_FHoP9OMLUluyI5XMidGDOQ6aM9bgLe2eKNkegOJfVfoPJPlTaq-bilzwpZD2beQIRm_FmLWuj2y_8aI2GsYSDXGvrsUINNVfTCiEsZpR_b4BujQDAMrjKKkjh1labJ6Vmq4wQaqEaeqzxqj93F1qcqlQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "06 23 37 46 83",
+  "adresse": "46C Rue de Zaessingue, 68130 Wahlbach, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: Fermé | mardi: Fermé | mercredi: Fermé",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.1,
+  "avis_google_nb": 7,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

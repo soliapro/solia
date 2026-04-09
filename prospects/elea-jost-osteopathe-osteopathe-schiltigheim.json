@@ -1,0 +1,32 @@
+{
+  "slug": "elea-jost-osteopathe-osteopathe-schiltigheim",
+  "prenom": "Eléa",
+  "nom": "Jost Ostéopathe",
+  "metier": "Ostéopathe",
+  "ville": "Schiltigheim",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ6_NCcmTIlkcREfA6hHMMKs4/photos/AU_ZVEH8Zi71UWq0zTTRpcz1T3_hmJFlGCJbalEjTxI-1l5iieA6KITbSn2prBCz5DJDgGM3h54qJKhMisqxfL6et3XIp0fwvWCuByAst4BuAvV3T7ZICgKqG8aedW-iXWU84k5isbL7ApBi7q7SYkaB7vh0WT0SwlHocQ_6kB9El_a1ojoh-e6bKWHDljtLWuH7h_1Fu6Yk6kXMpcv7rI6sr-apy5yz4l5fDgHr04tVFo-T_A_dT7cu_d94izLoCisZiNiZPvB_D2PHV5eDopq-dNoPuhsaR8MU8hucMxH6HEnbNA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "07 69 36 30 70",
+  "adresse": "10 Av. Pierre Mendès-France 6ème étage, 67300 Schiltigheim, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: 09:00 – 19:30 | mardi: 09:00 – 19:30 | mercredi: 09:00 – 19:30",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5.0,
+  "avis_google_nb": 23,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

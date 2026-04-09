@@ -1,0 +1,32 @@
+{
+  "slug": "philippe-grave-psychopraticien-haguenau",
+  "prenom": "Philippe",
+  "nom": "GRAVE",
+  "metier": "Psychopraticien",
+  "ville": "Haguenau",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ1Rruu8nJlkcRrgfuBRIxadU/photos/AU_ZVEEn5vk1KKSW5t5CVwAAFwqTq4OBFV2IFdYTmGMNT-IDL6IouMgsGwOHuUwUj-RL87YJgu6XNaJz0AmA1PrmJzi88zO2hTBXwgNh2HQRd0lR0dRnWnLxkL71ST4Wfw2ICFxcVyOjROZLjeVaBli3LGWioGzRJMIM_8GOVCr_lECPMDlSqNgLKj65N-P94RkPdEcGuOJ-iOklgx6e9-HM6vN9KPFL-Q-OFlO2Je8gHk_yJwhkw61UvGQAEaCWmEuw-b-_gSrbzr3F533b2T6Qt6iIP5OZKP4potb-tGNYtiuTyg/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "06 37 10 68 83",
+  "adresse": "12 Rue du Marché aux Grains, 67500 Haguenau, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 09:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.7,
+  "avis_google_nb": 12,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

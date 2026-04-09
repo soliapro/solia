@@ -1,0 +1,32 @@
+{
+  "slug": "thomas-soete-osteopathe-ribeauville",
+  "prenom": "Thomas",
+  "nom": "Soete",
+  "metier": "Ostéopathe",
+  "ville": "Ribeauvillé",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ950m8NddkUcRe8TTPbbPdpA/photos/AU_ZVEEEXx-bFS1OnDvTgNJ-2mtdgWOB9We6DSQjDAF75y_wk34n4ypy8d8BEFuROMQkZpPpELDfNF3btxuvT04afGRDKERqAyzev94-uqmt9YREhuu8O3oDtGEIhMXd-OpgkRDQAyIkP_sZWENfMNL8knJAHjJfjO2V36klzjmuFP-GgzecQ60s-DOM-Zyn9WNp9Klw3V7ONheUPMaS2VHiRALRt845i_qF4F-swcmN-hJ7hiJ60NjUuk9DAhFBJlbZsrVhgTOnhp-6xjyG7QeO7xlyZD4Jg8SC7AueWLm7PyYQ9w/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "06 32 39 12 59",
+  "adresse": "132 Grand'Rue, 68150 Ribeauvillé, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: 07:30 – 21:00 | mardi: 07:30 – 21:00 | mercredi: 07:30 – 21:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5.0,
+  "avis_google_nb": 25,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

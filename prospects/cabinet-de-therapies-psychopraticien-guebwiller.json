@@ -1,0 +1,32 @@
+{
+  "slug": "cabinet-de-therapies-psychopraticien-guebwiller",
+  "prenom": "",
+  "nom": "Cabinet de thérapies",
+  "metier": "Psychopraticien",
+  "ville": "Guebwiller",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJsW9PH4Z_kUcRWuk0_BHvdEg/photos/AU_ZVEFkL_Ej_m6DCG9ZJA67Zd4ZoZ3tUtCD0KIcjsGdH5tilP7Ia6SANMj_0EyWj4JJu9EY9BsCdzDF9XvzIXdxJSnYUJuCAhqfCOGV7uFHZ1iJyuNjlmL-NKVnKxNmyJNc_RotipPoM15XYO23Ko-YOxI6nJ_cXsSxRrF1slS8Gi95EPenxVzbO6QRfpPEpSmCpEYb2El42KJSP_rrDWx085EewfzdKeGsfx6-b5KLU3i8EsU0-60bovyxWNzpkqeuvi2FaxKMJ_emFjIqBycGD9Vk7K7wOB0RePJKuWo0VOqY5g/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "06 88 31 65 49",
+  "adresse": "125 Rue Théodore Deck, 68500 Guebwiller, France",
+  "zone_intervention": "les deux",
+  "horaires": "Sur rendez-vous",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5.0,
+  "avis_google_nb": 9,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}

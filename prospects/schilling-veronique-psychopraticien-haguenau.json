@@ -1,0 +1,32 @@
+{
+  "slug": "schilling-veronique-psychopraticien-haguenau",
+  "prenom": "Schilling",
+  "nom": "Veronique",
+  "metier": "Psychopraticien",
+  "ville": "Haguenau",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ71J0eifrlkcRMowIJRVJrf4/photos/AU_ZVEEyAp3RFUCXHpl7UIeaqfpRWXbKiH0lBPJdw0C9F1Mkf0FuqQLJtEL_H7UDJdSrr0BY-wVSVlb8qO_cm07e6b0Qc8uIoCyvDfnqpekvFPPWkhHQjnyWx7WVKoVauNOnmLcNy81tQ2OiQZiZJpNZNECaz8oe3Hd-OYRiCMVNBiG8G08ZXSK-mep8mBTVLh_dRJA-Ow1-l1VBkgZvnZEgAOoZO6LErbgkzESUCwr85QCeIMF2e65a-lqRmE3cvTfVZ0OptPRbyXmiCslX2Z-K-S0mg0KVV8SAL-cclkq1cAtzzg/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "zen",
+  "telephone": "06 80 47 57 79",
+  "adresse": "2 Rue des Cultivateurs, 67500 Haguenau, France",
+  "zone_intervention": "les deux",
+  "horaires": "lundi: 09:30 – 18:00 | mardi: 09:30 – 18:00 | mercredi: 09:30 – 18:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 3.7,
+  "avis_google_nb": 3,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
