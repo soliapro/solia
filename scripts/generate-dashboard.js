@@ -55,9 +55,9 @@ function buildCard(slug, prospect) {
             </div>
           </div>
         </div>
-        <div class="client-url">${slug}/</div>
+        <div class="client-url">${slug}.solia.me</div>
         <div class="client-actions">
-          <a href="../${slug}/" target="_blank" class="btn-view">Voir la page →</a>
+          <a href="https://${slug}.solia.me" target="_blank" class="btn-view">Voir la page →</a>
           <button class="btn-copy" onclick="copyLink(this,'${slug}')">Copier</button>
         </div>
       </div>`;
@@ -138,8 +138,7 @@ function generate() {
   </main>
   <script>
     function copyLink(btn, slug) {
-      const base = window.location.href.replace('/dashboard/', '/');
-      const url = base.endsWith('/') ? base + slug + '/' : base + '/' + slug + '/';
+      const url = 'https://' + slug + '.solia.me';
       navigator.clipboard.writeText(url).then(() => {
         btn.textContent = '✓ Copié';
         btn.classList.add('copied');
