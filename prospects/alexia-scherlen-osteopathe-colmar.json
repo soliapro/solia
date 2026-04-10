@@ -1,0 +1,32 @@
+{
+  "slug": "alexia-scherlen-osteopathe-colmar",
+  "prenom": "Alexia",
+  "nom": "Scherlen",
+  "metier": "Ostéopathe",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ4Qmkgo1lkUcR7moQGsP0fHo/photos/AU_ZVEGMU8-hiSdTfuv_ow_zL5wrHU4j6oxhDrb6SEhgJyOQdOqpomc8FepANzYv81T-_J1mNaO046kdj2oSCGQfTQqkHGeZpd3eQeykoaK3klps6q6tmKCh27yzxjgVtbOx9aBxFnhfrXttHJhYf-g8Xf2CJ1ng7eX3p7Gbh1r6nygYFLNbdiummAVmqvvtkfQ93BIYDpLUtcHpZwU14fbZEwUB0eTw3Czr5T2iYdpsTwMRRvo7hbuUkLUDr0S0Dh4MqRX8ArRpnVtBOM_XULoBh3iLjmDD8KYpZUn1zXMZEaT3dQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 52 68 15 02",
+  "adresse": "142 Rte de Bâle, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 13:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 68,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
