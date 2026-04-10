@@ -6,19 +6,18 @@
   "metier": "CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE",
   "ville": "Ingersheim",
   "telephone": "",
-  "email": "update@solia.me",
+  "email": "damien.reiss@gmail.com",
   "description": "Pendant que tu dors, je crée ta page pro. Tu te réveilles, elle est en ligne. Un peu comme Zorro, mais avec du CSS à la place de l'épée. Je suis le mec derrière Solia — le service qui donne une vraie présence web aux indépendants, sans qu'ils lèvent le petit doigt. Le reste du temps, j'écris Fullness, une lettre sur l'art de revenir à l'essentiel.",
   "approche": "Je crée ta page avant même de te parler. Tu la reçois en ligne, tu décides. Pas de brief, pas de template, pas de technique. En parallèle, j'écris chaque semaine sur ce que ça veut dire d'être vraiment là — dans son travail, ses relations, sa vie.",
   "specialites": [
     "Pages pro pour indépendants (Solia)",
     "Stratégie digitale & positionnement",
-    "Lettre Fullness — présence, travail, vie",
-    "test d'une spécialité"
+    "Lettre Fullness — présence, travail, vie"
   ],
   "horaires": "24h/24",
   "tarif": "9€/mois",
   "duree_seance": "",
-  "theme": "charbon",
+  "theme": "terracotta",
   "email_confirme": true,
   "page_active": true,
   "photo_url": "https://soliapro.github.io/solia/damien-reiss-createur-de-solia-strategie-digitale-ingersheim/img/profil.jpg",
