@@ -1,0 +1,32 @@
+{
+  "slug": "fanny-medez-sophrologue-ottrott",
+  "prenom": "Fanny",
+  "nom": "Médez",
+  "metier": "Sophrologue",
+  "ville": "Ottrott",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJYx3emuGxlkcRTA-T57WXvVc/photos/AU_ZVEGP23xvqgg9JxRHHSUll-mHLc3l68aDXPrWrVrWWwsR5_KeVkbwR-1pLUy0ZmXxC1aQ1Zd-z0Fg_tPEtIJp9fpRZGZ2Td3kpMDN-1DB3E8hVBU-GbxfASjR24QcPsoghJY1GzH5ACm9zGfzNjrAywUWo2rugdRsLrJIIL_fV5FtSMaXtDT1gUl0eZOXSkKSd526p0XYL-_AdmOSItLHrg9uoMlyvFrFvTQZCTaPrwpTiYxliyNWdD9f6IB99fxQnit8WS1ucvqJ1XV1pPEP2SmRJnxPiWh98qFLBlDrOJz34X1-qynZWBZKvPW9Va_Vws0_1VZuJidKpdxlTyc8K6rDiI8Pih9zDNZ-PErckIi4mcDMjYH6GqFrE0w-TdiO7ng1lGJIdZ1kMHYyjcmL2mMY8xBDDM21kNYm4kYxZ_w/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 65 98 42 48",
+  "adresse": "8 Rue Hohenbourg, 67530 Ottrott, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 09:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 18,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
