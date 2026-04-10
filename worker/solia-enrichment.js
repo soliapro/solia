@@ -324,6 +324,11 @@ function mergeProspect(prospect, formData, enriched) {
     horaires:     enriched.horaires     || formData.horaires  || prospect.horaires || '',
     tarif:        formData.tarif        || prospect.tarif     || '',
     duree_seance: formData.duree_seance || prospect.duree_seance || '',
+    // Réseaux sociaux
+    instagram_url:    formData.instagram_url    || prospect.instagram_url    || '',
+    facebook_url:     formData.facebook_url     || prospect.facebook_url     || '',
+    linkedin_url:     formData.linkedin_url     || prospect.linkedin_url     || '',
+    site_actuel:      formData.site_actuel      || prospect.site_actuel      || '',
     // Thème visuel
     theme:        formData.theme        || prospect.theme       || '',
     // Flags — le prospect a rempli le formulaire = email confirmé + page active

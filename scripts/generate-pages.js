@@ -352,6 +352,24 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   .expired-btn { background: #C4704F; color: #fff; font-weight: 700; font-size: 0.9rem; padding: 14px 32px; border-radius: 100px; text-decoration: none; }
   .expired-btn:hover { background: #A85C3E; }
   .expired-link { font-size: 0.82rem; color: #8A8074; }
+
+  /* Social editor panel */
+  .social-editor-btn { background:rgba(255,255,255,0.15); color:#fff; border:none; padding:5px 10px; border-radius:100px; font-size:0.65rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; }
+  .social-editor-btn:hover { background:rgba(255,255,255,0.25); }
+  #social-panel {
+    display:none; position:fixed; top:44px; right:16px; z-index:99998;
+    background:#fff; border-radius:14px; box-shadow:0 8px 32px rgba(0,0,0,0.18);
+    padding:20px; width:320px; max-width:calc(100vw - 32px);
+    font-family:'DM Sans',sans-serif;
+  }
+  #social-panel.visible { display:block; }
+  #social-panel h3 { font-size:0.88rem; font-weight:600; margin-bottom:12px; color:#1A1A18; }
+  .social-field { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .social-field label { font-size:0.72rem; font-weight:600; color:#8A8074; width:70px; flex-shrink:0; }
+  .social-field input { flex:1; border:1.5px solid #E4DDD4; border-radius:8px; padding:7px 10px; font-size:0.78rem; font-family:'DM Sans',sans-serif; outline:none; color:#1A1A18; }
+  .social-field input:focus { border-color:#C4704F; }
+  .social-field input::placeholder { color:#E4DDD4; }
+  .social-save { background:#C4704F; color:#fff; border:none; padding:8px 20px; border-radius:100px; font-size:0.78rem; font-weight:700; cursor:pointer; width:100%; margin-top:4px; font-family:'DM Sans',sans-serif; }
 </style>`;
 
   const bannerHtml = `
@@ -364,8 +382,18 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     <div class="theme-dot-btn" data-t="charbon" style="background:#3D3D3D" title="Charbon"></div>
   </div>
   <span class="banner-countdown" id="banner-countdown"></span>
+  <button class="social-editor-btn" id="social-toggle">Réseaux</button>
   <a href="${formUrl}" class="banner-btn banner-btn-secondary" id="banner-cta">Personnaliser</a>
   <a href="${stripeUrl}" class="banner-btn banner-btn-primary">Publier ma page</a>
+</div>
+
+<div id="social-panel">
+  <h3>Vos réseaux sociaux</h3>
+  <div class="social-field"><label>Instagram</label><input id="soc-instagram" placeholder="https://instagram.com/..."></div>
+  <div class="social-field"><label>Facebook</label><input id="soc-facebook" placeholder="https://facebook.com/..."></div>
+  <div class="social-field"><label>LinkedIn</label><input id="soc-linkedin" placeholder="https://linkedin.com/in/..."></div>
+  <div class="social-field"><label>Site web</label><input id="soc-site" placeholder="https://monsite.fr"></div>
+  <button class="social-save" id="social-save">Enregistrer</button>
 </div>
 
 <div id="solia-expired-overlay">
@@ -502,6 +530,71 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   // Style du bouton save
   var saveBtnEl = document.getElementById('save-btn');
   saveBtnEl.style.cssText = 'background:#C4704F;color:#fff;border:none;padding:8px 20px;border-radius:100px;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap';
+
+  // ── SOCIAL PANEL ──
+  var socialPanel = document.getElementById('social-panel');
+  document.getElementById('social-toggle').addEventListener('click', function(){
+    socialPanel.classList.toggle('visible');
+  });
+  // Close on click outside
+  document.addEventListener('click', function(e){
+    if (socialPanel.classList.contains('visible') && !socialPanel.contains(e.target) && e.target.id !== 'social-toggle') {
+      socialPanel.classList.remove('visible');
+    }
+  });
+
+  document.getElementById('social-save').addEventListener('click', function(){
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Enregistrement...';
+    var payload = {
+      slug: slug,
+      email: 'update@solia.me',
+      instagram_url: document.getElementById('soc-instagram').value.trim(),
+      facebook_url: document.getElementById('soc-facebook').value.trim(),
+      linkedin_url: document.getElementById('soc-linkedin').value.trim(),
+      site_actuel: document.getElementById('soc-site').value.trim()
+    };
+    payload.theme = current;
+
+    fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(){
+      btn.textContent = 'Enregistré !';
+      btn.style.background = '#2E7D32';
+      // Mettre à jour les liens sociaux visibles sur la page
+      var socialRow = document.getElementById('social-row');
+      if (socialRow) {
+        var links = '';
+        var socials = [
+          { id:'soc-instagram', label:'Instagram', icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/></svg>' },
+          { id:'soc-facebook', label:'Facebook', icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>' },
+          { id:'soc-linkedin', label:'LinkedIn', icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>' },
+          { id:'soc-site', label:'Mon site', icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>' }
+        ];
+        socials.forEach(function(s){
+          var val = document.getElementById(s.id).value.trim();
+          if (val) links += '<a href="' + val + '" class="social-link" target="_blank" rel="noopener">' + s.icon + '<span>' + s.label + '</span></a>';
+        });
+        socialRow.innerHTML = links;
+      }
+      setTimeout(function(){
+        btn.textContent = 'Enregistrer';
+        btn.style.background = '';
+        btn.disabled = false;
+        socialPanel.classList.remove('visible');
+      }, 2000);
+    })
+    .catch(function(err){
+      btn.textContent = 'Erreur';
+      btn.disabled = false;
+      setTimeout(function(){ btn.textContent = 'Enregistrer'; btn.style.background = ''; }, 2000);
+    });
+  });
   }); // fin DOMContentLoaded
 })();
 </script>`;
