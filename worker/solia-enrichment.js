@@ -309,39 +309,49 @@ async function enrichWithClaude(formData, prospect, env) {
 ═══════════════════════════════════════════════════════ */
 
 function mergeProspect(prospect, formData, enriched) {
+  // Helper : si le champ est envoyé par le formulaire (même vide), on le prend.
+  // Sinon on garde la valeur existante du prospect.
+  function pick(field, fallback) {
+    if (field in formData) return formData[field];
+    if (field in enriched) return enriched[field];
+    return prospect[field] ?? fallback;
+  }
+
   return {
     ...prospect,
-    // Infos de base (formulaire prioritaire)
-    prenom:       formData.prenom       || prospect.prenom    || '',
-    nom:          formData.nom          || prospect.nom       || '',
-    metier:       formData.metier       || prospect.metier    || '',
-    ville:        formData.ville        || prospect.ville     || '',
-    telephone:    formData.telephone    || prospect.telephone || '',
-    email:        formData.email        || prospect.email     || '',
-    // Contenu enrichi par Claude (ou placeholder)
-    description:  enriched.description  || prospect.description  || '',
-    approche:     enriched.approche     || prospect.approche     || '',
+    // Infos de base
+    prenom:       pick('prenom', ''),
+    nom:          pick('nom', ''),
+    metier:       pick('metier', ''),
+    ville:        pick('ville', ''),
+    telephone:    pick('telephone', ''),
+    email:        pick('email', ''),
+    // Contenu
+    description:  enriched.description || pick('description', ''),
+    approche:     enriched.approche    || pick('approche', ''),
     specialites:  enriched.specialites?.length
                     ? enriched.specialites
-                    : prospect.specialites || [],
-    horaires:     enriched.horaires     || formData.horaires  || prospect.horaires || '',
-    tarif:        formData.tarif        || prospect.tarif     || '',
-    duree_seance: formData.duree_seance || prospect.duree_seance || '',
+                    : ('services' in formData
+                        ? (formData.services || '').split('\n').map(s => s.trim()).filter(Boolean)
+                        : prospect.specialites || []),
+    horaires:     pick('horaires', ''),
+    tarif:        pick('tarif', ''),
+    duree_seance: pick('duree_seance', ''),
     // Réseaux sociaux
-    instagram_url:    formData.instagram_url    || prospect.instagram_url    || '',
-    facebook_url:     formData.facebook_url     || prospect.facebook_url     || '',
-    linkedin_url:     formData.linkedin_url     || prospect.linkedin_url     || '',
-    site_actuel:      formData.site_actuel      || prospect.site_actuel      || '',
-    // Infos pratiques (éditables en ligne)
-    adresse:          formData.adresse          || prospect.adresse          || '',
-    zone_intervention: formData.zone_intervention || prospect.zone_intervention || '',
-    publics:          formData.publics?.length   ? formData.publics : prospect.publics || [],
-    rdv_url:          formData.rdv_url          || prospect.rdv_url          || '',
-    annees_experience: formData.annees_experience || prospect.annees_experience || '',
-    formations:       formData.formations?.length ? formData.formations : prospect.formations || [],
+    instagram_url:    pick('instagram_url', ''),
+    facebook_url:     pick('facebook_url', ''),
+    linkedin_url:     pick('linkedin_url', ''),
+    site_actuel:      pick('site_actuel', ''),
+    // Infos pratiques
+    adresse:           pick('adresse', ''),
+    zone_intervention: pick('zone_intervention', ''),
+    publics:           'publics' in formData ? (formData.publics || []) : prospect.publics || [],
+    rdv_url:           pick('rdv_url', ''),
+    annees_experience: pick('annees_experience', ''),
+    formations:        'formations' in formData ? (formData.formations || []) : prospect.formations || [],
     // Thème visuel
-    theme:        formData.theme        || prospect.theme       || '',
-    // Flags — le prospect a rempli le formulaire = email confirmé + page active
+    theme:        pick('theme', ''),
+    // Flags
     email_confirme: true,
     page_active:    true,
   };
