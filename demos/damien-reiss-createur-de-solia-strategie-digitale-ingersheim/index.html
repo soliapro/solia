@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="charbon">
+<html lang="fr" data-theme="terracotta">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,7 +26,7 @@
     "addressRegion": "",
     "addressCountry": "FR"
   },
-  "email": "update@solia.me",
+  "email": "damien.reiss@gmail.com",
   "priceRange": "9€/mois",
   "image": "https://soliapro.github.io/solia/damien-reiss-createur-de-solia-strategie-digitale-ingersheim/img/profil.jpg",
   "url": "https://damienreiss.fr"
@@ -551,7 +551,8 @@
       document.body.classList.toggle('edit-mode',editMode);
       if(editMode){showEmpties();fields.forEach(applyPH)}else{hideEmpties()}
       fields.forEach(function(el){
-        el.setAttribute('contenteditable',editMode?'true':'false');
+        var f=el.dataset.field;
+        if(f!=='telephone'&&f!=='email'){el.setAttribute('contenteditable',editMode?'true':'false')}
         if(editMode)el.classList.add('edit-outline');else el.classList.remove('edit-outline');
       });
       var po=document.getElementById('photo-edit-overlay');
@@ -615,6 +616,20 @@
     // HERO CHIPS — click to edit
     if(chipExp){chipExp.addEventListener('click',function(){if(!editMode)return;var cur=chipExp.dataset.val||'';var v=prompt('Ann\u00e9es d\'exp\u00e9rience :',cur);if(v===null)return;var n=parseInt(v,10);if(!isNaN(n)&&n>0){chipExp.dataset.val=String(n);chipExp.innerHTML=n+' ans d\'exp\u00e9rience';markChanged()}})}
     if(chipLangues){chipLangues.addEventListener('click',function(){if(!editMode)return;var cur=chipLangues.textContent.trim();var v=prompt('Langues parl\u00e9es (s\u00e9par\u00e9es par virgule) :',cur);if(v===null)return;chipLangues.textContent=v.trim();markChanged()})}
+
+    // PHONE & EMAIL — prompt-based editing (contenteditable inside <a> is unreliable)
+    ['telephone','email'].forEach(function(fname){
+      var el=document.querySelector('[data-field="'+fname+'"]');if(!el)return;
+      el.addEventListener('click',function(e){
+        if(!editMode)return;e.preventDefault();e.stopPropagation();
+        var label=fname==='telephone'?'Num\u00e9ro de t\u00e9l\u00e9phone':'Adresse email';
+        var cur=el.classList.contains('field-placeholder')?'':el.textContent.trim();
+        var v=prompt(label+' :',cur);if(v===null)return;v=v.trim();
+        if(v){el.textContent=v;el.classList.remove('field-placeholder')}else{el.textContent='';restorePH(el)}
+        var lk=el.closest('a');if(lk&&v){lk.dataset.href=fname==='telephone'?'tel:'+v.replace(/\s/g,''):'mailto:'+v;lk.setAttribute('href',lk.dataset.href)}
+        markChanged();
+      });
+    });
 
     // CTA — click to edit URL
     function ctaEdit(btn){if(!btn)return;btn.addEventListener('click',function(e){if(!editMode)return;e.preventDefault();var cur=btn.getAttribute('href')||'';var v=prompt('URL de prise de rendez-vous :',cur.startsWith('#')||cur.startsWith('mailto:')?'https://':cur);if(v===null)return;v=v.trim();if(v){btn.setAttribute('href',v);btn.setAttribute('target','_blank')}markChanged()})}
@@ -742,8 +757,7 @@
         <span class="s-label">Spécialités</span>
         <div class="tags-row" id="specialites-row"><span class="specialite-tag">Pages pro pour indépendants (Solia)</span>
           <span class="specialite-tag">Stratégie digitale &amp; positionnement</span>
-          <span class="specialite-tag">Lettre Fullness — présence, travail, vie</span>
-          <span class="specialite-tag">test d'une spécialité</span></div>
+          <span class="specialite-tag">Lettre Fullness — présence, travail, vie</span></div>
       </div>
     </section>
     
@@ -824,7 +838,7 @@
         <ul class="contact-list">
           <li class="contact-row">
             <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:update@solia.me" id="contact-email-link"><span data-field="email">update@solia.me</span></a>
+            <a href="mailto:damien.reiss@gmail.com" id="contact-email-link"><span data-field="email">damien.reiss@gmail.com</span></a>
           </li>
           
           <li class="contact-row">
