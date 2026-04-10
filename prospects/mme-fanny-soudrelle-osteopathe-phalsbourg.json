@@ -1,0 +1,32 @@
+{
+  "slug": "mme-fanny-soudrelle-osteopathe-phalsbourg",
+  "prenom": "Mme",
+  "nom": "Fanny Soudrelle",
+  "metier": "Ostéopathe",
+  "ville": "Phalsbourg",
+  "departement": "57",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJger2OgAZlEcR6pV0-aDM3fE/photos/AU_ZVEF2uc29yeUcn_V54xBP9q6IKk1PfGO11_LoYH8CE0MGIDAdJ14kNhWvlmf-Vx1BE3aPjyVNTEEl2HtU-k8-Jn77Z_C3KXe6UOQte9mLqF-pi0yeJWHf59DJ4OZQy9MD8nDfOWcVwIbtzsAnYR7b80crh0IGvdupYn0gMJgZGd6W10gqBDg38m45cE5c98rAt9ebXpn_fCzPH0B83nOMs25Rb9xPoBAGq0fZolDHHNQM258lLOKhn0GYlmBUipXvl3Zsr67pdKGQJ03kl3XTEsdXpLt80ncmOtSWTA8foxt46Q/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "07 80 36 54 24",
+  "adresse": "Rue de Strasbourg, 57370 Phalsbourg, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:00 – 19:00 | mardi: 08:00 – 19:00 | mercredi: 08:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 32,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
