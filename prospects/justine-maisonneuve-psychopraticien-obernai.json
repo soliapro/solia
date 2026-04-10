@@ -1,0 +1,32 @@
+{
+  "slug": "justine-maisonneuve-psychopraticien-obernai",
+  "prenom": "Justine",
+  "nom": "Maisonneuve",
+  "metier": "Psychopraticien",
+  "ville": "Obernai",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ1QCQJAbJlkcRBB9XUP4MUCY/photos/AU_ZVEHy5JHefEUlMI-LHfsfe0cVEEwxFPI2x1Nx7dqHwoi0Aat3hL0wYJeCCRqPJpKiNSXvECRz8sWINfSYsagcS6_Zun2qXU3VWaJjnAAlMr-jP-R2MiAjg7uGVThDUwzmL2OJPQBtcRB3OHR70veqE0SReBYRbJQfuOVAJKtFRWE9d-kxRWUDY7wZHOjLzxh7mB3ls5XtxTIBPbguVrscG59sc7gKLDkAuK79AIHHOgG9vYwEB_vbOdWyNEsa_t4sdTviuI1HCJpmu9Y_Jl51dCvL1gzhyULbrWzSEF1WufmNjQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 48 69 93 00",
+  "adresse": "11a Rue du Général Gouraud, 67210 Obernai, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 10:00 – 17:00 | mardi: 08:30 – 17:00 | mercredi: 08:30 – 16:30",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 12,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
