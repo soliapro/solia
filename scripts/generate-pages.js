@@ -422,10 +422,9 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
     if (dot.dataset.t === current) dot.classList.add('active');
   });
-  // theme applied — les click handlers sont ajoutés dans DOMContentLoaded
+  // theme applied — les click handlers sont ajoutés quand le DOM est prêt
 
-  /* ── INLINE EDITING ── */
-  document.addEventListener('DOMContentLoaded', function(){
+  function initEditor() {
     var editableFields = document.querySelectorAll('[data-field]');
     var editMode = false;
     var hasChanges = false;
@@ -767,7 +766,14 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     reader.readAsDataURL(file);
   });
 
-  }); // fin DOMContentLoaded
+  } // fin initEditor
+
+  // Lancer dès que le DOM est prêt (fonctionne même si DOMContentLoaded a déjà fired)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEditor);
+  } else {
+    initEditor();
+  }
 })();
 </script>`;
 

@@ -505,7 +505,7 @@
 <script>
 (function(){
   var slug = 'damien-reiss-createur-de-solia-strategie-digitale-ingersheim';
-  var created = new Date('2026-04-10T16:43:21.373Z');
+  var created = new Date('2026-04-10T17:13:35.940Z');
   var expires = new Date(created.getTime() + 7*24*60*60*1000);
   var cdEl = document.getElementById('banner-countdown');
 
@@ -528,10 +528,9 @@
   document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
     if (dot.dataset.t === current) dot.classList.add('active');
   });
-  // theme applied — les click handlers sont ajoutés dans DOMContentLoaded
+  // theme applied — les click handlers sont ajoutés quand le DOM est prêt
 
-  /* ── INLINE EDITING ── */
-  document.addEventListener('DOMContentLoaded', function(){
+  function initEditor() {
     var editableFields = document.querySelectorAll('[data-field]');
     var editMode = false;
     var hasChanges = false;
@@ -873,7 +872,14 @@
     reader.readAsDataURL(file);
   });
 
-  }); // fin DOMContentLoaded
+  } // fin initEditor
+
+  // Lancer dès que le DOM est prêt (fonctionne même si DOMContentLoaded a déjà fired)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEditor);
+  } else {
+    initEditor();
+  }
 })();
 </script>
 
