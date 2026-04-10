@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Damien Reiss — Créateur de Solia · Stratégie digitale à Ingersheim</title>
+  <title>Damien
+Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim</title>
   <meta name="description" content="Pendant que tu dors, je crée ta page pro. Tu te réveilles, elle est en ligne. Un peu comme Zorro, mais avec du CSS à la place de l'épée. Je suis le mec…">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Damien Reiss — Créateur de Solia · Stratégie digitale à Ingersheim">
+  <meta property="og:title" content="Damien
+Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
   <meta property="og:description" content="Pendant que tu dors, je crée ta page pro. Tu te réveilles, elle est en ligne. Un peu comme Zorro, mais avec du CSS à la place de l'épée. Je suis le mec…">
   <meta property="og:type" content="website">
 
@@ -18,7 +20,7 @@
   {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "name": "Damien Reiss",
+  "name": "Damien\nReiss Reiss",
   "description": "Pendant que tu dors, je crée ta page pro. Tu te réveilles, elle est en ligne. Un peu comme Zorro, mais avec du CSS à la place de l'épée. Je suis le mec derrière Solia — le service qui donne une vraie présence web aux indépendants, sans qu'ils lèvent le petit doigt. Le reste du temps, j'écris…",
   "address": {
     "@type": "PostalAddress",
@@ -447,6 +449,20 @@
   .expired-btn:hover { background: #A85C3E; }
   .expired-link { font-size: 0.82rem; color: #8A8074; }
 
+  /* Photo upload overlay */
+  [data-photo-upload] { cursor: pointer; position: relative; }
+  [data-photo-upload]::after {
+    content: 'Modifier la photo';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.5); color: #fff;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  [data-photo-upload]:hover::after { opacity: 1; }
+  #photo-file-input { display: none; }
+
   /* Social editor panel */
   .social-editor-btn { background:rgba(255,255,255,0.15); color:#fff; border:none; padding:5px 10px; border-radius:100px; font-size:0.65rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; }
   .social-editor-btn:hover { background:rgba(255,255,255,0.25); }
@@ -501,7 +517,7 @@
 <script>
 (function(){
   var slug = 'damien-reiss-createur-de-solia-strategie-digitale-ingersheim';
-  var created = new Date('2026-04-10T15:45:46.104Z');
+  var created = new Date('2026-04-10T15:49:09.462Z');
   var expires = new Date(created.getTime() + 7*24*60*60*1000);
   var cdEl = document.getElementById('banner-countdown');
 
@@ -690,6 +706,64 @@
       setTimeout(function(){ btn.textContent = 'Enregistrer'; btn.style.background = ''; }, 2000);
     });
   });
+  // ── PHOTO UPLOAD ──
+  var photoInput = document.createElement('input');
+  photoInput.type = 'file';
+  photoInput.id = 'photo-file-input';
+  photoInput.accept = 'image/*';
+  document.body.appendChild(photoInput);
+
+  var heroVisual = document.getElementById('heroVisual');
+  if (heroVisual) {
+    heroVisual.addEventListener('click', function(){ photoInput.click(); });
+  }
+
+  photoInput.addEventListener('change', function(){
+    var file = photoInput.files[0];
+    if (!file) return;
+
+    // Aperçu instantané
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var dataUri = e.target.result;
+
+      // Transformer en mode photo si c'était des initiales
+      if (heroVisual.classList.contains('hero-visual--initials')) {
+        heroVisual.classList.remove('hero-visual--initials');
+        heroVisual.classList.add('hero-visual--photo');
+        heroVisual.innerHTML = '<div class="hero-photo-circle"><img class="hero-photo-img" id="heroImg" src="' + dataUri + '" style="width:100%;height:100%;object-fit:cover" loading="eager"></div>';
+      } else {
+        var img = document.getElementById('heroImg');
+        if (img) img.src = dataUri;
+      }
+
+      // Upload au Worker
+      var statusEl = document.getElementById('save-status');
+      saveBar.style.display = 'flex';
+      statusEl.textContent = 'Upload de la photo...';
+
+      fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          slug: slug,
+          email: 'update@solia.me',
+          photo_profil: dataUri,
+          theme: current
+        })
+      })
+      .then(function(res){ return res.json(); })
+      .then(function(){
+        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~1 min.';
+        setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
+      })
+      .catch(function(err){
+        statusEl.textContent = 'Erreur : ' + err.message;
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+
   }); // fin DOMContentLoaded
 })();
 </script>
@@ -707,18 +781,20 @@
   <header class="hero" id="hero">
 
     
-    <div class="hero-visual hero-visual--photo" id="heroVisual">
+    <div class="hero-visual hero-visual--photo" id="heroVisual" data-photo-upload>
       <div class="hero-photo-circle">
         <img class="hero-photo-img" id="heroImg"
-             src="https://soliapro.github.io/solia/damien-reiss-createur-de-solia-strategie-digitale-ingersheim/img/profil.jpg" alt="Portrait de Damien Reiss" loading="eager">
+             src="https://soliapro.github.io/solia/damien-reiss-createur-de-solia-strategie-digitale-ingersheim/img/profil.jpg" alt="Portrait de Damien
+Reiss Reiss" loading="eager">
         <div class="hero-cover" id="heroCover" aria-hidden="true"></div>
       </div>
     </div>
     
 
     <div class="hero-content">
-      <p class="hero-eyebrow" data-field="metier">Créateur de Solia · Stratégie digitale</p>
-      <h1 class="hero-name" id="heroName" data-field="nom_complet">Damien Reiss</h1>
+      <p class="hero-eyebrow" data-field="metier">CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE</p>
+      <h1 class="hero-name" id="heroName" data-field="nom_complet">Damien
+Reiss Reiss</h1>
 
       <div class="hero-meta" id="heroMeta">
         <span class="hero-loc">
@@ -796,7 +872,8 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
             <div class="info-label">Horaires</div>
-            <div class="info-value" data-field="horaires">24h/24</div>
+            <div class="info-value" data-field="horaires">24h/24
+Anti-phone</div>
           </div>
 
           

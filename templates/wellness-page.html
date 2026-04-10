@@ -401,7 +401,7 @@
   <header class="hero" id="hero">
 
     {{#if photo_url}}
-    <div class="hero-visual hero-visual--photo" id="heroVisual">
+    <div class="hero-visual hero-visual--photo" id="heroVisual" data-photo-upload>
       <div class="hero-photo-circle">
         <img class="hero-photo-img" id="heroImg"
              src="{{photo_url}}" alt="Portrait de {{prenom}} {{nom}}" loading="eager">
@@ -409,8 +409,8 @@
       </div>
     </div>
     {{else}}
-    <div class="hero-visual hero-visual--initials" id="heroVisual">
-      <span class="hero-initials-txt">{{initiales}}</span>
+    <div class="hero-visual hero-visual--initials" id="heroVisual" data-photo-upload>
+      <span class="hero-initials-txt" id="heroInitials">{{initiales}}</span>
     </div>
     {{/if}}
 

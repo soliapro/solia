@@ -353,6 +353,20 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   .expired-btn:hover { background: #A85C3E; }
   .expired-link { font-size: 0.82rem; color: #8A8074; }
 
+  /* Photo upload overlay */
+  [data-photo-upload] { cursor: pointer; position: relative; }
+  [data-photo-upload]::after {
+    content: 'Modifier la photo';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.5); color: #fff;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  [data-photo-upload]:hover::after { opacity: 1; }
+  #photo-file-input { display: none; }
+
   /* Social editor panel */
   .social-editor-btn { background:rgba(255,255,255,0.15); color:#fff; border:none; padding:5px 10px; border-radius:100px; font-size:0.65rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; }
   .social-editor-btn:hover { background:rgba(255,255,255,0.25); }
@@ -595,6 +609,64 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       setTimeout(function(){ btn.textContent = 'Enregistrer'; btn.style.background = ''; }, 2000);
     });
   });
+  // ── PHOTO UPLOAD ──
+  var photoInput = document.createElement('input');
+  photoInput.type = 'file';
+  photoInput.id = 'photo-file-input';
+  photoInput.accept = 'image/*';
+  document.body.appendChild(photoInput);
+
+  var heroVisual = document.getElementById('heroVisual');
+  if (heroVisual) {
+    heroVisual.addEventListener('click', function(){ photoInput.click(); });
+  }
+
+  photoInput.addEventListener('change', function(){
+    var file = photoInput.files[0];
+    if (!file) return;
+
+    // Aperçu instantané
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var dataUri = e.target.result;
+
+      // Transformer en mode photo si c'était des initiales
+      if (heroVisual.classList.contains('hero-visual--initials')) {
+        heroVisual.classList.remove('hero-visual--initials');
+        heroVisual.classList.add('hero-visual--photo');
+        heroVisual.innerHTML = '<div class="hero-photo-circle"><img class="hero-photo-img" id="heroImg" src="' + dataUri + '" style="width:100%;height:100%;object-fit:cover" loading="eager"></div>';
+      } else {
+        var img = document.getElementById('heroImg');
+        if (img) img.src = dataUri;
+      }
+
+      // Upload au Worker
+      var statusEl = document.getElementById('save-status');
+      saveBar.style.display = 'flex';
+      statusEl.textContent = 'Upload de la photo...';
+
+      fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          slug: slug,
+          email: 'update@solia.me',
+          photo_profil: dataUri,
+          theme: current
+        })
+      })
+      .then(function(res){ return res.json(); })
+      .then(function(){
+        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~1 min.';
+        setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
+      })
+      .catch(function(err){
+        statusEl.textContent = 'Erreur : ' + err.message;
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+
   }); // fin DOMContentLoaded
 })();
 </script>`;
