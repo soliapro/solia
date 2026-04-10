@@ -1,0 +1,32 @@
+{
+  "slug": "rinascentia-osteopathe-haguenau",
+  "prenom": "",
+  "nom": "Rinascentia",
+  "metier": "Ostéopathe",
+  "ville": "Haguenau",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJdcsTDtjqlkcRpSCrNcFMs-s/photos/AU_ZVEHe5cv9H4ONNPaXJIKiGZWcJadOq9CvMlyRgMr1YB1nZyz0VCnHiXH3PPzvIxqc2ZBSlWTF35poZ3pZIX3OtUyECkxwfAo6sGO8UL73-rIFHnMu2PQ0kBAx3FKB6F0k-wWCjE1aHt6PvYUbiFGMGpJcKFQQjzipgz1j7MM6wLHPhgXr2dT-TojPnljVyvAX6rbaV8-C6QdfqfmPShXU_7GTCK6EzcC2hKIW1-7xALOCY2m9oQX3JAsye94nFp9xCFh4uqj70NQwtjgI_6fSPYteWo9CQo5oSucsHk-JoMkUnbncaAwekro3SS6Ej_JDJRfnu-8nxga7dPiI2Pv9IO-roALj04i99aLKDtXn99xuF793StEBIgFR9I5cGWMyijEKS9Xb5k9s3FW7_8JVuAE9WqTXQMS-zRtVnODcUA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 66 36 97 97",
+  "adresse": "2 Av. de Wissembourg, 67500 Haguenau, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:30 – 17:00 | mardi: 08:30 – 17:00 | mercredi: 08:30 – 17:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.8,
+  "avis_google_nb": 73,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
