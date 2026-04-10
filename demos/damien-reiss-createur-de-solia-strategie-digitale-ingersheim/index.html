@@ -505,7 +505,7 @@
 <script>
 (function(){
   var slug = 'damien-reiss-createur-de-solia-strategie-digitale-ingersheim';
-  var created = new Date('2026-04-10T16:33:37.641Z');
+  var created = new Date('2026-04-10T16:43:21.373Z');
   var expires = new Date(created.getTime() + 7*24*60*60*1000);
   var cdEl = document.getElementById('banner-countdown');
 
@@ -527,21 +527,38 @@
   if (stored) { current = stored; document.documentElement.setAttribute('data-theme', current); }
   document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
     if (dot.dataset.t === current) dot.classList.add('active');
-    dot.addEventListener('click', function(){
-      current = dot.dataset.t;
-      document.documentElement.setAttribute('data-theme', current);
-      document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
-      dot.classList.add('active');
-      localStorage.setItem('solia_theme_'+slug, current);
-      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
-    });
   });
-  // theme applied
+  // theme applied — les click handlers sont ajoutés dans DOMContentLoaded
 
   /* ── INLINE EDITING ── */
   document.addEventListener('DOMContentLoaded', function(){
     var editableFields = document.querySelectorAll('[data-field]');
     var editMode = false;
+    var hasChanges = false;
+
+    var saveBar = document.createElement('div');
+    saveBar.id = 'solia-save-bar';
+    saveBar.innerHTML = '<span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button>';
+    saveBar.style.cssText = 'display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:DM Sans,sans-serif;font-size:0.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,0.15)';
+    document.body.appendChild(saveBar);
+    var saveBtnEl = document.getElementById('save-btn');
+    saveBtnEl.style.cssText = 'background:#C4704F;color:#fff;border:none;padding:8px 20px;border-radius:100px;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap';
+
+    function showSaveBar() {
+      showSaveBar();
+    }
+
+    // Theme click handlers (maintenant saveBar existe)
+    document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
+      dot.addEventListener('click', function(){
+        current = dot.dataset.t;
+        document.documentElement.setAttribute('data-theme', current);
+        document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
+        dot.classList.add('active');
+        localStorage.setItem('solia_theme_'+slug, current);
+        showSaveBar();
+      });
+    });
 
     // Toggle mode édition
     var editToggle = document.getElementById('edit-toggle');
@@ -566,12 +583,6 @@
         // Pas de scroll auto — reste à la position actuelle
       });
     }
-  var hasChanges = false;
-  var saveBar = document.createElement('div');
-  saveBar.id = 'solia-save-bar';
-  saveBar.innerHTML = '<span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button>';
-  saveBar.style.cssText = 'display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:DM Sans,sans-serif;font-size:0.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,0.15)';
-  document.body.appendChild(saveBar);
 
   editableFields.forEach(function(el){
     el.style.transition = 'outline 0.2s';
@@ -737,10 +748,10 @@
         if (!editMode) return;
         e.stopPropagation();
         if (confirm('Supprimer "' + tag.textContent + '" ?')) tag.remove();
-        if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+        showSaveBar();
       });
       specRow.appendChild(tag);
-      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+      showSaveBar();
     });
     // Rendre les tags existants supprimables en mode édition
     specRow.querySelectorAll('.specialite-tag').forEach(function(tag){
@@ -748,7 +759,7 @@
         if (!editMode) return;
         e.stopPropagation();
         if (confirm('Supprimer "' + tag.textContent + '" ?')) tag.remove();
-        if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+        showSaveBar();
       });
     });
   }
@@ -793,7 +804,7 @@
       icon.style.opacity = fullUrl ? '1' : '0.25';
       socialChanges[socialFields[social]] = fullUrl;
 
-      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+      showSaveBar();
     });
   });
 
@@ -1024,7 +1035,6 @@
         </a>
         
 
-        <div class="social-row" id="social-row"><a href="https://www.instagram.com/damienreiss/" class="social-link" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg><span>Instagram</span></a></div>
       </div>
     </section>
 

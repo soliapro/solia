@@ -421,21 +421,38 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   if (stored) { current = stored; document.documentElement.setAttribute('data-theme', current); }
   document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
     if (dot.dataset.t === current) dot.classList.add('active');
-    dot.addEventListener('click', function(){
-      current = dot.dataset.t;
-      document.documentElement.setAttribute('data-theme', current);
-      document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
-      dot.classList.add('active');
-      localStorage.setItem('solia_theme_'+slug, current);
-      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
-    });
   });
-  // theme applied
+  // theme applied — les click handlers sont ajoutés dans DOMContentLoaded
 
   /* ── INLINE EDITING ── */
   document.addEventListener('DOMContentLoaded', function(){
     var editableFields = document.querySelectorAll('[data-field]');
     var editMode = false;
+    var hasChanges = false;
+
+    var saveBar = document.createElement('div');
+    saveBar.id = 'solia-save-bar';
+    saveBar.innerHTML = '<span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button>';
+    saveBar.style.cssText = 'display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:DM Sans,sans-serif;font-size:0.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,0.15)';
+    document.body.appendChild(saveBar);
+    var saveBtnEl = document.getElementById('save-btn');
+    saveBtnEl.style.cssText = 'background:#C4704F;color:#fff;border:none;padding:8px 20px;border-radius:100px;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap';
+
+    function showSaveBar() {
+      showSaveBar();
+    }
+
+    // Theme click handlers (maintenant saveBar existe)
+    document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
+      dot.addEventListener('click', function(){
+        current = dot.dataset.t;
+        document.documentElement.setAttribute('data-theme', current);
+        document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
+        dot.classList.add('active');
+        localStorage.setItem('solia_theme_'+slug, current);
+        showSaveBar();
+      });
+    });
 
     // Toggle mode édition
     var editToggle = document.getElementById('edit-toggle');
@@ -460,12 +477,6 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
         // Pas de scroll auto — reste à la position actuelle
       });
     }
-  var hasChanges = false;
-  var saveBar = document.createElement('div');
-  saveBar.id = 'solia-save-bar';
-  saveBar.innerHTML = '<span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button>';
-  saveBar.style.cssText = 'display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:DM Sans,sans-serif;font-size:0.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,0.15)';
-  document.body.appendChild(saveBar);
 
   editableFields.forEach(function(el){
     el.style.transition = 'outline 0.2s';
@@ -631,10 +642,10 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
         if (!editMode) return;
         e.stopPropagation();
         if (confirm('Supprimer "' + tag.textContent + '" ?')) tag.remove();
-        if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+        showSaveBar();
       });
       specRow.appendChild(tag);
-      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+      showSaveBar();
     });
     // Rendre les tags existants supprimables en mode édition
     specRow.querySelectorAll('.specialite-tag').forEach(function(tag){
@@ -642,7 +653,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
         if (!editMode) return;
         e.stopPropagation();
         if (confirm('Supprimer "' + tag.textContent + '" ?')) tag.remove();
-        if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+        showSaveBar();
       });
     });
   }
@@ -687,7 +698,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       icon.style.opacity = fullUrl ? '1' : '0.25';
       socialChanges[socialFields[social]] = fullUrl;
 
-      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+      showSaveBar();
     });
   });
 
