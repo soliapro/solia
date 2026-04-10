@@ -307,27 +307,63 @@ function injectPreviewBanner(html, slug) {
 <style id="solia-preview-banner-style">
   #solia-preview-banner {
     position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
-    background: #C4704F; color: #fff;
+    background: #1A1A18; color: #fff;
     display: flex; align-items: center; justify-content: center;
-    gap: 20px; padding: 13px 24px;
+    gap: 16px; padding: 11px 24px;
     font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
-    font-size: 0.88rem; font-weight: 500;
+    font-size: 0.82rem; font-weight: 500;
     box-shadow: 0 2px 16px rgba(0,0,0,0.18); flex-wrap: wrap;
   }
   #solia-preview-banner .banner-btn {
-    background: #fff; color: #C4704F; font-weight: 700; font-size: 0.82rem;
-    padding: 8px 20px; border-radius: 100px; text-decoration: none;
+    background: #C4704F; color: #fff; font-weight: 700; font-size: 0.78rem;
+    padding: 7px 18px; border-radius: 100px; text-decoration: none;
     white-space: nowrap; transition: opacity 0.2s;
   }
   #solia-preview-banner .banner-btn:hover { opacity: 0.85; }
-  body { padding-top: 52px !important; }
+  .theme-dots { display: flex; gap: 6px; align-items: center; }
+  .theme-dots span { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-right: 2px; }
+  .theme-dot-btn {
+    width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25);
+    cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+  }
+  .theme-dot-btn:hover { transform: scale(1.15); }
+  .theme-dot-btn.active { border-color: #fff; transform: scale(1.15); }
+  body { padding-top: 48px !important; }
 </style>`;
 
   const bannerHtml = `
 <div id="solia-preview-banner">
-  <span>Ceci est un aperçu de votre future page &bull; Personnalisez-la gratuitement</span>
-  <a href="${formUrl}" class="banner-btn">Personnaliser ma page →</a>
-</div>`;
+  <span>Aperçu de votre page</span>
+  <div class="theme-dots">
+    <span>Thème</span>
+    <div class="theme-dot-btn" data-t="terracotta" style="background:#C4704F" title="Terracotta"></div>
+    <div class="theme-dot-btn" data-t="sauge" style="background:#6B8F5E" title="Sauge"></div>
+    <div class="theme-dot-btn" data-t="ocean" style="background:#2E6B8A" title="Océan"></div>
+    <div class="theme-dot-btn" data-t="lavande" style="background:#8B6DAF" title="Lavande"></div>
+    <div class="theme-dot-btn" data-t="charbon" style="background:#3D3D3D" title="Charbon"></div>
+  </div>
+  <a href="${formUrl}" class="banner-btn" id="banner-cta">Personnaliser ma page →</a>
+</div>
+<script>
+(function(){
+  var slug = '${slug}';
+  var current = document.documentElement.getAttribute('data-theme') || 'terracotta';
+  var stored = localStorage.getItem('solia_theme_' + slug);
+  if (stored) { current = stored; document.documentElement.setAttribute('data-theme', current); }
+  document.querySelectorAll('.theme-dot-btn').forEach(function(d){
+    if (d.dataset.t === current) d.classList.add('active');
+    d.addEventListener('click', function(){
+      var t = d.dataset.t;
+      document.documentElement.setAttribute('data-theme', t);
+      document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
+      d.classList.add('active');
+      localStorage.setItem('solia_theme_' + slug, t);
+      document.getElementById('banner-cta').href = '${formUrl}&theme=' + t;
+    });
+  });
+  document.getElementById('banner-cta').href = '${formUrl}&theme=' + current;
+})();
+</script>`;
 
   html = html.replace('</head>', `${bannerCss}\n</head>`);
   html = html.replace(/<body([^>]*)>/, `<body$1>\n${bannerHtml}`);

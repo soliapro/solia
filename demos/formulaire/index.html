@@ -740,6 +740,15 @@
       });
     });
 
+    // Pré-sélection du thème depuis l'URL (passé par le bandeau preview)
+    const urlTheme = new URLSearchParams(location.search).get('theme');
+    if (urlTheme) {
+      document.getElementById('f-theme').value = urlTheme;
+      document.querySelectorAll('.theme-card').forEach(c => {
+        c.classList.toggle('selected', c.dataset.theme === urlTheme);
+      });
+    }
+
     /* ─── INIT ─── */
     const params = new URLSearchParams(location.search);
     const slug   = params.get('prospect') || '';
