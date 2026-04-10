@@ -1,0 +1,32 @@
+{
+  "slug": "eliane-couval-maitre-praticien-eft-saint-nabord",
+  "prenom": "Éliane",
+  "nom": "Couval Maître",
+  "metier": "Praticien eft",
+  "ville": "Saint-Nabord",
+  "departement": "88",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJrY-hqTavk0cRXzq2-Dlabpw/photos/AU_ZVEEitRN6N32i-6W-q_y9lyeahTHy0Ql2C3C9RQRumpyZlz7NopdliKlmLOdq2xVB-sE7nK7UEBOteBV-sdbBzC3ayiz-NwTdri9nd1T1nZ3tBGJ2xLg93adqMeRoXtRpl14gKbNpeMAdODMWnaWRBfRbBv2wVoU8GKK4ml1KYZvfRe89Su1CIPqKjdGw5vKKoKMbsxDONA-S07HSczV4lq01B5FiluXUQvvsp9hVk5lGfXI2ybncOc2luGSABVcTJtj9DArXc0BdZjJuyhwQKfoq9YyR0tf42p6ChP1ThF1b1A/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "07 51 69 02 32",
+  "adresse": "25 Rue du Capitaine Poirot, 88200 Saint-Nabord, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 09:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 36,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
