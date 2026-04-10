@@ -1,0 +1,18 @@
+{
+  "name": "solia",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Générateur de pages vitrine pour praticiens bien-être",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "generate":  "node scripts/generate-pages.js",
+    "preview":   "node scripts/generate-preview.js",
+    "dashboard": "node scripts/generate-dashboard.js",
+    "validate":  "node scripts/validate-json.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  }
+}
