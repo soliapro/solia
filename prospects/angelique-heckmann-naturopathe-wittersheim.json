@@ -1,0 +1,32 @@
+{
+  "slug": "angelique-heckmann-naturopathe-wittersheim",
+  "prenom": "Angélique",
+  "nom": "Heckmann",
+  "metier": "Naturopathe",
+  "ville": "Wittersheim",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJRZPuk6iVlkcRYztlgCO5sEs/photos/AU_ZVEEjlB9gOkpVu-9LB3fRZI7AjDD4Z257He-rE_545JndGoSxau2MysCnwSziyjDlnqXizi8xnR94FkGTzzFZ58PBDgUNu3vvg1HVoj-L5yljZjL8gpDqQ7jlFCJXNb-7-suL6otnBzvi0U481VWYhmV4zUXKRGO4_Y4hf7xyYnX7BfVZBQGSsJuJfpNmoreaKKjOwPEv4JTpM5OIdN_ZZkdaQsrYX_9vPY5FUJLtBI1yLK5rQQwnqYi58bHedLi10s3w0EgukSwbtU7wXIabv0Im0ma_IlbsIB7ADM8FKXQFiQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 76 86 56 86",
+  "adresse": "1 Rue du Paradis, 67670 Wittersheim, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 16:00 – 19:00 | mardi: 10:00 – 22:00 | mercredi: 16:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 33,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
