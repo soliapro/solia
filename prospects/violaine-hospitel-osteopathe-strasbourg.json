@@ -1,0 +1,32 @@
+{
+  "slug": "violaine-hospitel-osteopathe-strasbourg",
+  "prenom": "Violaine",
+  "nom": "Hospitel",
+  "metier": "Ostéopathe",
+  "ville": "Strasbourg",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJU14SobHJlkcRlE-8G4RH14c/photos/AU_ZVEF0YEcQNpKcX4bReISOiprYFJdZXw0VCZyoH9AR3lmAvnQVQdQz2Jo8G0AMZwF0wMX1qfRzIPZxi6YoR6CI1u6r_PRY2A2lyMqcUOmEuFqdV_TUDzQV1vN-xaKk0idKV5jV4JkZXfh08eLdGWV8uRsYzMWMhY1kqcK7o6kNxdhnv3ZfY5yePbs9RUEXqlxGLVkMkyQvCrSU5awjvh9c7HZncalQ4jrodznO9-AsefJXsg5vFl_SI0X2GnBaOQJDDiaqvLRJHowVVVAt-M_GcqirLYGEXINN5RXCKShFIzfCkg/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "03 88 11 97 37",
+  "adresse": "1 Rue du Puits, 67000 Strasbourg, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:30 – 12:30, 14:00 – 19:00 | mardi: 08:30 – 12:30, 14:00 – 19:00 | mercredi: 08:30 – 12:30, 14:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 37,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
