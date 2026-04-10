@@ -353,7 +353,18 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   .expired-btn:hover { background: #A85C3E; }
   .expired-link { font-size: 0.82rem; color: #8A8074; }
 
-  [data-photo-upload] { position: relative; }
+  /* Photo upload overlay */
+  [data-photo-upload] { cursor: pointer; position: relative; }
+  [data-photo-upload]::after {
+    content: 'Modifier la photo';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.5); color: #fff;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  [data-photo-upload]:hover::after { opacity: 1; }
   #photo-file-input { display: none; }
 
   /* Social editor panel */
@@ -385,8 +396,18 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     <div class="theme-dot-btn" data-t="charbon" style="background:#3D3D3D" title="Charbon"></div>
   </div>
   <span class="banner-countdown" id="banner-countdown"></span>
-  <button class="banner-btn banner-btn-secondary" id="edit-toggle">Modifier</button>
+  <button class="social-editor-btn" id="social-toggle">Réseaux</button>
+  <a href="${formUrl}" class="banner-btn banner-btn-secondary" id="banner-cta">Personnaliser</a>
   <a href="${stripeUrl}" class="banner-btn banner-btn-primary">Publier ma page</a>
+</div>
+
+<div id="social-panel">
+  <h3>Vos réseaux sociaux</h3>
+  <div class="social-field"><label>Instagram</label><input id="soc-instagram" placeholder="https://instagram.com/..."></div>
+  <div class="social-field"><label>Facebook</label><input id="soc-facebook" placeholder="https://facebook.com/..."></div>
+  <div class="social-field"><label>LinkedIn</label><input id="soc-linkedin" placeholder="https://linkedin.com/in/..."></div>
+  <div class="social-field"><label>Site web</label><input id="soc-site" placeholder="https://monsite.fr"></div>
+  <button class="social-save" id="social-save">Enregistrer</button>
 </div>
 
 <div id="solia-expired-overlay">
@@ -421,67 +442,38 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   if (stored) { current = stored; document.documentElement.setAttribute('data-theme', current); }
   document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
     if (dot.dataset.t === current) dot.classList.add('active');
-  });
-  // theme applied — les click handlers sont ajoutés quand le DOM est prêt
-
-  function initEditor() {
-    var editableFields = document.querySelectorAll('[data-field]');
-    var editMode = false;
-    var hasChanges = false;
-
-    var saveBar = document.createElement('div');
-    saveBar.id = 'solia-save-bar';
-    saveBar.innerHTML = '<span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button>';
-    saveBar.style.cssText = 'display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:DM Sans,sans-serif;font-size:0.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,0.15)';
-    document.body.appendChild(saveBar);
-    var saveBtnEl = document.getElementById('save-btn');
-    saveBtnEl.style.cssText = 'background:#C4704F;color:#fff;border:none;padding:8px 20px;border-radius:100px;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap';
-
-    function showSaveBar() {
-      showSaveBar();
-    }
-
-    // Theme click handlers (maintenant saveBar existe)
-    document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
-      dot.addEventListener('click', function(){
-        current = dot.dataset.t;
-        document.documentElement.setAttribute('data-theme', current);
-        document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
-        dot.classList.add('active');
-        localStorage.setItem('solia_theme_'+slug, current);
-        showSaveBar();
-      });
+    dot.addEventListener('click', function(){
+      current = dot.dataset.t;
+      document.documentElement.setAttribute('data-theme', current);
+      document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
+      dot.classList.add('active');
+      localStorage.setItem('solia_theme_'+slug, current);
+      document.getElementById('banner-cta').href = '${formUrl}&theme='+current;
     });
+  });
+  document.getElementById('banner-cta').href = '${formUrl}&theme='+current;
 
-    // Toggle mode édition
-    var editToggle = document.getElementById('edit-toggle');
-    if (editToggle) {
-      editToggle.addEventListener('click', function(){
-        editMode = !editMode;
-        editToggle.textContent = editMode ? 'Masquer' : 'Modifier';
-        document.body.classList.toggle('edit-mode', editMode);
-        editableFields.forEach(function(el){
-          el.setAttribute('contenteditable', editMode ? 'true' : 'false');
-          el.style.outline = editMode ? '2px dashed rgba(196,112,79,0.3)' : 'none';
-          el.style.outlineOffset = '4px';
-        });
-        // Icônes sociales + photo overlay
-        document.querySelectorAll('.hero-social-icon').forEach(function(icon){
-          icon.style.cursor = editMode ? 'pointer' : '';
-        });
-        var po = document.getElementById('photo-overlay');
-        if (po) po.style.display = editMode ? 'flex' : 'none';
-        // Spécialités : cursor en mode édition
-        if (specRow) specRow.style.cursor = editMode ? 'pointer' : '';
-        // Pas de scroll auto — reste à la position actuelle
-      });
-    }
+  /* ── INLINE EDITING ── */
+  document.addEventListener('DOMContentLoaded', function(){
+    var editableFields = document.querySelectorAll('[data-field]');
+  var hasChanges = false;
+  var saveBar = document.createElement('div');
+  saveBar.id = 'solia-save-bar';
+  saveBar.innerHTML = '<span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button>';
+  saveBar.style.cssText = 'display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:DM Sans,sans-serif;font-size:0.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,0.15)';
+  document.body.appendChild(saveBar);
 
   editableFields.forEach(function(el){
+    el.style.cursor = 'text';
     el.style.transition = 'outline 0.2s';
+    el.style.outline = '2px dashed transparent';
+    el.style.outlineOffset = '4px';
     el.style.borderRadius = '4px';
-    el.addEventListener('focus', function(){ el.style.outline = '2px solid var(--c-accent)'; el.style.outlineOffset = '4px'; });
-    el.addEventListener('blur', function(){ el.style.outline = editMode ? '2px dashed rgba(196,112,79,0.3)' : 'none'; });
+    el.addEventListener('mouseenter', function(){ if(!hasChanges) el.style.outline = '2px dashed rgba(196,112,79,0.3)'; });
+    el.addEventListener('mouseleave', function(){ if(!hasChanges) el.style.outline = '2px dashed transparent'; });
+    el.addEventListener('focus', function(){ el.style.outline = '2px solid var(--c-accent)'; });
+    el.addEventListener('blur', function(){ el.style.outline = '2px dashed transparent'; });
+    el.setAttribute('contenteditable', 'true');
     el.addEventListener('input', function(){
       if (!hasChanges) {
         hasChanges = true;
@@ -514,22 +506,14 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       var field = el.dataset.field;
       var text = el.innerText.trim();
       if (field === 'nom_complet') {
-        var clean = text.replace(/\\s+/g, ' ').trim();
-        var parts = clean.split(' ');
+        var parts = text.split(' ');
         payload.prenom = parts[0] || '';
         payload.nom = parts.slice(1).join(' ') || '';
       } else {
-        payload[field] = text.replace(/\\n/g, ' ').trim();
+        payload[field] = text;
       }
     });
     payload.theme = current;
-    Object.keys(socialChanges).forEach(function(k){ payload[k] = socialChanges[k]; });
-    // Spécialités
-    if (specRow) {
-      var specs = [];
-      specRow.querySelectorAll('.specialite-tag').forEach(function(t){ specs.push(t.textContent.trim()); });
-      payload.services = specs.join('\\n');
-    }
 
     fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
       method: 'POST',
@@ -539,7 +523,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     .then(function(res){ return res.json(); })
     .then(function(){
       clearInterval(msgTimer);
-      statusEl.textContent = 'Sauvegardé ! Votre page sera mise à jour dans ~2 minute.';
+      statusEl.textContent = 'Sauvegardé ! Votre page sera mise à jour dans ~1 minute.';
       btn.textContent = '✓';
       btn.style.background = '#2E7D32';
       setTimeout(function(){
@@ -625,83 +609,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       setTimeout(function(){ btn.textContent = 'Enregistrer'; btn.style.background = ''; }, 2000);
     });
   });
-  // ── SPECIALITES (ajout dynamique en mode édition) ──
-  var specRow = document.getElementById('specialites-row');
-  if (specRow) {
-    specRow.addEventListener('click', function(){
-      if (!editMode) return;
-      var input = prompt('Ajouter une spécialité :');
-      if (!input || !input.trim()) return;
-      var tag = document.createElement('span');
-      tag.className = 'specialite-tag';
-      tag.textContent = input.trim();
-      tag.style.cursor = 'pointer';
-      tag.title = 'Cliquer pour supprimer';
-      tag.addEventListener('click', function(e){
-        if (!editMode) return;
-        e.stopPropagation();
-        if (confirm('Supprimer "' + tag.textContent + '" ?')) tag.remove();
-        showSaveBar();
-      });
-      specRow.appendChild(tag);
-      showSaveBar();
-    });
-    // Rendre les tags existants supprimables en mode édition
-    specRow.querySelectorAll('.specialite-tag').forEach(function(tag){
-      tag.addEventListener('click', function(e){
-        if (!editMode) return;
-        e.stopPropagation();
-        if (confirm('Supprimer "' + tag.textContent + '" ?')) tag.remove();
-        showSaveBar();
-      });
-    });
-  }
-
-  // ── SOCIAL ICONS (inline edit — seulement en mode édition) ──
-  var socialPrefixes = {
-    instagram: 'https://instagram.com/',
-    facebook: 'https://facebook.com/',
-    linkedin: 'https://linkedin.com/in/',
-    site: ''
-  };
-  var socialFields = {
-    instagram: 'instagram_url',
-    facebook: 'facebook_url',
-    linkedin: 'linkedin_url',
-    site: 'site_actuel'
-  };
-  var socialChanges = {};
-
-  document.querySelectorAll('.hero-social-icon').forEach(function(icon){
-    var social = icon.dataset.social;
-    if (!social) return;
-
-    icon.addEventListener('click', function(e){
-      e.preventDefault();
-      if (!editMode) return; // seulement en mode édition
-
-      var prefix = socialPrefixes[social];
-      var currentHref = icon.getAttribute('href') || '';
-      var currentVal = currentHref.replace(prefix, '');
-
-      var input = social === 'site'
-        ? prompt('Votre site web (URL complète) :', currentHref || 'https://')
-        : prompt('Votre pseudo ' + social.charAt(0).toUpperCase() + social.slice(1) + ' :', currentVal);
-
-      if (input === null) return;
-
-      var fullUrl = social === 'site' ? input.trim() : (prefix + input.trim());
-      if (!input.trim()) fullUrl = '';
-
-      icon.setAttribute('href', fullUrl);
-      icon.style.opacity = fullUrl ? '1' : '0.25';
-      socialChanges[socialFields[social]] = fullUrl;
-
-      showSaveBar();
-    });
-  });
-
-  // ── PHOTO UPLOAD (seulement en mode édition) ──
+  // ── PHOTO UPLOAD ──
   var photoInput = document.createElement('input');
   photoInput.type = 'file';
   photoInput.id = 'photo-file-input';
@@ -710,14 +618,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
 
   var heroVisual = document.getElementById('heroVisual');
   if (heroVisual) {
-    // Overlay cliquable dédié (évite conflit avec parallax)
-    var photoOverlay = document.createElement('div');
-    photoOverlay.id = 'photo-overlay';
-    photoOverlay.style.cssText = 'display:none;position:absolute;inset:0;z-index:10;cursor:pointer;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;color:#fff;font-family:DM Sans,sans-serif;font-size:0.85rem;font-weight:600';
-    photoOverlay.textContent = 'Modifier la photo';
-    heroVisual.style.position = 'relative';
-    heroVisual.appendChild(photoOverlay);
-    photoOverlay.addEventListener('click', function(e){ e.stopPropagation(); photoInput.click(); });
+    heroVisual.addEventListener('click', function(){ photoInput.click(); });
   }
 
   photoInput.addEventListener('change', function(){
@@ -756,7 +657,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       })
       .then(function(res){ return res.json(); })
       .then(function(){
-        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~2 min.';
+        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~1 min.';
         setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
       })
       .catch(function(err){
@@ -766,14 +667,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     reader.readAsDataURL(file);
   });
 
-  } // fin initEditor
-
-  // Lancer dès que le DOM est prêt (fonctionne même si DOMContentLoaded a déjà fired)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEditor);
-  } else {
-    initEditor();
-  }
+  }); // fin DOMContentLoaded
 })();
 </script>`;
 
