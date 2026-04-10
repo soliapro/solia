@@ -509,11 +509,12 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       var field = el.dataset.field;
       var text = el.innerText.trim();
       if (field === 'nom_complet') {
-        var parts = text.split(' ');
+        var clean = text.replace(/\s+/g, ' ').trim();
+        var parts = clean.split(' ');
         payload.prenom = parts[0] || '';
         payload.nom = parts.slice(1).join(' ') || '';
       } else {
-        payload[field] = text;
+        payload[field] = text.replace(/\n/g, ' ').trim();
       }
     });
     payload.theme = current;
