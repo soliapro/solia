@@ -1,0 +1,21 @@
+{
+  "slug": "damien-reiss-createur-de-solia-strategie-digitale-ingersheim",
+  "source": "inscription",
+  "prenom": "Damien",
+  "nom": "Reiss",
+  "metier": "Créateur de Solia · Stratégie digitale",
+  "ville": "Ingersheim",
+  "telephone": "",
+  "email": "damien.reiss@gmail.com",
+  "description": "Je crée des pages web professionnelles pour les indépendants qui n'ont pas le temps, l'envie, ou les compétences de s'en occuper eux-mêmes. Mon truc : je construis ta page avant même de te contacter. Tu la reçois prête, tu la partages. Zéro technique, zéro prise de tête. En parallèle, j'écris Fullness, une lettre hebdomadaire où j'explore comment redevenir présent dans un monde qui nous disperse — et ce que ça change dans ma manière de travailler, d'aimer et de vivre.",
+  "approche": "Je ne vends pas un site web, je livre une page terminée — créée avant le premier contact. Pas de brief interminable, pas de template à remplir. Le prospect reçoit sa page en ligne, il décide s'il la garde. C'est du \"show don't tell\" appliqué à la prospection. J'ai construit tout le système moi-même : GitHub Pages, Cloudflare, Stripe, Brevo, GitHub Actions. Tout roule sans intervention manuelle.",
+  "specialites": [
+    "Je crée des pages web professionnelles pour les indépendants qui n'ont pas le temps, l'envie, ou les compétences de s'en occuper eux-mêmes. Mon truc : je construis ta page avant même de te contacter. Tu la reçois prête, tu la partages. Zéro technique, zéro prise de tête. En parallèle, j'écris Fullness, une lettre hebdomadaire où j'explore comment redevenir présent dans un monde qui nous disperse — et ce que ça change dans ma manière de travailler, d'aimer et de vivre."
+  ],
+  "horaires": "",
+  "tarif": "9€/mois",
+  "duree_seance": "",
+  "theme": "charbon",
+  "email_confirme": true,
+  "page_active": true
+}
