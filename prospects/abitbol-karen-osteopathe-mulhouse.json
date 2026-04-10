@@ -2,7 +2,7 @@
   "slug": "abitbol-karen-osteopathe-mulhouse",
   "prenom": "Abitbol",
   "nom": "Karen",
-  "metier": "OstÃÂ©opathe",
+  "metier": "OstÃÂÃÂ©opathe",
   "ville": "Mulhouse",
   "departement": "68",
   "email": "",
@@ -13,7 +13,7 @@
   "telephone": "03 89 42 08 56",
   "adresse": "122 Av. Robert Schuman, 68100 Mulhouse, France",
   "zone_intervention": "les deux",
-  "horaires": "lundi: 08:45Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ18:00 | mardi: 08:45Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ18:00 | mercredi: 08:45Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ18:00",
+  "horaires": "lundi: 08:45ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ18:00 | mardi: 08:45ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ18:00 | mercredi: 08:45ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ18:00",
   "tarif": "",
   "duree_seance": "",
   "approche": "",
@@ -29,5 +29,5 @@
   ],
   "instagram_url": "",
   "notes": "",
-  "page_active": true
+  "page_active": false
 }
