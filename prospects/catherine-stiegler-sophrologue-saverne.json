@@ -1,0 +1,32 @@
+{
+  "slug": "catherine-stiegler-sophrologue-saverne",
+  "prenom": "Catherine",
+  "nom": "Stiegler",
+  "metier": "Sophrologue",
+  "ville": "Saverne",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJn1wuMO2hlkcRDqR_BiZ3CAQ/photos/AU_ZVEG4g-ACGKCVabyeF884_Z4db7NVHgv9bmppA5lWMFiF8mhDXxiQuhVxnu9J7bgp5Ioa1wR206igMipVdlXJVGkitUawKE9YZE0ts8DY3nWCvinUihWc-pp8EydoRf9hIe-EJZISChGXIDxElGl7eZcWfDyj4N_S-hbhqN8GQSGI1uxAdBo8neoQnCRvK-5IlDc-mCJSyhNhpNmrK4DhtXDlMNgBJ6TcvaE0bt2Ca9UhtOKJHCZ0DRK4NsSIY-ikY54XPghafChRkk2bz6ryvVZIdMbQROzb1uIZrQktmgxm8A/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 08 99 27 41",
+  "adresse": "8 Rue Neuve, 67700 Saverne, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 18:00 | mardi: 09:00 – 18:00 | mercredi: 09:00 – 18:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 30,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
