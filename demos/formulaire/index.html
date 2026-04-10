@@ -715,7 +715,7 @@
   <div id="loader-overlay">
     <div class="loader-spinner"></div>
     <div class="loader-title">Votre page est en cours de création…</div>
-    <div class="loader-sub">Cela prend généralement 20 à 40 secondes</div>
+    <div class="loader-sub">Vous allez être redirigé vers votre page</div>
     <div class="loader-steps">
       <div class="loader-step" id="step-1">
         <div class="step-dot"></div>Envoi de vos informations
@@ -965,14 +965,13 @@
 
         setStep(3);
         const data = await res.json();
+        const finalSlug = data.slug || document.getElementById('f-slug').value;
 
-        // Poll jusqu'à ce que la page soit reconstruite
-        await pollStatus(data.slug || slug);
         setStep(4);
 
-        // Attendre 1s puis rediriger
-        await delay(1000);
-        window.location.href = `https://${data.slug || slug}.solia.me`;
+        // Rediriger rapidement — la page sera mise à jour en ~1 min en arrière-plan
+        await delay(2000);
+        window.location.href = `https://${finalSlug}.solia.me`;
 
       } catch (err) {
         overlay.classList.remove('visible');

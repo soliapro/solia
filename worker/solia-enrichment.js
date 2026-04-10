@@ -120,10 +120,7 @@ async function handlePersonalize(request, env) {
   // 3. Fusionner les données dans le prospect
   const updated = mergeProspect(prospect, body, enriched);
 
-  // 4. Committer le JSON mis à jour sur GitHub
-  await commitProspectToGitHub(slug, updated, sha, env);
-
-  // 5. Committer les photos si présentes (vérifier que c'est bien une string base64)
+  // 4. Committer les photos si présentes AVANT le JSON (pour que photo_url soit dans le JSON)
   if (body.photo_profil && typeof body.photo_profil === 'string' && body.photo_profil.includes(',')) {
     await commitImageToGitHub(slug, 'profil.jpg', body.photo_profil, env);
     updated.photo_url = `https://soliapro.github.io/solia/${slug}/img/profil.jpg`;
@@ -135,6 +132,9 @@ async function handlePersonalize(request, env) {
       }
     }
   }
+
+  // 5. Committer le JSON mis à jour sur GitHub (avec photo_url)
+  await commitProspectToGitHub(slug, updated, sha, env);
 
   // 6. Trigger le rebuild GitHub Actions
   await triggerRebuild(slug, env);
