@@ -1,8 +1,8 @@
 # Rapport Solia
 
-**Généré le** : 10/04/2026 13:16:18  
-**Source** : `../../../tmp/test-theme.json`  
-**Durée** : 0.01s
+**Généré le** : 10/04/2026 14:28:29  
+**Source** : `../../../tmp/test-banner.json`  
+**Durée** : 0.02s
 
 ---
 
