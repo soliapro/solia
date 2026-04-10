@@ -396,18 +396,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     <div class="theme-dot-btn" data-t="charbon" style="background:#3D3D3D" title="Charbon"></div>
   </div>
   <span class="banner-countdown" id="banner-countdown"></span>
-  <button class="social-editor-btn" id="social-toggle">Réseaux</button>
-  <a href="${formUrl}" class="banner-btn banner-btn-secondary" id="banner-cta">Personnaliser</a>
+  <button class="banner-btn banner-btn-secondary" id="edit-toggle">Modifier</button>
   <a href="${stripeUrl}" class="banner-btn banner-btn-primary">Publier ma page</a>
-</div>
-
-<div id="social-panel">
-  <h3>Vos réseaux sociaux</h3>
-  <div class="social-field"><label>Instagram</label><input id="soc-instagram" placeholder="https://instagram.com/..."></div>
-  <div class="social-field"><label>Facebook</label><input id="soc-facebook" placeholder="https://facebook.com/..."></div>
-  <div class="social-field"><label>LinkedIn</label><input id="soc-linkedin" placeholder="https://linkedin.com/in/..."></div>
-  <div class="social-field"><label>Site web</label><input id="soc-site" placeholder="https://monsite.fr"></div>
-  <button class="social-save" id="social-save">Enregistrer</button>
 </div>
 
 <div id="solia-expired-overlay">
@@ -448,7 +438,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
       dot.classList.add('active');
       localStorage.setItem('solia_theme_'+slug, current);
-      document.getElementById('banner-cta').href = '${formUrl}&theme='+current;
+      // theme saved
     });
   });
   document.getElementById('banner-cta').href = '${formUrl}&theme='+current;
@@ -456,6 +446,25 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   /* ── INLINE EDITING ── */
   document.addEventListener('DOMContentLoaded', function(){
     var editableFields = document.querySelectorAll('[data-field]');
+    var editMode = false;
+
+    // Toggle mode édition
+    var editToggle = document.getElementById('edit-toggle');
+    if (editToggle) {
+      editToggle.addEventListener('click', function(){
+        editMode = !editMode;
+        editToggle.textContent = editMode ? 'Masquer' : 'Modifier';
+        editableFields.forEach(function(el){
+          el.setAttribute('contenteditable', editMode ? 'true' : 'false');
+          el.style.outline = editMode ? '2px dashed rgba(196,112,79,0.3)' : 'none';
+          el.style.outlineOffset = '4px';
+        });
+        // Scroll vers le premier champ
+        if (editMode && editableFields.length) {
+          editableFields[0].scrollIntoView({ behavior:'smooth', block:'center' });
+        }
+      });
+    }
   var hasChanges = false;
   var saveBar = document.createElement('div');
   saveBar.id = 'solia-save-bar';
@@ -464,16 +473,10 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   document.body.appendChild(saveBar);
 
   editableFields.forEach(function(el){
-    el.style.cursor = 'text';
     el.style.transition = 'outline 0.2s';
-    el.style.outline = '2px dashed transparent';
-    el.style.outlineOffset = '4px';
     el.style.borderRadius = '4px';
-    el.addEventListener('mouseenter', function(){ if(!hasChanges) el.style.outline = '2px dashed rgba(196,112,79,0.3)'; });
-    el.addEventListener('mouseleave', function(){ if(!hasChanges) el.style.outline = '2px dashed transparent'; });
-    el.addEventListener('focus', function(){ el.style.outline = '2px solid var(--c-accent)'; });
-    el.addEventListener('blur', function(){ el.style.outline = '2px dashed transparent'; });
-    el.setAttribute('contenteditable', 'true');
+    el.addEventListener('focus', function(){ el.style.outline = '2px solid var(--c-accent)'; el.style.outlineOffset = '4px'; });
+    el.addEventListener('blur', function(){ el.style.outline = editMode ? '2px dashed rgba(196,112,79,0.3)' : 'none'; });
     el.addEventListener('input', function(){
       if (!hasChanges) {
         hasChanges = true;
@@ -523,7 +526,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     .then(function(res){ return res.json(); })
     .then(function(){
       clearInterval(msgTimer);
-      statusEl.textContent = 'Sauvegardé ! Votre page sera mise à jour dans ~1 minute.';
+      statusEl.textContent = 'Sauvegardé ! Votre page sera mise à jour dans ~2 minute.';
       btn.textContent = '✓';
       btn.style.background = '#2E7D32';
       setTimeout(function(){
@@ -609,6 +612,65 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       setTimeout(function(){ btn.textContent = 'Enregistrer'; btn.style.background = ''; }, 2000);
     });
   });
+  // ── SOCIAL ICONS (inline edit) ──
+  var socialPrefixes = {
+    instagram: 'https://instagram.com/',
+    facebook: 'https://facebook.com/',
+    linkedin: 'https://linkedin.com/in/',
+    site: ''
+  };
+  var socialFields = {
+    instagram: 'instagram_url',
+    facebook: 'facebook_url',
+    linkedin: 'linkedin_url',
+    site: 'site_actuel'
+  };
+
+  document.querySelectorAll('.hero-social-icon').forEach(function(icon){
+    var social = icon.dataset.social;
+    if (!social) return;
+
+    icon.addEventListener('click', function(e){
+      e.preventDefault();
+      var prefix = socialPrefixes[social];
+      var currentHref = icon.getAttribute('href') || '';
+      var currentVal = currentHref.replace(prefix, '');
+
+      var input = social === 'site'
+        ? prompt('Votre site web (URL complète) :', currentHref || 'https://')
+        : prompt('Votre pseudo ' + social.charAt(0).toUpperCase() + social.slice(1) + ' :', currentVal);
+
+      if (input === null) return;
+
+      var fullUrl = social === 'site' ? input.trim() : (prefix + input.trim());
+      if (!input.trim()) fullUrl = '';
+
+      icon.setAttribute('href', fullUrl);
+      icon.style.opacity = fullUrl ? '1' : '0.25';
+
+      // Sauvegarder
+      var payload = { slug: slug, email: 'update@solia.me', theme: current };
+      payload[socialFields[social]] = fullUrl;
+
+      saveBar.style.display = 'flex';
+      document.getElementById('save-status').textContent = 'Sauvegarde du lien ' + social + '...';
+
+      fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(function(res){ return res.json(); })
+      .then(function(){
+        document.getElementById('save-status').textContent = 'Lien sauvegardé ! Mise à jour dans ~2 min.';
+        setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
+      })
+      .catch(function(err){
+        document.getElementById('save-status').textContent = 'Erreur : ' + err.message;
+      });
+    });
+  });
+
   // ── PHOTO UPLOAD ──
   var photoInput = document.createElement('input');
   photoInput.type = 'file';
@@ -657,7 +719,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       })
       .then(function(res){ return res.json(); })
       .then(function(){
-        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~1 min.';
+        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~2 min.';
         setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
       })
       .catch(function(err){

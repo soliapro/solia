@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="terracotta">
+<html lang="fr" data-theme="charbon">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -212,6 +212,18 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
     .hero-rating-star { color: var(--c-accent); }
     .hero-rating-count { color: var(--c-muted); font-weight: 400; font-size: 0.78rem; }
 
+    .hero-socials {
+      display: flex; gap: 12px; margin-bottom: 20px; justify-content: flex-start;
+    }
+    .hero-social-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%;
+      color: var(--c-muted); transition: color 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+    .hero-social-icon:hover { color: var(--c-accent); transform: scale(1.15); }
+    .hero-social-icon[href=""] { pointer-events: none; }
+
     .hero-chips {
       display: flex; flex-wrap: wrap; gap: 8px;
       margin-bottom: 32px;
@@ -393,7 +405,7 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
       }
       .hero-content { padding: 36px 24px 52px; align-items: center; text-align: center; }
       .hero-name { text-align: center; }
-      .hero-meta, .hero-chips { justify-content: center; }
+      .hero-meta, .hero-chips, .hero-socials { justify-content: center; }
       .btn-cta { align-self: center; }
       .timeline li::before { box-shadow: 0 0 0 3px var(--c-bg), 0 0 0 5px var(--c-accent); }
     }
@@ -493,18 +505,8 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
     <div class="theme-dot-btn" data-t="charbon" style="background:#3D3D3D" title="Charbon"></div>
   </div>
   <span class="banner-countdown" id="banner-countdown"></span>
-  <button class="social-editor-btn" id="social-toggle">Réseaux</button>
-  <a href="https://solia.me/formulaire/?prospect=damien-reiss-createur-de-solia-strategie-digitale-ingersheim" class="banner-btn banner-btn-secondary" id="banner-cta">Personnaliser</a>
+  <button class="banner-btn banner-btn-secondary" id="edit-toggle">Modifier</button>
   <a href="https://buy.stripe.com/28E4gAd7XawU2xl0WA67S0a?client_reference_id=damien-reiss-createur-de-solia-strategie-digitale-ingersheim" class="banner-btn banner-btn-primary">Publier ma page</a>
-</div>
-
-<div id="social-panel">
-  <h3>Vos réseaux sociaux</h3>
-  <div class="social-field"><label>Instagram</label><input id="soc-instagram" placeholder="https://instagram.com/..."></div>
-  <div class="social-field"><label>Facebook</label><input id="soc-facebook" placeholder="https://facebook.com/..."></div>
-  <div class="social-field"><label>LinkedIn</label><input id="soc-linkedin" placeholder="https://linkedin.com/in/..."></div>
-  <div class="social-field"><label>Site web</label><input id="soc-site" placeholder="https://monsite.fr"></div>
-  <button class="social-save" id="social-save">Enregistrer</button>
 </div>
 
 <div id="solia-expired-overlay">
@@ -517,7 +519,7 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
 <script>
 (function(){
   var slug = 'damien-reiss-createur-de-solia-strategie-digitale-ingersheim';
-  var created = new Date('2026-04-10T15:49:09.462Z');
+  var created = new Date('2026-04-10T15:57:54.440Z');
   var expires = new Date(created.getTime() + 7*24*60*60*1000);
   var cdEl = document.getElementById('banner-countdown');
 
@@ -545,7 +547,7 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
       document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
       dot.classList.add('active');
       localStorage.setItem('solia_theme_'+slug, current);
-      document.getElementById('banner-cta').href = 'https://solia.me/formulaire/?prospect=damien-reiss-createur-de-solia-strategie-digitale-ingersheim&theme='+current;
+      // theme saved
     });
   });
   document.getElementById('banner-cta').href = 'https://solia.me/formulaire/?prospect=damien-reiss-createur-de-solia-strategie-digitale-ingersheim&theme='+current;
@@ -553,6 +555,25 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
   /* ── INLINE EDITING ── */
   document.addEventListener('DOMContentLoaded', function(){
     var editableFields = document.querySelectorAll('[data-field]');
+    var editMode = false;
+
+    // Toggle mode édition
+    var editToggle = document.getElementById('edit-toggle');
+    if (editToggle) {
+      editToggle.addEventListener('click', function(){
+        editMode = !editMode;
+        editToggle.textContent = editMode ? 'Masquer' : 'Modifier';
+        editableFields.forEach(function(el){
+          el.setAttribute('contenteditable', editMode ? 'true' : 'false');
+          el.style.outline = editMode ? '2px dashed rgba(196,112,79,0.3)' : 'none';
+          el.style.outlineOffset = '4px';
+        });
+        // Scroll vers le premier champ
+        if (editMode && editableFields.length) {
+          editableFields[0].scrollIntoView({ behavior:'smooth', block:'center' });
+        }
+      });
+    }
   var hasChanges = false;
   var saveBar = document.createElement('div');
   saveBar.id = 'solia-save-bar';
@@ -561,16 +582,10 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
   document.body.appendChild(saveBar);
 
   editableFields.forEach(function(el){
-    el.style.cursor = 'text';
     el.style.transition = 'outline 0.2s';
-    el.style.outline = '2px dashed transparent';
-    el.style.outlineOffset = '4px';
     el.style.borderRadius = '4px';
-    el.addEventListener('mouseenter', function(){ if(!hasChanges) el.style.outline = '2px dashed rgba(196,112,79,0.3)'; });
-    el.addEventListener('mouseleave', function(){ if(!hasChanges) el.style.outline = '2px dashed transparent'; });
-    el.addEventListener('focus', function(){ el.style.outline = '2px solid var(--c-accent)'; });
-    el.addEventListener('blur', function(){ el.style.outline = '2px dashed transparent'; });
-    el.setAttribute('contenteditable', 'true');
+    el.addEventListener('focus', function(){ el.style.outline = '2px solid var(--c-accent)'; el.style.outlineOffset = '4px'; });
+    el.addEventListener('blur', function(){ el.style.outline = editMode ? '2px dashed rgba(196,112,79,0.3)' : 'none'; });
     el.addEventListener('input', function(){
       if (!hasChanges) {
         hasChanges = true;
@@ -620,7 +635,7 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
     .then(function(res){ return res.json(); })
     .then(function(){
       clearInterval(msgTimer);
-      statusEl.textContent = 'Sauvegardé ! Votre page sera mise à jour dans ~1 minute.';
+      statusEl.textContent = 'Sauvegardé ! Votre page sera mise à jour dans ~2 minute.';
       btn.textContent = '✓';
       btn.style.background = '#2E7D32';
       setTimeout(function(){
@@ -706,6 +721,65 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
       setTimeout(function(){ btn.textContent = 'Enregistrer'; btn.style.background = ''; }, 2000);
     });
   });
+  // ── SOCIAL ICONS (inline edit) ──
+  var socialPrefixes = {
+    instagram: 'https://instagram.com/',
+    facebook: 'https://facebook.com/',
+    linkedin: 'https://linkedin.com/in/',
+    site: ''
+  };
+  var socialFields = {
+    instagram: 'instagram_url',
+    facebook: 'facebook_url',
+    linkedin: 'linkedin_url',
+    site: 'site_actuel'
+  };
+
+  document.querySelectorAll('.hero-social-icon').forEach(function(icon){
+    var social = icon.dataset.social;
+    if (!social) return;
+
+    icon.addEventListener('click', function(e){
+      e.preventDefault();
+      var prefix = socialPrefixes[social];
+      var currentHref = icon.getAttribute('href') || '';
+      var currentVal = currentHref.replace(prefix, '');
+
+      var input = social === 'site'
+        ? prompt('Votre site web (URL complète) :', currentHref || 'https://')
+        : prompt('Votre pseudo ' + social.charAt(0).toUpperCase() + social.slice(1) + ' :', currentVal);
+
+      if (input === null) return;
+
+      var fullUrl = social === 'site' ? input.trim() : (prefix + input.trim());
+      if (!input.trim()) fullUrl = '';
+
+      icon.setAttribute('href', fullUrl);
+      icon.style.opacity = fullUrl ? '1' : '0.25';
+
+      // Sauvegarder
+      var payload = { slug: slug, email: 'update@solia.me', theme: current };
+      payload[socialFields[social]] = fullUrl;
+
+      saveBar.style.display = 'flex';
+      document.getElementById('save-status').textContent = 'Sauvegarde du lien ' + social + '...';
+
+      fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(function(res){ return res.json(); })
+      .then(function(){
+        document.getElementById('save-status').textContent = 'Lien sauvegardé ! Mise à jour dans ~2 min.';
+        setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
+      })
+      .catch(function(err){
+        document.getElementById('save-status').textContent = 'Erreur : ' + err.message;
+      });
+    });
+  });
+
   // ── PHOTO UPLOAD ──
   var photoInput = document.createElement('input');
   photoInput.type = 'file';
@@ -754,7 +828,7 @@ Reiss Reiss — CRÉATEUR DE SOLIA · STRATÉGIE DIGITALE à Ingersheim">
       })
       .then(function(res){ return res.json(); })
       .then(function(){
-        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~1 min.';
+        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~2 min.';
         setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
       })
       .catch(function(err){
@@ -802,6 +876,21 @@ Reiss Reiss</h1>
           Ingersheim
         </span>
         
+      </div>
+
+      <div class="hero-socials" id="heroSocials">
+        <a href="" class="hero-social-icon" data-social="instagram" title="Instagram" style="opacity:0.25">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="" class="hero-social-icon" data-social="facebook" title="Facebook" style="opacity:0.25">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="" class="hero-social-icon" data-social="linkedin" title="LinkedIn" style="opacity:0.25">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="" class="hero-social-icon" data-social="site" title="Site web" style="opacity:0.25">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        </a>
       </div>
 
       <div class="hero-chips" id="heroChips">
@@ -872,8 +961,7 @@ Reiss Reiss</h1>
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
             <div class="info-label">Horaires</div>
-            <div class="info-value" data-field="horaires">24h/24
-Anti-phone</div>
+            <div class="info-value" data-field="horaires">24h/24 Anti-phone</div>
           </div>
 
           
@@ -914,7 +1002,7 @@ Anti-phone</div>
         </a>
         
 
-        <div class="social-row" id="social-row"></div>
+        <div class="social-row" id="social-row"><a href="https://www.instagram.com/damienreiss/" class="social-link" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg><span>Instagram</span></a></div>
       </div>
     </section>
 
