@@ -276,8 +276,8 @@ function render(template, p, isDemo) {
     initiales:            initAvatar,
     meta_description:     escapeHtml(metaDesc),
     schema_org:           buildSchemaOrg(p),
-    tarif_display:        escapeHtml(p.tarif || 'Tarifs sur demande'),
-    horaires_display:     escapeHtml(p.horaires || 'Sur rendez-vous — contactez-moi'),
+    tarif_display:        escapeHtml(p.tarif || (isDemo ? '' : 'Tarifs sur demande')),
+    horaires_display:     escapeHtml(p.horaires || (isDemo ? '' : 'Sur rendez-vous — contactez-moi')),
     duree_seance:         escapeHtml(p.duree_seance || ''),
     zone_intervention:    escapeHtml(p.zone_intervention || ''),
     zone_intervention_label: escapeHtml(zoneLabel(p.zone_intervention || '')),
@@ -371,7 +371,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   .edit-mode #zone-value{cursor:pointer}.edit-mode #zone-value:hover{outline:2px dashed rgba(196,112,79,.3);outline-offset:4px;border-radius:4px}
   .edit-mode .contact-list a{cursor:text}
   .field-placeholder{color:var(--c-muted)!important;font-style:italic!important;font-weight:400!important}
-  .section-empty{display:none}.edit-mode .section-empty{display:block}
+  .empty-hide{display:none!important}
   .edit-mode .chip-add{display:inline-flex!important;cursor:pointer;border:1.5px dashed var(--c-border);color:var(--c-muted);font-size:.75rem;padding:4px 12px;border-radius:100px;background:none;font-family:'DM Sans',sans-serif;align-items:center;gap:4px}
   .chip-add{display:none!important}
   .edit-mode .chip-add:hover{border-color:var(--c-accent);color:var(--c-accent)}
@@ -440,14 +440,31 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     // PLACEHOLDERS — texte indicatif pour les champs vides
     var PH={description:'D\\u00e9crivez votre activit\\u00e9...',approche:'D\\u00e9crivez votre approche th\\u00e9rapeutique...',tarif:'Ex : 65\\u20ac / s\\u00e9ance',duree_seance:'Ex : 1h',horaires:'Ex : Lun-Ven 9h-19h',email:'votre@email.fr',telephone:'06 00 00 00 00',adresse:'Votre adresse compl\\u00e8te',publics:'Ex : adultes, adolescents',ville:'Votre ville',metier:'Votre m\\u00e9tier'};
     var mapEl=document.getElementById('map-container');
+    var heroChips=document.getElementById('heroChips');
     function applyPH(el){var f=el.dataset.field;if(PH[f]&&!el.textContent.trim()){el.textContent=PH[f];el.classList.add('field-placeholder')}}
     function clearPH(el){if(el.classList.contains('field-placeholder')){el.textContent='';el.classList.remove('field-placeholder')}}
     function restorePH(el){var f=el.dataset.field;if(PH[f]&&!el.textContent.trim()){el.textContent=PH[f];el.classList.add('field-placeholder')}}
+    function fieldEmpty(n){var el=document.querySelector('[data-field="'+n+'"]');return !el||!el.textContent.trim()||el.classList.contains('field-placeholder')}
     fields.forEach(applyPH);
-    // Hide map if no address
-    if(mapEl&&!document.querySelector('[data-field="adresse"]').textContent.trim())mapEl.style.display='none';
-    // Hide empty sections (no data, no editable content yet)
-    var heroChips=document.getElementById('heroChips');
+
+    // HIDE EMPTIES — masquer les \\u00e9l\\u00e9ments vides hors mode \\u00e9dition
+    var empties=[];
+    function markE(el){if(el){el.classList.add('empty-hide');empties.push(el)}}
+    function hideEmpties(){
+      empties.forEach(function(el){el.classList.remove('empty-hide')});empties=[];
+      fields.forEach(restorePH);
+      if(chipExp&&(!chipExp.dataset.val||chipExp.dataset.val==='0'))markE(chipExp);
+      if(chipLangues&&!chipLangues.textContent.trim())markE(chipLangues);
+      var addE=document.getElementById('add-chip-exp');if(addE)markE(addE);
+      var addL=document.getElementById('add-chip-langues');if(addL)markE(addL);
+      ['duree_seance','tarif','horaires','publics'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var c=el.closest('.info-card');if(c)markE(c)}}});
+      if(formList&&!formList.querySelectorAll('li').length){var fs=formList.closest('section');if(fs)markE(fs)}
+      if(fieldEmpty('approche')){var sep=document.querySelector('.sep');if(sep)markE(sep);var ap=document.querySelector('[data-field="approche"]');if(ap)markE(ap)}
+      ['telephone','adresse'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var r=el.closest('.contact-row');if(r)markE(r)}}});
+      if(mapEl&&fieldEmpty('adresse'))markE(mapEl);
+    }
+    function showEmpties(){empties.forEach(function(el){el.classList.remove('empty-hide')})}
+    hideEmpties();
 
     // Add chip buttons for missing chips
     if(!chipExp){var bExp=document.createElement('button');bExp.className='chip chip-add';bExp.id='add-chip-exp';bExp.innerHTML='+ Exp\\u00e9rience';heroChips.appendChild(bExp);bExp.addEventListener('click',function(){if(!editMode)return;var v=prompt('Ann\\u00e9es d\\'exp\\u00e9rience :');if(v===null)return;var n=parseInt(v,10);if(!isNaN(n)&&n>0){var sp=document.createElement('span');sp.className='chip';sp.id='chip-exp';sp.dataset.val=String(n);sp.textContent=n+' ans d\\'exp\\u00e9rience';heroChips.replaceChild(sp,bExp);chipExp=sp;chipExp.addEventListener('click',function(){if(!editMode)return;var cur=chipExp.dataset.val||'';var nv=prompt('Ann\\u00e9es d\\'exp\\u00e9rience :',cur);if(nv===null)return;var nn=parseInt(nv,10);if(!isNaN(nn)&&nn>0){chipExp.dataset.val=String(nn);chipExp.textContent=nn+' ans d\\'exp\\u00e9rience';markChanged()}});markChanged()}})}
@@ -461,6 +478,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       editMode=!editMode;
       editBtn.textContent=editMode?'Masquer':'Modifier';
       document.body.classList.toggle('edit-mode',editMode);
+      if(editMode){showEmpties();fields.forEach(applyPH)}else{hideEmpties()}
       fields.forEach(function(el){
         el.setAttribute('contenteditable',editMode?'true':'false');
         if(editMode)el.classList.add('edit-outline');else el.classList.remove('edit-outline');
@@ -470,7 +488,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       socIcons.forEach(function(ic){if(editMode){ic.style.display='flex';ic.style.opacity=ic.getAttribute('href')?'1':'0.35';ic.style.cursor='pointer'}else{ic.style.display=ic.getAttribute('href')?'flex':'none';ic.style.cursor='';ic.style.opacity='1'}});
       document.querySelectorAll('.spec-add-btn,.edit-add-btn').forEach(function(b){b.style.display=editMode?'inline-block':'none'});
       if(formList)formList.querySelectorAll('.formation-del').forEach(function(b){b.style.display=editMode?'inline':'none'});
-      contactLinks.forEach(function(lk){if(editMode){lk.removeAttribute('target')}});
+      // Contact links: remove/restore href to fix phone/email click bug
+      contactLinks.forEach(function(lk){if(editMode){lk.dataset.href=lk.getAttribute('href')||'';lk.removeAttribute('href')}else{if(lk.dataset.href)lk.setAttribute('href',lk.dataset.href)}});
     });
 
     // FIELD EVENTS + PASTE AS PLAIN TEXT
@@ -480,9 +499,6 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       el.addEventListener('input',markChanged);
       el.addEventListener('paste',function(e){e.preventDefault();var text=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,text)});
     });
-
-    // CONTACT LINKS — prevent navigation in edit mode
-    contactLinks.forEach(function(lk){lk.addEventListener('click',function(e){if(editMode)e.preventDefault()})});
 
     // PHOTO
     if(heroVisual){
