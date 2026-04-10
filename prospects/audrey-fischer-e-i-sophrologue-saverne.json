@@ -1,0 +1,32 @@
+{
+  "slug": "audrey-fischer-e-i-sophrologue-saverne",
+  "prenom": "Audrey",
+  "nom": "FISCHER E.I",
+  "metier": "Sophrologue",
+  "ville": "Saverne",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJe9xWePShlkcR0szAYgF0mwk/photos/AU_ZVEG0TuOSonCG4fJJRugHTrRpSC-RNFvKgEPwHCsf9zfegH3VFvCEviiax0AT_5VkvpCsgd5kRrzSYfcnpT1DfJ1H0HbgGnijRAZNpHmIvUdamUrTR9N97XqulrjaNLicVMJnqYfVALvSniXgzRl6IkEM2bO_SEMT852EbUwIn8ezTw-oq5XIPpNcukh5ZRvA9MZhs-B21qLlLqDk6gZ5aLaY_edHC499pv2NQwwZFVM3arew4biH5WiwZuLk2mChmXOcCNGjxjRCqCJepCBjWZX9sTBvbf3LBhsbOlSfmCFUTQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 16 29 31 07",
+  "adresse": "8 Rue des Pères, 67700 Saverne, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:30 – 17:00 | mardi: 09:30 – 17:00 | mercredi: 09:30 – 17:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 10,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
