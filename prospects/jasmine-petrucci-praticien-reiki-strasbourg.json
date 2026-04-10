@@ -1,0 +1,32 @@
+{
+  "slug": "jasmine-petrucci-praticien-reiki-strasbourg",
+  "prenom": "Jasmine",
+  "nom": "Petrucci",
+  "metier": "Praticien reiki",
+  "ville": "Strasbourg",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJOWV7__rIlkcRp4shYBD5zbc/photos/AU_ZVEEKs4eKjkm4YsFmMBylLdnWLg8hjsh6pHzYzws5zlr7o6XkbFiwVhEUZ4x8I36ZFrq_Pu0iXaua0xDni6XwRsG-8p9EUjjhjolsj0MRgv7Mi71oW9RbZoEX3nugChPUutYcH537sMIHYqKONZD3Myrzvh6BZidoAlDdIrlgpk1dHDtbDmrbbTqoL81O8XuMoBaIBW6HADiJZPx0olYZlb2uG7tto7iARX0DNwuSUNvQicpLUNfb02TxQD-HE44YsLIZ_0tc6Yg1XvTry_oMpBm50TdA34dYQQv4uROjseUUkg/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "03 88 44 67 49",
+  "adresse": "40 Rue du Tivoli, 67000 Strasbourg, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 18:00 | mardi: 09:00 – 18:00 | mercredi: 09:00 – 18:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.3,
+  "avis_google_nb": 38,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
