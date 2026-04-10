@@ -51,13 +51,6 @@ function truncate(str, max) {
   return str.slice(0, max - 1).replace(/\s+\S*$/, '') + '…';
 }
 
-function starsHtml(note) {
-  const full  = Math.floor(note);
-  const half  = note - full >= 0.5 ? 1 : 0;
-  const empty = 5 - full - half;
-  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
-}
-
 function svgStarsHtml(note) {
   const filled = Math.round(note);
   const d = 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z';
@@ -89,15 +82,6 @@ function escapeHtml(str) {
 
 function nl2br(str) {
   return escapeHtml(str).replace(/\n/g, '<br>');
-}
-
-function extractPlaceId(p) {
-  // Extract Google Place ID from photo_url or google_business_url
-  const photoMatch = (p.photo_url || '').match(/places\/(ChIJ[A-Za-z0-9_-]+)\//);
-  if (photoMatch) return photoMatch[1];
-  const bizMatch = (p.google_business_url || '').match(/place_id[=:]([A-Za-z0-9_-]+)/);
-  if (bizMatch) return bizMatch[1];
-  return '';
 }
 
 function buildMapUrl(p) {
@@ -210,7 +194,6 @@ function render(template, p, isDemo) {
     rdv_url:                !!p.rdv_url,
     adresse:                !!p.adresse,
     reseaux_sociaux:        !!(p.instagram_url || p.facebook_url || p.linkedin_url || p.google_business_url),
-    departement:            !!p.departement,
     annees_experience:      !!p.annees_experience,
     langues_extra:          !!(p.langues && p.langues.length > 1),
   };
@@ -281,7 +264,6 @@ function render(template, p, isDemo) {
     metier:               escapeHtml(p.metier),
     ville:                escapeHtml(p.ville),
     ville_display:        escapeHtml(p.ville + (p.departement ? `, ${p.departement}` : '')),
-    departement:          escapeHtml(p.departement || ''),
     email:                escapeHtml(p.email),
     telephone:            escapeHtml(p.telephone || ''),
     telephone_raw:        escapeHtml(phoneRaw(p.telephone)),
@@ -305,7 +287,6 @@ function render(template, p, isDemo) {
     formations_items:     formationsItems,
     avis_google_note:     String(p.avis_google_note || ''),
     avis_google_nb:       String(p.avis_google_nb || ''),
-    avis_etoiles:         p.avis_google_note ? starsHtml(p.avis_google_note) : '',
     avis_etoiles_svg:     p.avis_google_note ? svgStarsHtml(p.avis_google_note) : '',
     map_embed_url:        buildMapUrl(p),
     cta_text:             escapeHtml(p.cta_text ?? 'Prendre rendez-vous'),

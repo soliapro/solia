@@ -574,7 +574,6 @@ async function handleImport(request, env) {
       avis_google_nb:    p.avis_nb   ? parseInt(p.avis_nb)     : null,
       langues:        ['fr'],
       instagram_url:  '',
-      notes:          '',
     };
 
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(prospect, null, 2))));
