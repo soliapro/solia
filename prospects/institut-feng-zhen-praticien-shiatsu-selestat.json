@@ -1,0 +1,32 @@
+{
+  "slug": "institut-feng-zhen-praticien-shiatsu-selestat",
+  "prenom": "Institut",
+  "nom": "Feng Zhen",
+  "metier": "Praticien shiatsu",
+  "ville": "Sélestat",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ2Vt5detEkUcR8ZOdK8PzIR4/photos/AU_ZVEEBS1YOObH15W8VUTu0joy6zCryEC7eGfl-Qm9QBlSi7uPCVDotFIo1s98dAT9QFNOAOTuScoDAW4E-VM8sRHtO8oE0zZS8aV3ztlisHICawiKJ3hvRB4LRefyw7eUxBLG32-MZG-a23gjHKL4SBCuo0OlfLvPQaptTycdG6HFJvMNHGGizS7lAkmKQQ2qvBp16RPHcGPGZ4WisAMuaQgb-3XJ8Zi1HF3TSIp2Q6WUCZLJoXqB3S3J5REgT-VM_O5PyiPbnt5z5_KWdbrTzstJtYjSdbalQ_oojopQTSE6aFw/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "07 67 49 83 83",
+  "adresse": "2 Rue des Chevaliers, 67600 Sélestat, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 10:00 – 19:00 | mardi: 10:00 – 19:00 | mercredi: 10:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 14,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
