@@ -480,7 +480,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       document.body.classList.toggle('edit-mode',editMode);
       if(editMode){showEmpties();fields.forEach(applyPH)}else{hideEmpties()}
       fields.forEach(function(el){
-        el.setAttribute('contenteditable',editMode?'true':'false');
+        var f=el.dataset.field;
+        if(f!=='telephone'&&f!=='email'){el.setAttribute('contenteditable',editMode?'true':'false')}
         if(editMode)el.classList.add('edit-outline');else el.classList.remove('edit-outline');
       });
       var po=document.getElementById('photo-edit-overlay');
@@ -544,6 +545,20 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     // HERO CHIPS — click to edit
     if(chipExp){chipExp.addEventListener('click',function(){if(!editMode)return;var cur=chipExp.dataset.val||'';var v=prompt('Ann\\u00e9es d\\'exp\\u00e9rience :',cur);if(v===null)return;var n=parseInt(v,10);if(!isNaN(n)&&n>0){chipExp.dataset.val=String(n);chipExp.innerHTML=n+' ans d\\'exp\\u00e9rience';markChanged()}})}
     if(chipLangues){chipLangues.addEventListener('click',function(){if(!editMode)return;var cur=chipLangues.textContent.trim();var v=prompt('Langues parl\\u00e9es (s\\u00e9par\\u00e9es par virgule) :',cur);if(v===null)return;chipLangues.textContent=v.trim();markChanged()})}
+
+    // PHONE & EMAIL — prompt-based editing (contenteditable inside <a> is unreliable)
+    ['telephone','email'].forEach(function(fname){
+      var el=document.querySelector('[data-field="'+fname+'"]');if(!el)return;
+      el.addEventListener('click',function(e){
+        if(!editMode)return;e.preventDefault();e.stopPropagation();
+        var label=fname==='telephone'?'Num\\u00e9ro de t\\u00e9l\\u00e9phone':'Adresse email';
+        var cur=el.classList.contains('field-placeholder')?'':el.textContent.trim();
+        var v=prompt(label+' :',cur);if(v===null)return;v=v.trim();
+        if(v){el.textContent=v;el.classList.remove('field-placeholder')}else{el.textContent='';restorePH(el)}
+        var lk=el.closest('a');if(lk&&v){lk.dataset.href=fname==='telephone'?'tel:'+v.replace(/\\s/g,''):'mailto:'+v;lk.setAttribute('href',lk.dataset.href)}
+        markChanged();
+      });
+    });
 
     // CTA — click to edit URL
     function ctaEdit(btn){if(!btn)return;btn.addEventListener('click',function(e){if(!editMode)return;e.preventDefault();var cur=btn.getAttribute('href')||'';var v=prompt('URL de prise de rendez-vous :',cur.startsWith('#')||cur.startsWith('mailto:')?'https://':cur);if(v===null)return;v=v.trim();if(v){btn.setAttribute('href',v);btn.setAttribute('target','_blank')}markChanged()})}
