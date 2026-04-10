@@ -1,0 +1,32 @@
+{
+  "slug": "l-osteo-david-cordon-osteopathe-colmar",
+  "prenom": "L'Ostéo",
+  "nom": "David CORDON",
+  "metier": "Ostéopathe",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJyZ1czqRlkUcRFrabAJeZizQ/photos/AU_ZVEEl6J5owqLVqHcGJ9dDTmy61_qGw7Zyl229RoXOSVugEXWjTIEZHGverPFXUoCU_ecOgXOfLeS0P08vfW_STWFZvZgvu6k60MePwJBPPkLb0HTM32MVhC-pvBPXq5Y5yj5jPRDn1UzfhP-IhMQzSVoerI2eJ8ZEdPywBV8ZkRckjGcecEJuo55iG4Or1M3FQcoISr_SYWaU8WdijHKIrjnCCZs2BtN0ZnVGdlW-7EuSzJ6W3xUDClev3BEFTRepai_dfE_TzZilJ82IG0AalS2EtOHYxlHP-SjqFFzIin367Q/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "03 68 61 05 76",
+  "adresse": "4D Av. du Général de Gaulle 2ème étage, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:00 – 20:30 | mardi: 08:00 – 20:30 | mercredi: 08:00 – 20:30",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 145,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
