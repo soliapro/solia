@@ -1,0 +1,32 @@
+{
+  "slug": "jacquot-lucile-naturopathe-naturopathe-strasbourg",
+  "prenom": "Jacquot",
+  "nom": "Lucile",
+  "metier": "Naturopathe",
+  "ville": "Strasbourg",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJGfKDUKvJlkcRoXYjKgfKY8o/photos/AU_ZVEEVVqWIUjS6iYB9z8XAsVIhD6Xmw4C13byZE0kNjIReXEW29nFY-U-THtwTjsNOTHk_XrJpiAmInOQOk58TEcQccdXawOGaM0zxotWYVlJ7ohiYGXImwFnHzm51d4Z0MFCEyloGKgJ6OnOa0iwiyNXn-5WAKRPYdMv1XtUmKw-Wfcg_eoiN4Qf5qPUJRUEH0Drve-_iYQjmDrXszhvzUUswVK1tk_yzuL_Iwb9F-2S-uPfgNr2gvoNL-p-Dse2061ITuRej4cdtkXGFYcB1UGJr377JeEyy5iDcvEmx8H3Y_g/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "03 88 11 45 30",
+  "adresse": "7 Pass. du Neckar, 67100 Strasbourg, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 10:00 – 20:00 | mardi: 10:00 – 20:00 | mercredi: Fermé",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 23,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
