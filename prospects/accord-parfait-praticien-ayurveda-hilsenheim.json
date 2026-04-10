@@ -1,9 +1,9 @@
 {
   "slug": "accord-parfait-praticien-ayurveda-hilsenheim",
-  "prenom": "Accord\nParfait",
+  "prenom": "Accord",
   "nom": "Parfait",
   "metier": "PRATICIEN AYURVEDA",
-  "ville": "Hilsenheim",
+  "ville": "Hilsenheim, 67",
   "departement": "67",
   "email": "update@solia.me",
   "description": "Accord Parfait, praticien ayurveda à Hilsenheim. Prenez rendez-vous pour une consultation personnalisée.",
@@ -13,7 +13,7 @@
   "telephone": "06 20 04 25 55",
   "adresse": "21 Rue du Cygne, 67600 Hilsenheim, France",
   "zone_intervention": "",
-  "horaires": "lundi: 09:30 – 11:30 \nmardi: 18:00 – 19:00\nmercredi: 18:00 – 19:00",
+  "horaires": "lundi: 09:30 – 11:30  mardi: 18:00 – 19:00 mercredi: 18:00 – 19:00",
   "tarif": "9€/mois",
   "duree_seance": "",
   "approche": "",
@@ -30,5 +30,8 @@
   "instagram_url": "",
   "notes": "",
   "page_active": true,
-  "priorite": "BASSE"
+  "priorite": "BASSE",
+  "facebook_url": "",
+  "linkedin_url": "",
+  "site_actuel": ""
 }
