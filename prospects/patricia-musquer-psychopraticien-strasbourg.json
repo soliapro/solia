@@ -1,0 +1,32 @@
+{
+  "slug": "patricia-musquer-psychopraticien-strasbourg",
+  "prenom": "Patricia",
+  "nom": "Musquer",
+  "metier": "Psychopraticien",
+  "ville": "Strasbourg",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJbdzGQwDLlkcRQ3kqljutLWg/photos/AU_ZVEHpyiYcfwFLa-oQ0b1qGeT8vNCjGzabMfMtOF6hTnh0nAclrkGFdd3DJ6I-3LTNGgPCSzkg3f9ER2yJM9Ztzun3yO6G1Um13nlM04b-Hn2pWpEA8IiHopyDXnw0s-zci2hdu_SpIudi4EtAwoej-XY6vhMtvs2cbs1WeIF8NatX3UNpZH4QxwZdj3lzoW9xx3E0GH78PEJ_tHBOPDxjbUat9vE2eq7d-76cwH5Sj2Ug3gU5PF2t4f9Y1Px-thLPGKmspLJkeXEhIVEpSnFrMdSHKxh6gIN4IuekNrsgkFMdJQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "",
+  "adresse": "69 Rue des Grandes Arcades, 67000 Strasbourg, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 12:00, 13:30 – 17:30 | mardi: 09:00 – 12:00, 13:30 – 18:30 | mercredi: 10:00 – 12:00, 13:30 – 18:30",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 9,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
