@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Page publiée — Solia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif; background: #FDFAF6; color: #1A1A18;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 32px; -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      max-width: 480px; text-align: center;
+    }
+    .check {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(46,125,50,0.1); color: #2E7D32;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px; font-size: 2rem;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif; font-size: 1.8rem;
+      font-weight: 600; margin-bottom: 12px;
+    }
+    p { font-size: 0.95rem; color: #8A8074; line-height: 1.6; margin-bottom: 24px; }
+    .url-box {
+      background: #F4EFE8; border-radius: 12px; padding: 14px 20px;
+      font-family: monospace; font-size: 0.88rem; color: #C4704F;
+      margin-bottom: 24px; word-break: break-all;
+    }
+    .btn {
+      display: inline-block; background: #C4704F; color: #fff;
+      font-weight: 700; font-size: 0.9rem; padding: 14px 32px;
+      border-radius: 100px; text-decoration: none; transition: background 0.2s;
+    }
+    .btn:hover { background: #A85C3E; }
+    .sub-link {
+      display: block; margin-top: 16px;
+      font-size: 0.82rem; color: #8A8074; text-decoration: underline;
+    }
+    .loader { color: #8A8074; font-size: 0.88rem; }
+    .loader.hidden { display: none; }
+    .content.hidden { display: none; }
+    .error { color: #C4704F; font-size: 0.88rem; }
+    .error.hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="loader" id="loader">
+      <div class="check" style="background:rgba(196,112,79,0.1);color:#C4704F">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <h1>Publication en cours...</h1>
+      <p>Votre page sera en ligne dans quelques instants.</p>
+    </div>
+
+    <div class="content hidden" id="content">
+      <div class="check">&#10003;</div>
+      <h1>Votre page est publiée !</h1>
+      <p>Félicitations, votre page professionnelle est maintenant en ligne. Partagez-la avec vos clients.</p>
+      <div class="url-box" id="page-url"></div>
+      <a href="#" class="btn" id="page-link">Voir ma page →</a>
+      <a href="#" class="sub-link" id="edit-link">Modifier ma page</a>
+    </div>
+
+    <div class="error hidden" id="error">
+      <div class="check" style="background:rgba(196,112,79,0.1);color:#C4704F">!</div>
+      <h1>Oups</h1>
+      <p id="error-msg">Une erreur est survenue.</p>
+      <a href="mailto:damien.reiss@gmail.com" class="sub-link">Nous contacter</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var params = new URLSearchParams(location.search);
+      var slug = params.get('slug') || params.get('client_reference_id') || '';
+      var workerUrl = 'https://solia-enrichment.damien-reiss.workers.dev';
+
+      if (!slug) {
+        showError('Aucune page identifiée. Vérifiez votre lien.');
+        return;
+      }
+
+      // Appeler le Worker pour publier
+      fetch(workerUrl + '/api/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: slug }),
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.error) throw new Error(data.error);
+
+        var pageUrl = slug + '.solia.me';
+        document.getElementById('page-url').textContent = pageUrl;
+        document.getElementById('page-link').href = 'https://' + pageUrl;
+        document.getElementById('edit-link').href = 'https://solia.me/formulaire/?prospect=' + slug;
+
+        document.getElementById('loader').classList.add('hidden');
+        document.getElementById('content').classList.remove('hidden');
+      })
+      .catch(function(err) {
+        showError(err.message || 'Erreur lors de la publication.');
+      });
+
+      function showError(msg) {
+        document.getElementById('error-msg').textContent = msg;
+        document.getElementById('loader').classList.add('hidden');
+        document.getElementById('error').classList.remove('hidden');
+      }
+    })();
+  </script>
+</body>
+</html>

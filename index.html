@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solia — Ta page pro, sans effort</title>
+  <meta name="description" content="Solia crée ta page professionnelle personnalisée. Tu n'touches à rien — tu la reçois, tu la partages. 7 jours offerts, CB débitée uniquement au 8ème jour.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #FDFAF6;
+      color: #1A1A18;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --c-bg:       #FDFAF6;
+      --c-bg-alt:   #F4EFE8;
+      --c-dark:     #1A1A18;
+      --c-accent:   #C4704F;
+      --c-accent-h: #B05F40;
+      --c-text:     #1A1A18;
+      --c-muted:    #8A8074;
+      --c-card:     #F8F4EE;
+      --ff-serif:   'Playfair Display', Georgia, serif;
+      --ff-sans:    'DM Sans', system-ui, sans-serif;
+      --radius:     16px;
+      --radius-lg:  24px;
+      --shadow-sm:  0 2px 12px rgba(26,26,24,0.07);
+      --shadow-md:  0 8px 32px rgba(26,26,24,0.10);
+      --shadow-lg:  0 24px 64px rgba(26,26,24,0.14);
+    }
+
+    /* ===== GRAIN TEXTURE ===== */
+    .grain::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===== UTILITY ===== */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .section-tag { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-accent); margin-bottom: 16px; }
+
+    /* ===== FADE-IN SCROLL ===== */
+    .fade-s {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-s.visible { opacity: 1; transform: translateY(0); }
+    .fade-s.visible > * { opacity: 1; transform: translateY(0); }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--c-bg);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      height: 64px; display: flex; align-items: center;
+    }
+    .nav.scrolled {
+      border-color: rgba(26,26,24,0.08);
+      box-shadow: 0 2px 16px rgba(26,26,24,0.07);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%;
+    }
+    .nav-logo {
+      font-family: var(--ff-serif);
+      font-style: italic;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--c-text);
+      letter-spacing: -0.01em;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 32px;
+    }
+    .nav-link {
+      font-size: 0.9rem; font-weight: 500; color: var(--c-muted);
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--c-text); }
+    .nav-cta {
+      display: inline-flex; align-items: center;
+      background: var(--c-accent);
+      color: #FDFAF6;
+      font-size: 0.875rem; font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 100px;
+      transition: background 0.2s, transform 0.2s;
+      will-change: transform;
+    }
+    .nav-cta:hover { background: var(--c-accent-h); }
+    .nav-menu-btn {
+      display: none;
+      background: none; border: none; cursor: pointer;
+      padding: 8px; color: var(--c-text);
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .nav-cta-mobile {
+        display: inline-flex; align-items: center;
+        background: var(--c-accent); color: #FDFAF6;
+        font-size: 0.8rem; font-weight: 600;
+        padding: 8px 16px; border-radius: 100px;
+      }
+    }
+
+    /* ===== TICKER ===== */
+    .ticker {
+      background: var(--c-dark);
+      color: #FDFAF6;
+      overflow: hidden;
+      padding: 10px 0;
+      white-space: nowrap;
+      cursor: default;
+    }
+    .ticker-track {
+      display: inline-flex; gap: 0;
+      animation: marquee 40s linear infinite;
+      will-change: transform;
+    }
+    .ticker:hover .ticker-track { animation-play-state: paused; }
+    .ticker-item {
+      font-size: 0.8rem; font-weight: 400;
+      padding: 0 28px;
+      opacity: 0.9;
+    }
+    .ticker-dot { opacity: 0.4; padding: 0 4px; }
+    .ticker-quote { font-style: italic; opacity: 0.8; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="mainNav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo">Solia</a>
+      <div class="nav-links">
+        <a href="claire-martin-sophrologue-bordeaux/" class="nav-link" target="_blank">Voir un exemple</a>
+        <a href="https://solia.me/formulaire/" class="nav-cta magnetic-btn" id="navCta">Personnaliser ma page</a>
+      </div>
+      <a href="#essayer" class="nav-cta nav-cta-mobile" style="display:none" id="navCtaMobile">Personnaliser ma page</a>
+    </div>
+  </nav>
+
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="tickerTrack">
+      <span class="ticker-item">+200 pages créées</span><span class="ticker-dot">·</span>
+      <span class="ticker-item">9€/mois, résiliable quand tu veux</span><span class="ticker-dot">·</span>
+      <span class="ticker-item ticker-quote">« J'ai partagé mon lien le soir même » — Marie, réflexologue</span><span class="ticker-dot">·</span>
+      <span class="ticker-item">Zéro technique requis. Vraiment.</span><span class="ticker-dot">·</span>
+      <span class="ticker-item ticker-quote">« Enfin quelque chose de pro » — Karim, électricien</span><span class="ticker-dot">·</span>
+      <span class="ticker-item">Ta page. Ton image. Notre boulot.</span><span class="ticker-dot">·</span>
+      <span class="ticker-item">7 jours offerts, sans engagement</span><span class="ticker-dot">·</span>
+      <span class="ticker-item ticker-quote">« Je l'ai envoyé à un client 10 min après l'avoir reçu » — Sophie, coach</span><span class="ticker-dot">·</span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item">+200 pages créées</span><span class="ticker-dot">·</span>
+      <span class="ticker-item">9€/mois, résiliable quand tu veux</span><span class="ticker-dot">·</span>
+      <span class="ticker-item ticker-quote">« J'ai partagé mon lien le soir même » — Marie, réflexologue</span><span class="ticker-dot">·</span>
+      <span class="ticker-item">Zéro technique requis. Vraiment.</span><span class="ticker-dot">·</span>
+      <span class="ticker-item ticker-quote">« Enfin quelque chose de pro » — Karim, électricien</span><span class="ticker-dot">·</span>
+      <span class="ticker-item">Ta page. Ton image. Notre boulot.</span><span class="ticker-dot">·</span>
+      <span class="ticker-item">7 jours offerts, sans engagement</span><span class="ticker-dot">·</span>
+      <span class="ticker-item ticker-quote">« Je l'ai envoyé à un client 10 min après l'avoir reçu » — Sophie, coach</span><span class="ticker-dot">·</span>
+    </div>
+  </div>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero grain" id="hero">
+    <div class="container hero-inner">
+
+      <!-- LEFT: texte -->
+      <div class="hero-text" id="heroText">
+        <p class="hero-eyebrow" id="heroEyebrow">Pour les indépendants qui méritent mieux</p>
+        <h1 class="hero-headline" id="heroHeadline">
+          <span class="hero-line" data-line="0">La page pro</span>
+          <span class="hero-line" data-line="1">que tu aurais dû</span>
+          <span class="hero-line" data-line="2">avoir depuis le début.</span>
+        </h1>
+        <p class="hero-sub" id="heroSub">
+          On la crée pour toi. Adaptée à ton activité, prête à partager.<br>
+          Tu n'touches à rien — c'est littéralement le principe.
+        </p>
+        <div class="hero-ctas" id="heroCtas">
+          <a href="https://solia.me/formulaire/" class="btn-primary magnetic-btn" id="heroCtaPrimary">Personnaliser ma page gratuitement</a>
+          <a href="claire-martin-sophrologue-bordeaux/" class="btn-secondary" target="_blank">Voir un exemple →</a>
+        </div>
+        <p class="hero-note" id="heroNote">7 jours offerts. Ta carte bancaire ne sera débitée qu'au 8ème jour.</p>
+      </div>
+
+      <!-- RIGHT: mockup téléphone -->
+      <div class="hero-mockup" id="heroMockup">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <iframe
+              src="claire-martin-sophrologue-bordeaux/"
+              title="Exemple de page Solia — Claire Martin, Sophrologue"
+              loading="lazy"
+              scrolling="yes"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <style>
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      background: var(--c-bg);
+      min-height: calc(100vh - 96px);
+      display: flex; align-items: center;
+      padding: 80px 0 60px;
+      overflow: hidden;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    /* eyebrow */
+    .hero-eyebrow {
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--c-accent);
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+    /* headline lines */
+    .hero-headline {
+      font-family: var(--ff-serif);
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--c-text);
+      margin-bottom: 28px;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .hero-line {
+      display: block;
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* sub */
+    .hero-sub {
+      font-size: 1.05rem; font-weight: 400;
+      line-height: 1.7; color: var(--c-muted);
+      margin-bottom: 36px;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    /* ctas */
+    .hero-ctas {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+      opacity: 0; transform: translateY(14px) scale(0.97);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .hero-note {
+      font-size: 0.8rem; color: var(--c-muted);
+      opacity: 0; transition: opacity 0.5s ease;
+    }
+    /* buttons */
+    .btn-primary {
+      display: inline-flex; align-items: center;
+      background: var(--c-accent); color: #FDFAF6;
+      font-family: var(--ff-sans); font-size: 0.95rem; font-weight: 600;
+      padding: 14px 28px; border-radius: 100px;
+      transition: background 0.2s, transform 0.2s;
+      will-change: transform;
+    }
+    .btn-primary:hover { background: var(--c-accent-h); }
+    .btn-secondary {
+      display: inline-flex; align-items: center;
+      border: 1.5px solid rgba(26,26,24,0.2);
+      color: var(--c-text);
+      font-family: var(--ff-sans); font-size: 0.95rem; font-weight: 500;
+      padding: 13px 24px; border-radius: 100px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--c-accent); color: var(--c-accent); }
+
+    /* ===== PHONE MOCKUP ===== */
+    .hero-mockup {
+      display: flex; justify-content: center; align-items: center;
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 0.7s ease 0.6s, transform 0.7s cubic-bezier(0.16,1,0.3,1) 0.6s;
+    }
+    .phone-frame {
+      position: relative;
+      width: 300px;
+      height: 620px;
+      background: #1A1A18;
+      border-radius: 44px;
+      padding: 12px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.08) inset,
+        0 32px 80px rgba(26,26,24,0.30),
+        0 8px 24px rgba(26,26,24,0.15);
+      transform: rotate(-5deg);
+      animation: phoneFloat 3s ease-in-out infinite;
+      will-change: transform;
+    }
+    .phone-screen {
+      position: relative; /* nécessaire pour que overflow:hidden clipe l'iframe en position:absolute */
+      width: 100%; height: 100%;
+      border-radius: 34px;
+      overflow: hidden;
+      background: var(--c-bg);
+    }
+    .phone-screen iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 375px;
+      height: 812px;
+      border: none;
+      transform-origin: top left;
+      transform: scale(0.736); /* 276px inner / 375px = 0.736 → h: 812*0.736=597px ≈ 596px inner */
+      pointer-events: none;
+    }
+    /* notch */
+    .phone-frame::before {
+      content: '';
+      position: absolute; top: 18px; left: 50%;
+      transform: translateX(-50%);
+      width: 80px; height: 6px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 100px;
+      z-index: 2;
+    }
+    @keyframes phoneFloat {
+      0%, 100% { transform: rotate(-5deg) translateY(0); }
+      50%       { transform: rotate(-5deg) translateY(-10px); }
+    }
+
+    /* hero ANIMATED state */
+    .hero-animated .hero-eyebrow { opacity: 1; transform: translateY(0); }
+    .hero-animated .hero-line { clip-path: inset(0 0 0% 0); }
+    .hero-animated .hero-sub { opacity: 1; transform: translateY(0); }
+    .hero-animated .hero-ctas { opacity: 1; transform: translateY(0) scale(1); }
+    .hero-animated .hero-note { opacity: 1; }
+    .hero-animated .hero-mockup { opacity: 1; transform: translateX(0); }
+
+    /* line delays */
+    .hero-line[data-line="0"] { transition-delay: 0.25s; }
+    .hero-line[data-line="1"] { transition-delay: 0.38s; }
+    .hero-line[data-line="2"] { transition-delay: 0.51s; }
+    .hero-animated .hero-sub   { transition-delay: 0.65s; }
+    .hero-animated .hero-ctas  { transition-delay: 0.80s; }
+    .hero-animated .hero-note  { transition-delay: 0.90s; }
+
+    /* mobile hero */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .phone-frame { width: 260px; height: 530px; }
+      .phone-screen iframe { transform: scale(0.629); } /* 236/375 → h: 812*0.629=511px ≈ 506px inner */
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 48px 0 40px; min-height: auto; }
+      .hero-headline { font-size: clamp(1.9rem, 8vw, 2.4rem); }
+      .hero-ctas { flex-direction: column; align-items: flex-start; }
+      .phone-frame { width: 220px; height: 450px; }
+      .phone-screen iframe { transform: scale(0.523); } /* 196/375 → h: 812*0.523=425px ≈ 426px inner */
+    }
+  </style>
+
+
+  <!-- ==================== PROBLÈME ==================== -->
+  <section class="section-problem" id="probleme">
+    <div class="container">
+      <div class="section-head fade-s">
+        <h2 class="section-title">Tu te présentes comment,<br>là, maintenant&nbsp;?</h2>
+        <p class="section-sub">Un numéro de téléphone. Un lien Instagram. Un fichier PDF envoyé en pièce jointe.<br>On a vu mieux.</p>
+      </div>
+      <div class="problem-cards">
+        <div class="problem-card fade-s">
+          <span class="problem-icon">🔁</span>
+          <h3>Tu réexpliques ton activité à chaque nouveau contact</h3>
+          <p>Même pitch, encore et encore. Ton énergie mérite mieux que ça.</p>
+        </div>
+        <div class="problem-card fade-s">
+          <span class="problem-icon">📱</span>
+          <h3>Ton lien envoie les gens sur ta bio Instagram entre deux stories de vacances</h3>
+          <p>Pas vraiment l'image la plus pro qui soit.</p>
+        </div>
+        <div class="problem-card fade-s">
+          <span class="problem-icon">🤷</span>
+          <h3>Tu n'as rien à envoyer quand quelqu'un te demande tes infos. Pas idéal.</h3>
+          <p>Un bon contact raté parce que tu n'avais pas de lien à portée de main.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SOLUTION ==================== -->
+  <section class="section-solution" id="solution">
+    <div class="container">
+      <div class="section-head fade-s">
+        <h2 class="section-title">Solia, c'est ta page.<br>On s'occupe du reste.</h2>
+        <p class="section-sub">Pas un outil à apprendre. Pas un template à remplir.<br>On crée ta page à ton image — tu la reçois, tu la partages.</p>
+      </div>
+      <div class="solution-demo fade-s">
+        <div class="demo-browser">
+          <div class="demo-bar">
+            <span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span>
+            <span class="demo-url">claire-martin-sophrologue.solia.me</span>
+          </div>
+          <div class="demo-frame">
+            <iframe
+              src="claire-martin-sophrologue-bordeaux/"
+              title="Démo Solia — Claire Martin"
+              loading="lazy"
+              scrolling="yes"
+            ></iframe>
+          </div>
+        </div>
+        <div class="solution-links">
+          <a href="claire-martin-sophrologue-bordeaux/" target="_blank" class="demo-link">Voir la page en vrai →</a>
+          <p class="demo-note"><em>Chaque page est personnalisée selon ton activité, ta ville, tes infos.</em></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    /* ===== SECTION HEADER ===== */
+    .section-head { text-align: center; margin-bottom: 56px; }
+    .section-title {
+      font-family: var(--ff-serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--c-muted);
+      line-height: 1.7; max-width: 560px; margin: 0 auto;
+    }
+
+    /* ===== PROBLEM ===== */
+    .section-problem {
+      padding: 96px 0;
+      background: var(--c-bg);
+    }
+    .problem-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .problem-card {
+      background: var(--c-card);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .problem-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(196,112,79,0.3);
+    }
+    .problem-icon {
+      font-size: 1.8rem; display: block; margin-bottom: 16px;
+    }
+    .problem-card h3 {
+      font-family: var(--ff-serif); font-size: 1.05rem; font-weight: 600;
+      line-height: 1.4; margin-bottom: 10px;
+    }
+    .problem-card p { font-size: 0.875rem; color: var(--c-muted); line-height: 1.6; }
+
+    /* ===== SOLUTION ===== */
+    .section-solution {
+      padding: 96px 0;
+      background: var(--c-bg-alt);
+    }
+    .solution-demo { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+    .demo-browser {
+      width: 100%; max-width: 860px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(26,26,24,0.08);
+    }
+    .demo-bar {
+      background: #EDEBE7; padding: 12px 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .demo-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(26,26,24,0.15);
+    }
+    .demo-url {
+      margin-left: 12px; font-size: 0.75rem; color: var(--c-muted);
+      font-family: monospace; letter-spacing: 0.02em;
+    }
+    .demo-frame {
+      height: 540px; overflow: hidden; background: var(--c-bg);
+      position: relative;
+    }
+    .demo-frame iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1200px;
+      height: 900px;
+      border: none;
+      transform-origin: top left;
+      transform: scale(0.717); /* 860/1200 ≈ 0.717 — remplit le conteneur */
+      pointer-events: none;
+    }
+    .solution-links { text-align: center; }
+    .demo-link {
+      font-size: 0.9rem; font-weight: 600;
+      color: var(--c-accent); border-bottom: 1px solid currentColor;
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+    .demo-link:hover { opacity: 0.75; }
+    .demo-note {
+      font-size: 0.8rem; color: var(--c-muted);
+      font-family: var(--ff-serif); margin-top: 10px;
+    }
+
+    @media (max-width: 860px) {
+      .problem-cards { grid-template-columns: 1fr; }
+      .demo-frame { height: 380px; }
+      /* containerW ≈ viewport - 48px padding */
+      .demo-frame iframe { width: 760px; transform: scale(0.618); }
+    }
+    @media (max-width: 600px) {
+      .section-problem, .section-solution { padding: 64px 0; }
+      .demo-frame { height: 300px; }
+      .demo-frame iframe { width: 375px; height: 700px; transform: scale(0.88); }
+    }
+  </style>
+
+
+  <!-- ==================== RÉASSURANCE ==================== -->
+  <section class="section-reassurance" id="reassurance">
+    <div class="container">
+      <div class="reassurance-grid">
+        <div class="reassurance-item">
+          <div class="reassurance-num" data-count="7" data-suffix="">7</div>
+          <div class="reassurance-label">jours offerts</div>
+        </div>
+        <div class="reassurance-sep" aria-hidden="true"></div>
+        <div class="reassurance-item">
+          <div class="reassurance-num" data-count="9" data-suffix="€">9</div>
+          <div class="reassurance-label">par mois ensuite</div>
+        </div>
+        <div class="reassurance-sep" aria-hidden="true"></div>
+        <div class="reassurance-item">
+          <div class="reassurance-num">∞</div>
+          <div class="reassurance-label">Résiliable quand tu veux</div>
+        </div>
+        <div class="reassurance-sep" aria-hidden="true"></div>
+        <div class="reassurance-item">
+          <div class="reassurance-num">0</div>
+          <div class="reassurance-label">technique requis</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== POUR QUI ==================== -->
+  <section class="section-forwhom" id="pour-qui">
+    <div class="container">
+      <div class="section-head fade-s">
+        <h2 class="section-title">Pour tous ceux qui méritent<br>mieux qu'un numéro de téléphone.</h2>
+      </div>
+      <div class="pills-grid fade-s">
+        <span class="pill">Artisan</span>
+        <span class="pill">Électricien</span>
+        <span class="pill">Plombier</span>
+        <span class="pill">Coach</span>
+        <span class="pill">Sophrologue</span>
+        <span class="pill">Consultant</span>
+        <span class="pill">Photographe</span>
+        <span class="pill">Formateur</span>
+        <span class="pill">Commercial</span>
+        <span class="pill">Naturopathe</span>
+        <span class="pill">Kiné</span>
+        <span class="pill">Gérant</span>
+        <span class="pill">Agent immobilier</span>
+        <span class="pill pill--more">+ et toi</span>
+      </div>
+      <p class="forwhom-sub fade-s">Si tu veux être pris au sérieux dès le premier contact, c'est pour toi.</p>
+    </div>
+  </section>
+
+  <!-- ==================== BÉNÉFICES ==================== -->
+  <section class="section-benefits" id="benefices">
+    <div class="container">
+      <div class="section-head fade-s">
+        <h2 class="section-title">Ce que tu gagnes.<br><em style="font-weight:400;color:var(--c-muted)">(Spoiler : c'est du temps.)</em></h2>
+      </div>
+      <div class="benefits-grid">
+        <div class="benefit-card fade-s">
+          <span class="benefit-icon">🔗</span>
+          <h3>Un seul lien, partout</h3>
+          <p>WhatsApp, email, carte papier, bio Instagram — un seul endroit.</p>
+        </div>
+        <div class="benefit-card fade-s">
+          <span class="benefit-icon">📄</span>
+          <h3>Une vraie page, pas un bio-link</h3>
+          <p>Tes infos, tes tarifs, ton contact. Structurés. Lisibles. Professionnels.</p>
+        </div>
+        <div class="benefit-card fade-s">
+          <span class="benefit-icon">📱</span>
+          <h3>Pensée pour le mobile</h3>
+          <p>Parce que tes contacts regardent sur leur téléphone dans le métro.</p>
+        </div>
+        <div class="benefit-card fade-s">
+          <span class="benefit-icon">✏️</span>
+          <h3>Tu demandes une modif, on la fait</h3>
+          <p>Tu changes de cabinet ? Tu ajustes tes tarifs ? Un message suffit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    /* ===== RÉASSURANCE ===== */
+    .section-reassurance {
+      background: var(--c-dark);
+      color: #FDFAF6;
+      padding: 64px 0;
+    }
+    .reassurance-grid {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; flex-wrap: wrap;
+    }
+    .reassurance-item {
+      text-align: center; padding: 16px 48px;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reassurance-item.visible { opacity: 1; transform: translateY(0); }
+    .reassurance-num {
+      font-family: var(--ff-serif);
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      font-weight: 600; line-height: 1;
+      color: var(--c-accent);
+      margin-bottom: 6px;
+    }
+    .reassurance-label { font-size: 0.85rem; opacity: 0.7; }
+    .reassurance-sep {
+      width: 1px; height: 56px;
+      background: rgba(255,255,255,0.12);
+    }
+    @media (max-width: 700px) {
+      .reassurance-grid { gap: 0; }
+      .reassurance-item { padding: 20px 24px; }
+      .reassurance-sep { display: none; }
+    }
+
+    /* ===== POUR QUI ===== */
+    .section-forwhom {
+      padding: 96px 0;
+      background: var(--c-bg);
+    }
+    .pills-grid {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      justify-content: center;
+      max-width: 720px; margin: 0 auto 24px;
+    }
+    .pill {
+      display: inline-block;
+      border: 1.5px solid rgba(26,26,24,0.15);
+      color: var(--c-text);
+      font-size: 0.875rem; font-weight: 500;
+      padding: 8px 20px; border-radius: 100px;
+      cursor: default;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .pill:hover {
+      background: var(--c-accent);
+      border-color: var(--c-accent);
+      color: #FDFAF6;
+    }
+    .pill--more {
+      background: rgba(196,112,79,0.1);
+      border-color: rgba(196,112,79,0.3);
+      color: var(--c-accent);
+    }
+    .pill--more:hover { background: var(--c-accent); color: #FDFAF6; }
+    .forwhom-sub {
+      text-align: center; font-size: 0.9rem;
+      color: var(--c-muted); margin-top: 8px;
+    }
+
+    /* ===== BÉNÉFICES ===== */
+    .section-benefits {
+      padding: 96px 0;
+      background: var(--c-bg-alt);
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .benefit-card {
+      background: var(--c-bg);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      border: 1.5px solid rgba(26,26,24,0.05);
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+    .benefit-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    .benefit-icon { font-size: 2rem; display: block; margin-bottom: 20px; }
+    .benefit-card h3 {
+      font-family: var(--ff-serif); font-size: 1.15rem; font-weight: 600;
+      margin-bottom: 10px; line-height: 1.35;
+    }
+    .benefit-card p { font-size: 0.9rem; color: var(--c-muted); line-height: 1.65; }
+
+    @media (max-width: 640px) {
+      .benefits-grid { grid-template-columns: 1fr; }
+      .section-forwhom, .section-benefits { padding: 64px 0; }
+    }
+  </style>
+
+
+  <!-- ==================== PRICING ==================== -->
+  <section class="section-pricing" id="essayer">
+    <div class="container">
+      <div class="section-head fade-s">
+        <h2 class="section-title">Moins cher que tes cartes de visite papier<br>que tout le monde jette.</h2>
+      </div>
+      <div class="pricing-wrapper fade-s">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <span class="pricing-brand">SOLIA</span>
+            <div class="pricing-price">
+              <span class="pricing-amount">9</span>
+              <span class="pricing-unit">€<br><small>/ mois</small></span>
+            </div>
+          </div>
+          <ul class="pricing-list">
+            <li><span class="check">✓</span> Ta page pro personnalisée, en ligne</li>
+            <li><span class="check">✓</span> Sous-domaine inclus <small>(prenom-metier-ville.solia.me)</small></li>
+            <li><span class="check">✓</span> Modifications incluses sur demande</li>
+            <li><span class="check">✓</span> Hébergement garanti</li>
+            <li><span class="check">✓</span> Résiliable à tout moment, sans justification</li>
+          </ul>
+          <a href="https://solia.me/formulaire/" class="btn-primary pricing-cta magnetic-btn">Personnaliser ma page — 7 jours offerts</a>
+          <p class="pricing-note">CB demandée à l'inscription — débitée uniquement après 7 jours.<br>Résiliable avant sans frais.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== COMPARAISON ==================== -->
+  <section class="section-compare" id="comparaison">
+    <div class="container">
+      <div class="section-head fade-s">
+        <h2 class="section-title">La concurrence existe.<br>Elle coûte juste 10 fois plus cher.</h2>
+      </div>
+      <div class="compare-table-wrap fade-s">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th class="compare-criteria">Critère</th>
+              <th>Simplebo</th>
+              <th>Agence web</th>
+              <th>Se débrouiller</th>
+              <th class="compare-solia">Solia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="compare-criteria">Prix</td>
+              <td>60–110€/mois</td>
+              <td>500–2 000€</td>
+              <td>Variable</td>
+              <td class="compare-solia"><strong>9€/mois</strong></td>
+            </tr>
+            <tr>
+              <td class="compare-criteria">Délai</td>
+              <td>Plusieurs semaines</td>
+              <td>Plusieurs semaines</td>
+              <td>Ton week-end</td>
+              <td class="compare-solia"><strong>—</strong></td>
+            </tr>
+            <tr>
+              <td class="compare-criteria">Effort requis</td>
+              <td>Important</td>
+              <td>Très important</td>
+              <td>Beaucoup</td>
+              <td class="compare-solia"><strong>Aucun</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FAQ ==================== -->
+  <section class="section-faq" id="faq">
+    <div class="container">
+      <div class="section-head fade-s">
+        <h2 class="section-title">Les vraies questions.<br>Les vraies réponses.</h2>
+      </div>
+      <div class="faq-list">
+
+        <div class="faq-item fade-s">
+          <button class="faq-q" aria-expanded="false">
+            <span>J'ai déjà Instagram. Pourquoi j'aurais besoin de ça&nbsp;?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a">
+            <p>Instagram, c'est pour te faire connaître. Solia, c'est pour convaincre ceux qui te connaissent déjà. Ce n'est pas le même moment, ce n'est pas le même outil. Les deux ensemble, c'est redoutable.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-s">
+          <button class="faq-q" aria-expanded="false">
+            <span>C'est quoi exactement cette page&nbsp;?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a">
+            <p>Une page web à ton nom, avec ta présentation, tes infos de contact, tes tarifs si tu veux, et un bouton pour te contacter ou prendre rendez-vous. Propre, mobile, professionnel. Rien à installer, rien à apprendre.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-s">
+          <button class="faq-q" aria-expanded="false">
+            <span>Je peux faire ça moi-même sur Canva, non&nbsp;?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a">
+            <p>Techniquement, oui. En pratique : une heure minimum, un résultat souvent approximatif, et une maintenance à prévoir à chaque changement. Solia, c'est fait pour toi, une fois, et tu n'y touches plus.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-s">
+          <button class="faq-q" aria-expanded="false">
+            <span>C'est vraiment adapté à mon activité&nbsp;?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a">
+            <p>Ta page est personnalisée selon ce que tu fais, où tu le fais, et à qui tu t'adresses. Ce n'est pas un template générique — c'est une page qui parle de toi.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-s">
+          <button class="faq-q" aria-expanded="false">
+            <span>Que se passe-t-il si je résilie&nbsp;?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a">
+            <p>Ta page passe hors ligne. Tes données restent les tiennes. Aucune pénalité, aucune relance agressive. Promis.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-s">
+          <button class="faq-q" aria-expanded="false">
+            <span>Et si je veux modifier ma page&nbsp;?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a">
+            <p>Tu nous envoies un message, on s'en occupe. Changement de tarif, nouvelle adresse, nouvelle photo — c'est inclus.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-s">
+          <button class="faq-q" aria-expanded="false">
+            <span>Pourquoi 9€/mois et pas un paiement unique&nbsp;?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a">
+            <p>Parce que ta page reste en ligne, hébergée, maintenue. Ce n'est pas un fichier qu'on te livre — c'est un service qu'on assure. Et à 9€, si un seul contact devient client grâce à ta page, c'est rentabilisé.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-s">
+          <button class="faq-q" aria-expanded="false">
+            <span>C'est quoi les 7 jours gratuits exactement&nbsp;?</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-a">
+            <p>On crée ta page, on la met en ligne, tu peux la partager, la tester, voir la tête que ça a pour de vrai. Ta carte ne sera débitée qu'à partir du 8ème jour. Si ça te convient, tu t'abonnes. Sinon, pas de rancune.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <style>
+    /* ===== PRICING ===== */
+    .section-pricing {
+      padding: 96px 0;
+      background: var(--c-bg-alt);
+    }
+    .pricing-wrapper { display: flex; justify-content: center; }
+    .pricing-card {
+      background: var(--c-bg);
+      border-radius: var(--radius-lg);
+      padding: 52px 56px;
+      max-width: 540px; width: 100%;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(26,26,24,0.06);
+      text-align: center;
+    }
+    .pricing-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 36px;
+    }
+    .pricing-brand {
+      font-family: var(--ff-serif); font-style: italic;
+      font-size: 1.1rem; color: var(--c-muted); letter-spacing: 0.08em;
+    }
+    .pricing-price { display: flex; align-items: flex-start; gap: 4px; }
+    .pricing-amount {
+      font-family: var(--ff-serif); font-size: 4rem; font-weight: 700;
+      line-height: 1; color: var(--c-accent);
+    }
+    .pricing-unit {
+      font-size: 1.1rem; font-weight: 600; color: var(--c-accent);
+      padding-top: 8px; line-height: 1.3;
+    }
+    .pricing-unit small { font-size: 0.75rem; font-weight: 400; }
+    .pricing-list {
+      list-style: none; margin-bottom: 36px; text-align: left;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .pricing-list li {
+      font-size: 0.95rem; line-height: 1.5; display: flex; gap: 10px; align-items: baseline;
+    }
+    .pricing-list li small { font-size: 0.78rem; color: var(--c-muted); }
+    .check { color: var(--c-accent); font-weight: 700; flex-shrink: 0; }
+    .pricing-cta {
+      width: 100%; justify-content: center;
+      font-size: 1rem; padding: 16px 32px;
+      margin-bottom: 16px;
+    }
+    .pricing-note { font-size: 0.8rem; color: var(--c-muted); }
+
+    /* ===== COMPARAISON ===== */
+    .section-compare {
+      padding: 96px 0;
+      background: var(--c-bg);
+    }
+    .compare-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(26,26,24,0.08);
+    }
+    .compare-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .compare-table thead tr {
+      background: var(--c-card);
+    }
+    .compare-table th {
+      padding: 18px 24px;
+      font-weight: 600; text-align: center;
+      border-bottom: 2px solid rgba(26,26,24,0.08);
+    }
+    .compare-table th.compare-criteria,
+    .compare-table td.compare-criteria {
+      text-align: left; font-weight: 600;
+      color: var(--c-muted); font-size: 0.8rem;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      width: 140px;
+    }
+    .compare-table td {
+      padding: 16px 24px; text-align: center;
+      border-bottom: 1px solid rgba(26,26,24,0.06);
+      color: var(--c-muted);
+    }
+    .compare-table tbody tr:last-child td { border-bottom: none; }
+    /* colonne Solia */
+    .compare-solia {
+      background: var(--c-accent) !important;
+      color: #FDFAF6 !important;
+      position: sticky;
+      right: 0;
+      z-index: 1;
+    }
+    .compare-table th.compare-solia {
+      border-radius: 0; font-size: 1rem;
+    }
+    .compare-table td.compare-solia strong { color: #FDFAF6; }
+    /* colonne critère sticky à gauche sur mobile */
+    .compare-table th.compare-criteria,
+    .compare-table td.compare-criteria {
+      position: sticky;
+      left: 0;
+      background: var(--c-card);
+      z-index: 1;
+    }
+    .compare-table tbody td.compare-criteria { background: var(--c-bg); }
+
+    /* ===== FAQ ===== */
+    .section-faq {
+      padding: 96px 0;
+      background: var(--c-bg-alt);
+    }
+    .faq-list {
+      max-width: 720px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .faq-item {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--c-bg);
+      border: 1px solid rgba(26,26,24,0.07);
+    }
+    .faq-q {
+      width: 100%; background: none; border: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px;
+      padding: 22px 28px;
+      font-family: var(--ff-sans); font-size: 0.95rem; font-weight: 600;
+      color: var(--c-text); text-align: left;
+      transition: background 0.2s;
+    }
+    .faq-q:hover { background: var(--c-bg-alt); }
+    .faq-icon {
+      width: 20px; height: 20px; flex-shrink: 0;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .faq-icon::before, .faq-icon::after {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      background: var(--c-accent);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .faq-icon::before { width: 12px; height: 2px; transform: translate(-50%, -50%); }
+    .faq-icon::after  { width: 2px; height: 12px; transform: translate(-50%, -50%); }
+    .faq-q[aria-expanded="true"] .faq-icon::after { transform: translate(-50%, -50%) rotate(90deg); opacity: 0; }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .faq-a p {
+      padding: 16px 28px 24px;
+      font-size: 0.9rem; color: var(--c-muted); line-height: 1.75;
+    }
+    .faq-item.open .faq-a { max-height: 400px; }
+
+    @media (max-width: 600px) {
+      .pricing-card { padding: 36px 28px; }
+      .section-compare, .section-faq, .section-pricing { padding: 64px 0; }
+      .compare-table th, .compare-table td { padding: 12px 14px; font-size: 0.8rem; }
+    }
+  </style>
+
+
+  <!-- ==================== CTA FINAL ==================== -->
+  <section class="section-cta-final" id="cta-final">
+    <div class="container">
+      <h2 class="cta-final-title fade-s">Ta page pro t'attend.</h2>
+      <p class="cta-final-sub fade-s">7 jours pour tester. CB débitée uniquement au 8ème jour. Juste ta présentation, enfin.</p>
+      <a href="https://solia.me/formulaire/" class="btn-cta-final magnetic-btn fade-s">Personnaliser ma page maintenant</a>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-logo">Solia</div>
+      <div class="footer-links">
+        <a href="#">Contact</a>
+        <span class="footer-sep">·</span>
+        <a href="#">Mentions légales</a>
+      </div>
+      <p class="footer-love">Fait avec ❤︎ par Solia</p>
+    </div>
+  </footer>
+
+  <style>
+    /* ===== CTA FINAL ===== */
+    .section-cta-final {
+      background: var(--c-dark);
+      color: #FDFAF6;
+      padding: 112px 0;
+      text-align: center;
+    }
+    .cta-final-title {
+      font-family: var(--ff-serif);
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 700; line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .cta-final-sub {
+      font-size: 1.05rem; color: rgba(253,250,246,0.65);
+      margin-bottom: 44px; line-height: 1.6;
+    }
+    .btn-cta-final {
+      display: inline-flex; align-items: center;
+      background: #FDFAF6; color: var(--c-dark);
+      font-family: var(--ff-sans); font-size: 1rem; font-weight: 700;
+      padding: 18px 44px; border-radius: 100px;
+      transition: background 0.2s, transform 0.2s;
+      will-change: transform;
+    }
+    .btn-cta-final:hover { background: var(--c-bg-alt); }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--c-dark);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 16px;
+    }
+    .footer-logo {
+      font-family: var(--ff-serif); font-style: italic;
+      font-size: 1.4rem; font-weight: 600;
+      color: rgba(253,250,246,0.9);
+    }
+    .footer-links {
+      display: flex; gap: 16px; align-items: center;
+      font-size: 0.85rem; color: rgba(253,250,246,0.4);
+    }
+    .footer-links a { transition: color 0.2s; }
+    .footer-links a:hover { color: rgba(253,250,246,0.8); }
+    .footer-sep { opacity: 0.3; }
+    .footer-love { font-size: 0.8rem; color: rgba(253,250,246,0.3); }
+  </style>
+
+  <!-- ==================== JS ==================== -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script>
+    const isTouch = window.matchMedia('(hover: none)').matches;
+
+    /* ===== LENIS SMOOTH SCROLL ===== */
+    const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function lenisRaf(time) { lenis.raf(time); requestAnimationFrame(lenisRaf); }
+    requestAnimationFrame(lenisRaf);
+
+    /* ===== NAV SHADOW ON SCROLL ===== */
+    const nav = document.getElementById('mainNav');
+    lenis.on('scroll', ({ scroll }) => {
+      nav.classList.toggle('scrolled', scroll > 10);
+    });
+
+    /* ===== MOBILE NAV CTA ===== */
+    const navCtaMobile = document.getElementById('navCtaMobile');
+    if (window.innerWidth <= 640) navCtaMobile.style.display = 'inline-flex';
+
+    /* ===== HERO CINEMATIC ENTRY ===== */
+    function initHeroEntry() {
+      const hero = document.querySelector('.hero');
+      // Small delay then trigger all at once via class
+      setTimeout(() => hero.classList.add('hero-animated'), 80);
+    }
+    initHeroEntry();
+
+    /* ===== INTERSECTION OBSERVER — FADE-IN SECTIONS ===== */
+    const fadeEls = document.querySelectorAll('.fade-s');
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          // stagger siblings
+          const siblings = entry.target.parentElement.querySelectorAll('.fade-s');
+          let delay = 0;
+          siblings.forEach((s, idx) => {
+            if (s === entry.target) delay = idx * 80;
+          });
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    fadeEls.forEach(el => fadeObserver.observe(el));
+
+    /* ===== REASSURANCE COUNTERS ===== */
+    function animateCount(el) {
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const duration = 1400;
+      const start = performance.now();
+      function step(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 4); // easeOutQuart
+        const current = Math.round(ease * target);
+        el.textContent = current + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    const counterEls = document.querySelectorAll('.reassurance-num[data-count]');
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // also make items visible
+          const items = document.querySelectorAll('.reassurance-item');
+          items.forEach((item, i) => {
+            setTimeout(() => item.classList.add('visible'), i * 120);
+          });
+          counterEls.forEach((el, i) => {
+            setTimeout(() => animateCount(el), i * 120);
+          });
+          counterObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    if (counterEls.length) counterObserver.observe(document.querySelector('.section-reassurance'));
+
+    /* ===== MAGNETIC BUTTONS ===== */
+    if (!isTouch) {
+      document.querySelectorAll('.magnetic-btn').forEach(btn => {
+        btn.addEventListener('mousemove', e => {
+          const rect = btn.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = e.clientX - cx;
+          const dy = e.clientY - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const zone = 80;
+          if (dist < zone) {
+            const mx = (dx / zone) * 12;
+            const my = (dy / zone) * 8;
+            btn.style.transform = `translate(${mx}px, ${my}px)`;
+          }
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = 'translate(0,0)';
+        });
+      });
+    }
+
+    /* ===== FAQ ACCORDION ===== */
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        // close all
+        document.querySelectorAll('.faq-item.open').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    /* ===== ANCHOR SCROLL (lenis) ===== */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          lenis.scrollTo(target, { offset: -64 });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
