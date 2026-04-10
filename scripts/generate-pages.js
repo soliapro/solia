@@ -421,7 +421,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
 /* ─── Génération ─── */
 
 function generatePage(p, template) {
-  const isDemo = p.page_active === true && p.email_confirme !== true;
+  const isPublished = p.published === true;
+  const isDemo = p.page_active === true && !isPublished;
 
   // Appliquer les fallbacks pour les pages démo
   if (isDemo) applyDemoFallbacks(p);

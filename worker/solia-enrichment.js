@@ -56,6 +56,11 @@ export default {
         return await handleTogglePage(request, env);
       }
 
+      // POST /api/publish
+      if (request.method === 'POST' && path === '/api/publish') {
+        return await handlePublish(request, env);
+      }
+
       // POST /api/import
       if (request.method === 'POST' && path === '/api/import') {
         return await handleImport(request, env);
@@ -460,6 +465,27 @@ async function handleTogglePage(request, env) {
     await triggerRebuild(slug, env);
     return jsonResponse({ status: 'offline', slug });
   }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ROUTE — POST /api/publish
+═══════════════════════════════════════════════════════ */
+
+async function handlePublish(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'JSON invalide' }, 400); }
+
+  const { slug } = body;
+  if (!slug) return jsonResponse({ error: 'Champ "slug" requis' }, 400);
+
+  const { prospect, sha } = await getProspectFromGitHub(slug, env);
+  prospect.published = true;
+  prospect.published_at = new Date().toISOString();
+  prospect.email_confirme = true;
+  await commitProspectToGitHub(slug, prospect, sha, env);
+  await triggerRebuild(slug, env);
+
+  return jsonResponse({ status: 'published', slug, message: 'Votre page est publiée !' });
 }
 
 /* ═══════════════════════════════════════════════════════
