@@ -1,0 +1,32 @@
+{
+  "slug": "stephane-kaufmann-masseur-osteopathe-saverne",
+  "prenom": "Stéphane",
+  "nom": "Kaufmann masseur",
+  "metier": "Ostéopathe",
+  "ville": "Saverne",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ-xRgRAihlkcRmY95YwG2NVs/photos/AU_ZVEEdFlO2Tui0Sw-FxYAWvrITGLpfIfl8NcespzCw72ZB3D9hQ8sk0JhIV2TOPHex-AOoYnmVQh5HnPZHx36qYqDxIDt-7Wxje6PEEIQ55iR_ssDtjWnxzkJy3mPFuj7TTWNUN9kWq30HC9_zdfKl8858r-wxNwIp_ykhF0w7PqgXUAlC-xTFdC8RWqEj9NpyOJaysEpT-r_dvP6neQoIN6v5c_DxcuWhmNrlOlvq78WVV2S38LpaVM9wfpSLnRFOhJcitM_O4iuvqEZ55_BzBNQ-tq9ntGsKrT3lD5iRuu0Jlw/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "03 88 01 25 37",
+  "adresse": "16 Rue des Bains, 67700 Saverne, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:00 – 12:00, 13:00 – 19:00 | mardi: 08:00 – 12:00, 13:00 – 19:00 | mercredi: 08:00 – 12:00, 13:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 2,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
