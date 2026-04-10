@@ -189,12 +189,16 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
     .badge-no-page { background: rgba(0,0,0,0.04); color: var(--muted); }
     .badge-contacted { background: rgba(196,112,79,0.1); color: var(--accent); }
 
-    .actions { display: flex; gap: 6px; flex-wrap: nowrap; }
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; }
     .btn-sm { font-family: var(--ff-sans); font-size: 0.72rem; font-weight: 600; padding: 6px 12px; border-radius: 100px; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--dark); transition: all 0.2s; white-space: nowrap; }
     .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
     .btn-sm.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
     .btn-sm.btn-primary:hover { background: var(--accent-d); }
     .btn-sm.btn-done { background: var(--green-bg); color: var(--green); border-color: rgba(46,125,50,0.2); }
+    .btn-sm.btn-danger { border-color: rgba(200,50,50,0.2); color: #c33; }
+    .btn-sm.btn-danger:hover { border-color: #c33; background: rgba(200,50,50,0.06); }
+    .btn-sm:disabled { opacity: 0.5; cursor: wait; }
+    .page-link { font-size: 0.72rem; color: var(--accent); text-decoration: underline; white-space: nowrap; }
 
     .empty-row td { text-align: center; padding: 48px; color: var(--muted); font-size: 0.9rem; }
 
@@ -334,11 +338,18 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
             (p.avis_note ? '<span class="star">&#9733;</span> ' + p.avis_note + '/5 <span style="color:var(--muted)">(' + p.avis_nb + ')</span>' : '<span style="color:var(--border)">&mdash;</span>') +
           '</td>' +
           '<td class="hide-mobile">' +
-            (p.has_page ? '<span class="badge badge-page">En ligne</span>' : '<span class="badge badge-no-page">Pas de page</span>') +
+            (p.has_page
+              ? '<span class="badge badge-page">En ligne</span> <a href="https://' + p.slug + '.solia.me" target="_blank" class="page-link">' + p.slug + '.solia.me</a>'
+              : '<span class="badge badge-no-page">Hors ligne</span>'
+            ) +
             (t ? ' <span class="badge badge-contacted">' + dateStr + '</span>' : '') +
           '</td>' +
           '<td class="actions">' +
-            '<a href="https://solia.me/formulaire/?prospect=' + p.slug + '" target="_blank" class="btn-sm' + (p.has_page ? ' btn-primary' : '') + '">' + (p.has_page ? 'Lien prospect' : 'Formulaire') + '</a>' +
+            (p.has_page
+              ? '<a href="https://solia.me/formulaire/?prospect=' + p.slug + '" target="_blank" class="btn-sm btn-primary">Lien prospect</a>' +
+                '<button class="btn-sm btn-danger" onclick="togglePage(\\'' + p.slug + '\\', false)">Hors ligne</button>'
+              : '<button class="btn-sm btn-primary" onclick="togglePage(\\'' + p.slug + '\\', true)">Mettre en ligne</button>'
+            ) +
             (t
               ? '<button class="btn-sm btn-done" onclick="unmark(\\'' + p.slug + '\\')">&check; ' + dateStr + '</button>'
               : '<button class="btn-sm" onclick="mark(\\'' + p.slug + '\\')">Prospect&eacute;</button>'
@@ -352,6 +363,36 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
       if (!s) return '';
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
+
+    /* ---- TOGGLE PAGE ---- */
+    window.togglePage = async function(slug, activate) {
+      const action = activate ? 'Mettre en ligne' : 'Retirer';
+      if (!confirm(action + ' la page de ' + slug + ' ?')) return;
+
+      // Disable le bouton pendant l'appel
+      event.target.disabled = true;
+      event.target.textContent = activate ? 'Cr\u00e9ation...' : 'Suppression...';
+
+      try {
+        const res = await fetch(WORKER_URL + '/api/toggle-page', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug, active: activate }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+
+        // Mettre à jour l'état local
+        const p = PROSPECTS.find(pr => pr.slug === slug);
+        if (p) p.has_page = activate;
+        document.getElementById('stat-pages').textContent = PROSPECTS.filter(pr => pr.has_page).length;
+        render();
+      } catch (err) {
+        alert('Erreur : ' + err.message);
+        event.target.disabled = false;
+        event.target.textContent = activate ? 'Mettre en ligne' : 'Hors ligne';
+      }
+    };
 
     /* ---- ACTIONS ---- */
     window.mark = function(slug) {
