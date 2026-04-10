@@ -412,7 +412,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   document.getElementById('banner-cta').href = '${formUrl}&theme='+current;
 
   /* ── INLINE EDITING ── */
-  var editableFields = document.querySelectorAll('[data-field]');
+  document.addEventListener('DOMContentLoaded', function(){
+    var editableFields = document.querySelectorAll('[data-field]');
   var hasChanges = false;
   var saveBar = document.createElement('div');
   saveBar.id = 'solia-save-bar';
@@ -495,6 +496,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   // Style du bouton save
   var saveBtnEl = document.getElementById('save-btn');
   saveBtnEl.style.cssText = 'background:#C4704F;color:#fff;border:none;padding:8px 20px;border-radius:100px;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap';
+  }); // fin DOMContentLoaded
 })();
 </script>`;
 
