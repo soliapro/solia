@@ -1,0 +1,32 @@
+{
+  "slug": "huckert-clarisse-reflexologue-munster",
+  "prenom": "HUCKERT",
+  "nom": "Clarisse",
+  "metier": "Réflexologue",
+  "ville": "Munster",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ1-sZj1zZk0cRE2vG2Yuruaw/photos/AU_ZVEExd3rRUH_KWDCe61q7K3ZISkbzTqrF2caOdMDTwKzBP0F-I4Sg7fSM1sb3TJCpBbXeBfcPivk5HkgE0_J88-H0hWjTfXfMUdgFOTC9h_YtHf4JQtTnGRlgGTV75mYvsiydF4FA9H9nOAuA6LvxTwavXTfFY8STkViZCHjFD5Wc_JUaEQtqJLFHHBP4vXwhVhNWjfboU80eOfRGBOeBMl9hXYWJR62cuk8gqXouYNd0wgrKtnu7knpEbmpcx-QVqpmwGi4-ZWE5UCXI7sLgbMwbCSCPbJQm8opl0Iw26S2wtw/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "07 87 81 69 14",
+  "adresse": "39 Rue Louis-Joseph Blanc, 68140 Munster, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:30 – 12:00, 14:00 – 18:00 | mardi: 09:30 – 12:00, 14:00 – 18:00 | mercredi: 09:30 – 12:00, 14:00 – 17:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": null,
+  "avis_google_nb": null,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
