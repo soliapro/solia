@@ -291,15 +291,17 @@
     }
 
     /* ─── SPÉCIALITÉS ─── */
-    .tags-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .tags-row { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: center; }
     .specialite-tag {
-      font-size: 0.85rem; font-weight: 400; padding: 9px 20px;
-      border-radius: 100px; background: var(--c-bg);
-      color: var(--c-text); border: 1px solid var(--c-border);
-      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-      cursor: default;
+      font-size: 0.92rem; font-weight: 400; padding: 6px 0;
+      color: var(--c-text); display: inline-flex; align-items: center; gap: 10px;
+      transition: color 0.2s ease; cursor: default;
     }
-    .specialite-tag:hover { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
+    .specialite-tag::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--c-accent); flex-shrink: 0;
+    }
+    .specialite-tag:hover { color: var(--c-accent); }
 
     /* ─── INFOS ─── */
     .infos-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 16px; }
@@ -470,7 +472,7 @@
 
       
       <a href="#contact" class="btn-cta" id="heroCta">
-        Prendre rendez-vous
+        <span class="cta-label">Prendre rendez-vous</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
       
@@ -635,7 +637,7 @@
 
         
         <a href="mailto:claire.martin@sophro-bordeaux.fr" class="btn-cta btn-cta--lg" id="ctaMain">
-          Écrire un message
+          <span class="cta-label">Écrire un message</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         

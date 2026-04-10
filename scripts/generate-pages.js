@@ -452,7 +452,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     var heroCta=document.getElementById('heroCta');
     var ctaMain=document.getElementById('ctaMain');
     var contactLinks=document.querySelectorAll('#contact-email-link,#contact-phone-link');
-    var ZONES={cabinet:'En cabinet',domicile:'\\u00c0 domicile','les deux':'Cabinet & domicile'};
+    var ZONES={'':'','cabinet':'En cabinet',domicile:'\\u00c0 domicile','les deux':'Cabinet & domicile'};
     var zoneKeys=Object.keys(ZONES);
 
     // PLACEHOLDERS — texte indicatif pour les champs vides
@@ -473,8 +473,10 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       fields.forEach(restorePH);
       if(chipExp&&(!chipExp.dataset.val||chipExp.dataset.val==='0'||chipExp.dataset.val===''))markE(chipExp);
       if(chipLangues&&!chipLangues.textContent.trim())markE(chipLangues);
+      if(chipZone&&!chipZone.dataset.val)markE(chipZone);
       var addE=document.getElementById('add-chip-exp');if(addE)markE(addE);
       var addL=document.getElementById('add-chip-langues');if(addL)markE(addL);
+      if(zoneVal&&!zoneVal.dataset.val){var zc=zoneVal.closest('.info-card');if(zc)markE(zc)}
       ['duree_seance','tarif','horaires','publics'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var c=el.closest('.info-card');if(c)markE(c)}}});
       if(formList&&!formList.querySelectorAll('li').length){var fs=formList.closest('section');if(fs)markE(fs)}
       if(specRow&&!specRow.querySelectorAll('.specialite-tag').length){var ss=specRow.closest('section');if(ss)markE(ss)}
@@ -510,6 +512,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       if(formList)formList.querySelectorAll('.formation-del').forEach(function(b){b.style.display=editMode?'inline':'none'});
       // Contact links: remove/restore href to fix phone/email click bug
       contactLinks.forEach(function(lk){if(editMode){lk.dataset.href=lk.getAttribute('href')||'';lk.removeAttribute('href')}else{if(lk.dataset.href)lk.setAttribute('href',lk.dataset.href)}});
+      document.querySelectorAll('.cta-label').forEach(function(lb){lb.setAttribute('contenteditable',editMode?'true':'false');if(editMode)lb.classList.add('edit-outline');else lb.classList.remove('edit-outline')});
     });
 
     // FIELD EVENTS + PASTE AS PLAIN TEXT
@@ -580,7 +583,16 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     });
 
     // CTA — click to edit URL
-    function ctaEdit(btn){if(!btn)return;btn.addEventListener('click',function(e){if(!editMode)return;e.preventDefault();var cur=btn.getAttribute('href')||'';var v=prompt('URL de prise de rendez-vous :',cur.startsWith('#')||cur.startsWith('mailto:')?'https://':cur);if(v===null)return;v=v.trim();if(v){btn.setAttribute('href',v);btn.setAttribute('target','_blank')}markChanged()})}
+    function ctaEdit(btn){
+      if(!btn)return;
+      var label=btn.querySelector('.cta-label');
+      if(label){
+        label.addEventListener('paste',function(e){e.preventDefault();var t=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,t)});
+        label.addEventListener('input',markChanged);
+        label.addEventListener('keydown',function(e){if(e.key==='Enter')e.preventDefault()});
+      }
+      btn.addEventListener('click',function(e){if(!editMode)return;e.preventDefault();var cur=btn.getAttribute('href')||'';var v=prompt('URL du lien (rendez-vous, calendrier...) :',cur.startsWith('#')||cur.startsWith('mailto:')?'https://':cur);if(v===null)return;v=v.trim();if(v){btn.setAttribute('href',v);btn.setAttribute('target','_blank')}markChanged()});
+    }
     ctaEdit(heroCta);ctaEdit(ctaMain);
 
     // FORMATIONS — editable timeline
@@ -608,6 +620,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       if(chipExp&&chipExp.dataset.val)payload.annees_experience=parseInt(chipExp.dataset.val,10)||'';
       if(chipLangues){var lg=chipLangues.textContent.trim();if(lg)payload.langues_display=lg}
       if(formList){var fl=[];formList.querySelectorAll('li').forEach(function(li){var tn=li.firstChild;var txt=tn?tn.textContent.trim():'';if(txt)fl.push(txt)});if(fl.length)payload.formations=fl}
+      var heroLabel=heroCta?heroCta.querySelector('.cta-label'):null;if(heroLabel)payload.cta_text=heroLabel.textContent.trim();
 
       fetch(W+'/api/personalize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
       .then(function(r){return r.json()})
