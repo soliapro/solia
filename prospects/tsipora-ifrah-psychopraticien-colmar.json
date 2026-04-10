@@ -1,0 +1,32 @@
+{
+  "slug": "tsipora-ifrah-psychopraticien-colmar",
+  "prenom": "Tsipora",
+  "nom": "Ifrah",
+  "metier": "Psychopraticien",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJwY1B6-dlkUcRcHL-hAVXN4Y/photos/AU_ZVEEqstCw8rzL3a8cMT6MnLlsXcM0qvN7FGR0GPakAMLNtzJgVScxRf-4yuVH8YABvOU3l8dsFCzrIA70OC040_75I318dMX-PPsFFxAaG5NQ22aWEkYHmlHsndonJLoUqL85i-l_cWV60GdWSlgKmMDlcJs8p_xWnDqiNBRSkghARJq6T-yBsVoUl0jxwnMK8rf55P5A89yljUhwgdV5vOEk-PiRTKdQ2YuMAqceN-_AszWp0TixU9RygTlAdc_ZRan6Z-si3MYPWYSA7oQnepXZ9k7dACrbL3LUx2PJCPsu7w/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 14 17 14 24",
+  "adresse": "23 Bd du Champ de Mars, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:30 – 18:00 | mardi: 08:30 – 18:00 | mercredi: 08:30 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.9,
+  "avis_google_nb": 24,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
