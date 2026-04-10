@@ -142,7 +142,7 @@ function applyDemoFallbacks(p) {
   if (!p.specialites) p.specialites = [];
   if (!p.tarif) p.tarif = '';
   if (!p.duree_seance) p.duree_seance = '';
-  if (!p.zone_intervention) p.zone_intervention = 'cabinet';
+  if (p.zone_intervention == null) p.zone_intervention = '';
   if (!p.publics) p.publics = [];
   if (!p.formations && !p.certifications) { p.formations = []; p.certifications = []; }
   if (!p.telephone) p.telephone = '';
@@ -473,7 +473,6 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       fields.forEach(restorePH);
       if(chipExp&&(!chipExp.dataset.val||chipExp.dataset.val==='0'||chipExp.dataset.val===''))markE(chipExp);
       if(chipLangues&&!chipLangues.textContent.trim())markE(chipLangues);
-      if(chipZone&&!chipZone.dataset.val)markE(chipZone);
       var addE=document.getElementById('add-chip-exp');if(addE)markE(addE);
       var addL=document.getElementById('add-chip-langues');if(addL)markE(addL);
       if(zoneVal&&!zoneVal.dataset.val){var zc=zoneVal.closest('.info-card');if(zc)markE(zc)}
@@ -490,6 +489,9 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     // Add chip buttons for missing chips
     if(!chipExp){var bExp=document.createElement('button');bExp.className='chip chip-add';bExp.id='add-chip-exp';bExp.innerHTML='+ Exp\\u00e9rience';heroChips.appendChild(bExp);bExp.addEventListener('click',function(){if(!editMode)return;var v=prompt('Ann\\u00e9es d\\'exp\\u00e9rience :');if(v===null)return;var n=parseInt(v,10);if(!isNaN(n)&&n>0){var sp=document.createElement('span');sp.className='chip';sp.id='chip-exp';sp.dataset.val=String(n);sp.textContent=n+' ans d\\'exp\\u00e9rience';heroChips.replaceChild(sp,bExp);chipExp=sp;chipExp.addEventListener('click',function(){if(!editMode)return;var cur=chipExp.dataset.val||'';var nv=prompt('Ann\\u00e9es d\\'exp\\u00e9rience :',cur);if(nv===null)return;var nn=parseInt(nv,10);if(!isNaN(nn)&&nn>0){chipExp.dataset.val=String(nn);chipExp.textContent=nn+' ans d\\'exp\\u00e9rience';markChanged()}});markChanged()}})}
     if(!chipLangues){var bLang=document.createElement('button');bLang.className='chip chip-add';bLang.id='add-chip-langues';bLang.innerHTML='+ Langues';heroChips.appendChild(bLang);bLang.addEventListener('click',function(){if(!editMode)return;var v=prompt('Langues parl\\u00e9es (s\\u00e9par\\u00e9es par virgule) :');if(v===null||!v.trim())return;var sp=document.createElement('span');sp.className='chip';sp.id='chip-langues';sp.textContent=v.trim();heroChips.replaceChild(sp,bLang);chipLangues=sp;chipLangues.addEventListener('click',function(){if(!editMode)return;var cur=chipLangues.textContent.trim();var nv=prompt('Langues parl\\u00e9es :',cur);if(nv===null)return;chipLangues.textContent=nv.trim();markChanged()});markChanged()})}
+
+    // Hide chip zone permanently when empty (not part of empties toggle)
+    if(chipZone&&!chipZone.dataset.val)chipZone.style.display='none';
 
     // Hide empty social icons by default
     socIcons.forEach(function(ic){if(!ic.getAttribute('href'))ic.style.display='none'});
@@ -561,7 +563,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
 
     // ZONE INTERVENTION — click to cycle
     if(zoneVal){
-      zoneVal.addEventListener('click',function(){if(!editMode)return;var curKey=zoneVal.dataset.val||'cabinet';var idx=(zoneKeys.indexOf(curKey)+1)%zoneKeys.length;var nk=zoneKeys[idx];zoneVal.dataset.val=nk;zoneVal.textContent=ZONES[nk];if(chipZone){chipZone.dataset.val=nk;chipZone.textContent=ZONES[nk]}markChanged()});
+      zoneVal.addEventListener('click',function(){if(!editMode)return;var curKey=zoneVal.dataset.val||'';var idx=(zoneKeys.indexOf(curKey)+1)%zoneKeys.length;var nk=zoneKeys[idx];zoneVal.dataset.val=nk;zoneVal.textContent=ZONES[nk]||'Aucun';if(chipZone){chipZone.dataset.val=nk;chipZone.textContent=ZONES[nk];chipZone.style.display=nk?'':'none'}markChanged()});
     }
 
     // HERO CHIPS — click to edit
