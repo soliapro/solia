@@ -1,0 +1,32 @@
+{
+  "slug": "massage-anne-praticien-shiatsu-colmar",
+  "prenom": "Massage",
+  "nom": "Anne",
+  "metier": "Praticien shiatsu",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJDQ873cllkUcRHlPlFDmmauM/photos/AU_ZVEGntBp63dEDr_dXwYwiPCdpAqb9Ckt4RLi40Dp6cMvlC9yxom946-PaLi9PTs3Q0-CtzOC8Y-4h8TT6tihrQDvAhJrn0WF8PImS0Unkmo1ALm7N_Q9sUBiVn9MS83TvAEtV0Qt9E7B70Y9ni7lCTfvURwTj8UfhmLnGvCm0XFCl9NxpV9AnzhS4R5MZjGOMjPN_j26xvpblgwYAfaGKWCE1GEa4oPboNXefy6RzToqUPI6Tj2qfONcEdUN1_OL-mBf7Z_Pf0NWSSOfQFe422ySiGdA3KW3Kln9-GN83ZT3few/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "07 81 42 82 75",
+  "adresse": "4 Rue de Turckheim, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 14:00 – 19:00 | mardi: Fermé | mercredi: 14:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 36,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
