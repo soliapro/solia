@@ -1,0 +1,32 @@
+{
+  "slug": "arnaud-finkler-naturopathe-colmar",
+  "prenom": "Arnaud",
+  "nom": "Finkler",
+  "metier": "Naturopathe",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJJx8TEWRlkUcRZbrNdp93wuY/photos/AU_ZVEGyQBDiZfbZZXm8Gk4rmnRHZjiy24CZ5dMwu_4nkjz1r3QhbPVMyAcWfxIrvLvoQb0CranojWrtAm2FTiJqC-ZFWr-SCkHj5EE0oD6SHOkbQ-TUOWZk4QnPr_nf3KLGJVo0SnqJ9FNlwbhtjSwCyxTDJj_e-STslmoSv74TRDxGM7yiwissIH54srQ0AEtG7vll-bVXIPWA5AVc8Uo97N_EMUIo92p9zwHVK-tjMETQZYUiBR9QxFoPpIccZul-vPLsNXqxgM1NsjVoSfb9zWNv7rw9T3dBWygBVisYkDS2Xg/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "07 77 37 08 20",
+  "adresse": "11 Rue des Bains, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:30 – 19:00 | mardi: 08:30 – 19:00 | mercredi: 08:30 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 15,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
