@@ -264,7 +264,8 @@
           '</td>' +
           '<td class="actions">' +
             (p.has_page
-              ? '<a href="https://solia.me/formulaire/?prospect=' + p.slug + '" target="_blank" class="btn-sm btn-primary">Personnaliser</a>' +
+              ? '<a href="https://' + p.slug + '.solia.me" target="_blank" class="btn-sm">Voir</a>' +
+                '<a href="https://solia.me/formulaire/?prospect=' + p.slug + '" target="_blank" class="btn-sm btn-primary">Personnaliser</a>' +
                 '<button class="btn-sm btn-danger" onclick="togglePage(\'' + p.slug + '\', false)">Hors ligne</button>'
               : '<button class="btn-sm btn-primary" onclick="togglePage(\'' + p.slug + '\', true)">En ligne</button>'
             ) +
