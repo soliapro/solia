@@ -461,7 +461,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       if(formList&&!formList.querySelectorAll('li').length){var fs=formList.closest('section');if(fs)markE(fs)}
       if(specRow&&!specRow.querySelectorAll('.specialite-tag').length){var ss=specRow.closest('section');if(ss)markE(ss)}
       if(fieldEmpty('approche')){var sep=document.querySelector('.sep');if(sep)markE(sep);var ap=document.querySelector('[data-field="approche"]');if(ap)markE(ap)}
-      ['telephone','adresse'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var r=el.closest('.contact-row');if(r)markE(r)}}});
+      ['email','telephone','adresse'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var r=el.closest('.contact-row');if(r)markE(r)}}});
       if(mapEl&&fieldEmpty('adresse'))markE(mapEl);
     }
     function showEmpties(){empties.forEach(function(el){el.classList.remove('empty-hide')})}

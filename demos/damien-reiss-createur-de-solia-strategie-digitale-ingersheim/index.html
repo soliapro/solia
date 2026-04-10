@@ -28,6 +28,7 @@
   },
   "email": "damien.reiss@gmail.com",
   "priceRange": "9€/mois",
+  "telephone": "0667685242",
   "image": "https://soliapro.github.io/solia/damien-reiss-createur-de-solia-strategie-digitale-ingersheim/img/profil.jpg",
   "url": "https://damienreiss.fr"
 }
@@ -532,7 +533,7 @@
       if(formList&&!formList.querySelectorAll('li').length){var fs=formList.closest('section');if(fs)markE(fs)}
       if(specRow&&!specRow.querySelectorAll('.specialite-tag').length){var ss=specRow.closest('section');if(ss)markE(ss)}
       if(fieldEmpty('approche')){var sep=document.querySelector('.sep');if(sep)markE(sep);var ap=document.querySelector('[data-field="approche"]');if(ap)markE(ap)}
-      ['telephone','adresse'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var r=el.closest('.contact-row');if(r)markE(r)}}});
+      ['email','telephone','adresse'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var r=el.closest('.contact-row');if(r)markE(r)}}});
       if(mapEl&&fieldEmpty('adresse'))markE(mapEl);
     }
     function showEmpties(){empties.forEach(function(el){el.classList.remove('empty-hide')})}
@@ -840,7 +841,7 @@
           
           <li class="contact-row">
             <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.8a2 2 0 012-2.18h2.96a2 2 0 012 1.72c.128.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            <a href="tel:" id="contact-phone-link"><span data-field="telephone"></span></a>
+            <a href="tel:0667685242" id="contact-phone-link"><span data-field="telephone">0667685242</span></a>
           </li>
           
           
