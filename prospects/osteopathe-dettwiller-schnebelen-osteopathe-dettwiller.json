@@ -1,0 +1,32 @@
+{
+  "slug": "osteopathe-dettwiller-schnebelen-osteopathe-dettwiller",
+  "prenom": "Ostéopathe",
+  "nom": "Dettwiller SCHNEBELEN",
+  "metier": "Ostéopathe",
+  "ville": "Dettwiller",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJRSn2ANYHEYIRMhij0oVSr-I/photos/AU_ZVEHI4vhJogwBEw6RS_Z7MymN-uN8S6ioknuqGKKrx-X3qujpD5L8R0yIVGMBox7iL9O4WwIZalBWUX09eI9HyQrWM-1i4lfB5f5_R3Fq25-sNPLOcuVVucp9uHTDBEuTm-WsAf3dK-jMgLxiSLUXqLB7gUI9OJEkMKQfH5ssPaUSmh5eIhhG1H_3awMgu8o_6AfI1mwvDCpxURRwzL5QoX2kf_ye2GFLyXjP4DviN4J-9R8rKH5oq4SIm4GGy6S_yxpeWuFxCAXrn8Cl9OTNVdbpboOjTGJQQ6iir6eGatqSxg/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 42 89 28 09",
+  "adresse": "13 Rue des Bouchers, 67490 Dettwiller, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 07:45 – 19:45 | mardi: 08:00 – 19:00 | mercredi: 08:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 73,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
