@@ -111,14 +111,16 @@ async function handlePersonalize(request, env) {
   // 4. Committer le JSON mis à jour sur GitHub
   await commitProspectToGitHub(slug, updated, sha, env);
 
-  // 5. Committer les photos si présentes
-  if (body.photo_profil) {
+  // 5. Committer les photos si présentes (vérifier que c'est bien une string base64)
+  if (body.photo_profil && typeof body.photo_profil === 'string' && body.photo_profil.includes(',')) {
     await commitImageToGitHub(slug, 'profil.jpg', body.photo_profil, env);
     updated.photo_url = `https://soliapro.github.io/solia/${slug}/img/profil.jpg`;
   }
-  if (body.photos_cabinet?.length) {
+  if (Array.isArray(body.photos_cabinet)) {
     for (let i = 0; i < Math.min(body.photos_cabinet.length, 5); i++) {
-      await commitImageToGitHub(slug, `cabinet-${i + 1}.jpg`, body.photos_cabinet[i], env);
+      if (typeof body.photos_cabinet[i] === 'string' && body.photos_cabinet[i].includes(',')) {
+        await commitImageToGitHub(slug, `cabinet-${i + 1}.jpg`, body.photos_cabinet[i], env);
+      }
     }
   }
 
