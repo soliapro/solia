@@ -1,0 +1,32 @@
+{
+  "slug": "filiz-gusun-naturopathe-horbourg-wihr",
+  "prenom": "Filiz",
+  "nom": "Gusun",
+  "metier": "Naturopathe",
+  "ville": "Horbourg-Wihr",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJp2Mn_4hpkUcRno0uKuTN-MI/photos/AU_ZVEGL0pF9OX32HkjIqMBTZbKP2V_J0lQDmeXjhEGf5NUsRaO9SX7ngw6_lSVsvVDGC7UF1psxkdhdnHLNiflRpOVdKGnHWPAS2xyMffC1FzUyY8-c2HaDqu2pXEsvLii8m_FoaqFw-ACJNlD4Ga3VeS2VJaPWJnqj7SNow3irB0-I1okXR5yNdfHik78wTAFPQMXGFhRvjrqvppQE9xVekN-DY_O7R7aB2Hkui6lFtneGbMpCGg3FVNHykaGVCoD25l9STL9gKq9iqg7q4fjCXZwDig8g3aj3nS5pjPEBgCNwNw/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 78 44 08 67",
+  "adresse": "34 Rue Beethoven, 68180 Horbourg-Wihr, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 17:00 | mardi: 09:00 – 17:00 | mercredi: 09:00 – 17:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 2,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
