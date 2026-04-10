@@ -440,6 +440,11 @@
   .edit-mode .chip[id]{cursor:pointer}.edit-mode .chip[id]:hover{outline:2px dashed rgba(196,112,79,.3);outline-offset:2px;border-radius:100px}
   .edit-mode #zone-value{cursor:pointer}.edit-mode #zone-value:hover{outline:2px dashed rgba(196,112,79,.3);outline-offset:4px;border-radius:4px}
   .edit-mode .contact-list a{cursor:text}
+  .field-placeholder{color:var(--c-muted)!important;font-style:italic!important;font-weight:400!important}
+  .section-empty{display:none}.edit-mode .section-empty{display:block}
+  .edit-mode .chip-add{display:inline-flex!important;cursor:pointer;border:1.5px dashed var(--c-border);color:var(--c-muted);font-size:.75rem;padding:4px 12px;border-radius:100px;background:none;font-family:'DM Sans',sans-serif;align-items:center;gap:4px}
+  .chip-add{display:none!important}
+  .edit-mode .chip-add:hover{border-color:var(--c-accent);color:var(--c-accent)}
 </style>
 </head>
 <body>
@@ -503,6 +508,22 @@
     var ZONES={cabinet:'En cabinet',domicile:'\u00c0 domicile','les deux':'Cabinet & domicile'};
     var zoneKeys=Object.keys(ZONES);
 
+    // PLACEHOLDERS — texte indicatif pour les champs vides
+    var PH={description:'D\u00e9crivez votre activit\u00e9...',approche:'D\u00e9crivez votre approche th\u00e9rapeutique...',tarif:'Ex : 65\u20ac / s\u00e9ance',duree_seance:'Ex : 1h',horaires:'Ex : Lun-Ven 9h-19h',email:'votre@email.fr',telephone:'06 00 00 00 00',adresse:'Votre adresse compl\u00e8te',publics:'Ex : adultes, adolescents',ville:'Votre ville',metier:'Votre m\u00e9tier'};
+    var mapEl=document.getElementById('map-container');
+    function applyPH(el){var f=el.dataset.field;if(PH[f]&&!el.textContent.trim()){el.textContent=PH[f];el.classList.add('field-placeholder')}}
+    function clearPH(el){if(el.classList.contains('field-placeholder')){el.textContent='';el.classList.remove('field-placeholder')}}
+    function restorePH(el){var f=el.dataset.field;if(PH[f]&&!el.textContent.trim()){el.textContent=PH[f];el.classList.add('field-placeholder')}}
+    fields.forEach(applyPH);
+    // Hide map if no address
+    if(mapEl&&!document.querySelector('[data-field="adresse"]').textContent.trim())mapEl.style.display='none';
+    // Hide empty sections (no data, no editable content yet)
+    var heroChips=document.getElementById('heroChips');
+
+    // Add chip buttons for missing chips
+    if(!chipExp){var bExp=document.createElement('button');bExp.className='chip chip-add';bExp.id='add-chip-exp';bExp.innerHTML='+ Exp\u00e9rience';heroChips.appendChild(bExp);bExp.addEventListener('click',function(){if(!editMode)return;var v=prompt('Ann\u00e9es d\'exp\u00e9rience :');if(v===null)return;var n=parseInt(v,10);if(!isNaN(n)&&n>0){var sp=document.createElement('span');sp.className='chip';sp.id='chip-exp';sp.dataset.val=String(n);sp.textContent=n+' ans d\'exp\u00e9rience';heroChips.replaceChild(sp,bExp);chipExp=sp;chipExp.addEventListener('click',function(){if(!editMode)return;var cur=chipExp.dataset.val||'';var nv=prompt('Ann\u00e9es d\'exp\u00e9rience :',cur);if(nv===null)return;var nn=parseInt(nv,10);if(!isNaN(nn)&&nn>0){chipExp.dataset.val=String(nn);chipExp.textContent=nn+' ans d\'exp\u00e9rience';markChanged()}});markChanged()}})}
+    if(!chipLangues){var bLang=document.createElement('button');bLang.className='chip chip-add';bLang.id='add-chip-langues';bLang.innerHTML='+ Langues';heroChips.appendChild(bLang);bLang.addEventListener('click',function(){if(!editMode)return;var v=prompt('Langues parl\u00e9es (s\u00e9par\u00e9es par virgule) :');if(v===null||!v.trim())return;var sp=document.createElement('span');sp.className='chip';sp.id='chip-langues';sp.textContent=v.trim();heroChips.replaceChild(sp,bLang);chipLangues=sp;chipLangues.addEventListener('click',function(){if(!editMode)return;var cur=chipLangues.textContent.trim();var nv=prompt('Langues parl\u00e9es :',cur);if(nv===null)return;chipLangues.textContent=nv.trim();markChanged()});markChanged()})}
+
     // Hide empty social icons by default
     socIcons.forEach(function(ic){if(!ic.getAttribute('href'))ic.style.display='none'});
 
@@ -525,8 +546,8 @@
 
     // FIELD EVENTS + PASTE AS PLAIN TEXT
     fields.forEach(function(el){
-      el.addEventListener('focus',function(){el.classList.remove('edit-outline');el.classList.add('edit-focus')});
-      el.addEventListener('blur',function(){el.classList.remove('edit-focus');if(editMode)el.classList.add('edit-outline')});
+      el.addEventListener('focus',function(){clearPH(el);el.classList.remove('edit-outline');el.classList.add('edit-focus')});
+      el.addEventListener('blur',function(){restorePH(el);el.classList.remove('edit-focus');if(editMode)el.classList.add('edit-outline')});
       el.addEventListener('input',markChanged);
       el.addEventListener('paste',function(e){e.preventDefault();var text=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,text)});
     });
@@ -599,7 +620,7 @@
       var mi=0;sts.textContent=msgs[0];var timer=setInterval(function(){mi++;if(mi<msgs.length)sts.textContent=msgs[mi]},3e3);
 
       var payload={slug:SLUG,email:'update@solia.me',theme:current};
-      fields.forEach(function(el){var f=el.dataset.field,txt=el.innerText.replace(/[\r\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt.split(',').map(function(s){return s.trim()}).filter(Boolean)}else{payload[f]=txt}});
+      fields.forEach(function(el){var f=el.dataset.field;var isph=el.classList.contains('field-placeholder');var txt=isph?'':el.innerText.replace(/[\r\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt?txt.split(',').map(function(s){return s.trim()}).filter(Boolean):[]}else{payload[f]=txt}});
       if(specRow){var sp=[];specRow.querySelectorAll('.specialite-tag').forEach(function(t){sp.push(t.textContent.trim())});payload.services=sp.join('\n')}
       socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
       if(photoDataUri)payload.photo_profil=photoDataUri;
@@ -662,13 +683,13 @@
       </div>
 
       <div class="hero-chips" id="heroChips">
-        
-        
-        
+        <span class="chip" id="chip-exp" data-val=""><span class="count" data-to=""></span> ans d'expérience</span>
+        <span class="chip" id="chip-zone" data-val="cabinet">En cabinet</span>
+        <span class="chip" id="chip-langues"></span>
       </div>
 
       
-      <a href="#contact" class="btn-cta" id="heroCta">
+      <a href="" class="btn-cta" id="heroCta" target="_blank" rel="noopener">
         Prendre rendez-vous
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -724,6 +745,14 @@
           </div>
 
           
+          <div class="info-card">
+            <div class="info-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="info-label">Durée</div>
+            <div class="info-value" data-field="duree_seance"></div>
+          </div>
+          
 
           <div class="info-card">
             <div class="info-icon">
@@ -734,7 +763,23 @@
           </div>
 
           
+          <div class="info-card">
+            <div class="info-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="info-label">Lieu</div>
+            <div class="info-value" id="zone-value" data-val="cabinet">En cabinet</div>
+          </div>
+          
 
+          
+          <div class="info-card">
+            <div class="info-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div class="info-label">Publics</div>
+            <div class="info-value" id="publics-value" data-field="publics"></div>
+          </div>
           
 
         </div>
@@ -742,6 +787,13 @@
     </section>
 
     <!-- ════ FORMATIONS ════ -->
+    
+    <section class="s-formations s-surface fade-s">
+      <div class="wrap">
+        <span class="s-label">Formation &amp; parcours</span>
+        <ul class="timeline" id="formations-list"></ul>
+      </div>
+    </section>
     
 
     <!-- ════ AVIS GOOGLE ════ -->
@@ -759,14 +811,33 @@
             <a href="mailto:update@solia.me" id="contact-email-link"><span data-field="email">update@solia.me</span></a>
           </li>
           
+          <li class="contact-row">
+            <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.8a2 2 0 012-2.18h2.96a2 2 0 012 1.72c.128.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:" id="contact-phone-link"><span data-field="telephone"></span></a>
+          </li>
+          
+          
+          <li class="contact-row">
+            <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span data-field="adresse"></span>
+          </li>
           
         </ul>
 
         
+        <div id="map-container" style="margin-top:24px;border-radius:14px;overflow:hidden;border:1.5px solid var(--c-border)">
+          <iframe
+            width="100%" height="250" style="border:0;display:block"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q=&output=embed&z=15"
+            allowfullscreen>
+          </iframe>
+        </div>
+        
 
         
-        <a href="mailto:update@solia.me" class="btn-cta btn-cta--lg" id="ctaMain">
-          Écrire un message
+        <a href="" class="btn-cta btn-cta--lg" id="ctaMain" target="_blank" rel="noopener">
+          Prendre rendez-vous
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         

@@ -119,6 +119,17 @@ function applyDemoFallbacks(p) {
   if (!p.nom) p.nom = p.metier;
   if (!p.departement) p.departement = '';
   if (!p.email) p.email = '';
+
+  // Ensure all optional sections can render for inline editing
+  if (!p.approche) p.approche = '';
+  if (!p.specialites) p.specialites = [];
+  if (!p.tarif) p.tarif = '';
+  if (!p.duree_seance) p.duree_seance = '';
+  if (!p.zone_intervention) p.zone_intervention = 'cabinet';
+  if (!p.publics) p.publics = [];
+  if (!p.formations && !p.certifications) { p.formations = []; p.certifications = []; }
+  if (!p.telephone) p.telephone = '';
+  if (!p.adresse) p.adresse = '';
   return p;
 }
 
@@ -159,7 +170,7 @@ function buildSchemaOrg(p) {
 
 /* ─── Injection du template ─── */
 
-function render(template, p) {
+function render(template, p, isDemo) {
   const theme   = p.theme || detectTheme(p.metier);
   const initAvatar = initiales(p.prenom, p.nom);
   const metaDesc   = truncate(p.description, 160);
@@ -186,6 +197,21 @@ function render(template, p) {
     annees_experience:      !!p.annees_experience,
     langues_extra:          !!(p.langues && p.langues.length > 1),
   };
+
+  // Pages démo : forcer toutes les sections à s'afficher pour l'édition en ligne
+  if (isDemo) {
+    flags.approche = true;
+    flags.specialites = true;
+    flags.duree_seance = true;
+    flags.zone_intervention = true;
+    flags.publics = true;
+    flags.formations_ou_certifications = true;
+    flags.telephone = true;
+    flags.rdv_url = true;
+    flags.adresse = true;
+    flags.annees_experience = true;
+    flags.langues_extra = true;
+  }
 
   // Spécialités → tags HTML
   const specialitesTags = (p.specialites || [])
@@ -344,6 +370,11 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   .edit-mode .chip[id]{cursor:pointer}.edit-mode .chip[id]:hover{outline:2px dashed rgba(196,112,79,.3);outline-offset:2px;border-radius:100px}
   .edit-mode #zone-value{cursor:pointer}.edit-mode #zone-value:hover{outline:2px dashed rgba(196,112,79,.3);outline-offset:4px;border-radius:4px}
   .edit-mode .contact-list a{cursor:text}
+  .field-placeholder{color:var(--c-muted)!important;font-style:italic!important;font-weight:400!important}
+  .section-empty{display:none}.edit-mode .section-empty{display:block}
+  .edit-mode .chip-add{display:inline-flex!important;cursor:pointer;border:1.5px dashed var(--c-border);color:var(--c-muted);font-size:.75rem;padding:4px 12px;border-radius:100px;background:none;font-family:'DM Sans',sans-serif;align-items:center;gap:4px}
+  .chip-add{display:none!important}
+  .edit-mode .chip-add:hover{border-color:var(--c-accent);color:var(--c-accent)}
 </style>`;
 
   const bannerHtml = `
@@ -406,6 +437,22 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     var ZONES={cabinet:'En cabinet',domicile:'\\u00c0 domicile','les deux':'Cabinet & domicile'};
     var zoneKeys=Object.keys(ZONES);
 
+    // PLACEHOLDERS — texte indicatif pour les champs vides
+    var PH={description:'D\\u00e9crivez votre activit\\u00e9...',approche:'D\\u00e9crivez votre approche th\\u00e9rapeutique...',tarif:'Ex : 65\\u20ac / s\\u00e9ance',duree_seance:'Ex : 1h',horaires:'Ex : Lun-Ven 9h-19h',email:'votre@email.fr',telephone:'06 00 00 00 00',adresse:'Votre adresse compl\\u00e8te',publics:'Ex : adultes, adolescents',ville:'Votre ville',metier:'Votre m\\u00e9tier'};
+    var mapEl=document.getElementById('map-container');
+    function applyPH(el){var f=el.dataset.field;if(PH[f]&&!el.textContent.trim()){el.textContent=PH[f];el.classList.add('field-placeholder')}}
+    function clearPH(el){if(el.classList.contains('field-placeholder')){el.textContent='';el.classList.remove('field-placeholder')}}
+    function restorePH(el){var f=el.dataset.field;if(PH[f]&&!el.textContent.trim()){el.textContent=PH[f];el.classList.add('field-placeholder')}}
+    fields.forEach(applyPH);
+    // Hide map if no address
+    if(mapEl&&!document.querySelector('[data-field="adresse"]').textContent.trim())mapEl.style.display='none';
+    // Hide empty sections (no data, no editable content yet)
+    var heroChips=document.getElementById('heroChips');
+
+    // Add chip buttons for missing chips
+    if(!chipExp){var bExp=document.createElement('button');bExp.className='chip chip-add';bExp.id='add-chip-exp';bExp.innerHTML='+ Exp\\u00e9rience';heroChips.appendChild(bExp);bExp.addEventListener('click',function(){if(!editMode)return;var v=prompt('Ann\\u00e9es d\\'exp\\u00e9rience :');if(v===null)return;var n=parseInt(v,10);if(!isNaN(n)&&n>0){var sp=document.createElement('span');sp.className='chip';sp.id='chip-exp';sp.dataset.val=String(n);sp.textContent=n+' ans d\\'exp\\u00e9rience';heroChips.replaceChild(sp,bExp);chipExp=sp;chipExp.addEventListener('click',function(){if(!editMode)return;var cur=chipExp.dataset.val||'';var nv=prompt('Ann\\u00e9es d\\'exp\\u00e9rience :',cur);if(nv===null)return;var nn=parseInt(nv,10);if(!isNaN(nn)&&nn>0){chipExp.dataset.val=String(nn);chipExp.textContent=nn+' ans d\\'exp\\u00e9rience';markChanged()}});markChanged()}})}
+    if(!chipLangues){var bLang=document.createElement('button');bLang.className='chip chip-add';bLang.id='add-chip-langues';bLang.innerHTML='+ Langues';heroChips.appendChild(bLang);bLang.addEventListener('click',function(){if(!editMode)return;var v=prompt('Langues parl\\u00e9es (s\\u00e9par\\u00e9es par virgule) :');if(v===null||!v.trim())return;var sp=document.createElement('span');sp.className='chip';sp.id='chip-langues';sp.textContent=v.trim();heroChips.replaceChild(sp,bLang);chipLangues=sp;chipLangues.addEventListener('click',function(){if(!editMode)return;var cur=chipLangues.textContent.trim();var nv=prompt('Langues parl\\u00e9es :',cur);if(nv===null)return;chipLangues.textContent=nv.trim();markChanged()});markChanged()})}
+
     // Hide empty social icons by default
     socIcons.forEach(function(ic){if(!ic.getAttribute('href'))ic.style.display='none'});
 
@@ -428,8 +475,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
 
     // FIELD EVENTS + PASTE AS PLAIN TEXT
     fields.forEach(function(el){
-      el.addEventListener('focus',function(){el.classList.remove('edit-outline');el.classList.add('edit-focus')});
-      el.addEventListener('blur',function(){el.classList.remove('edit-focus');if(editMode)el.classList.add('edit-outline')});
+      el.addEventListener('focus',function(){clearPH(el);el.classList.remove('edit-outline');el.classList.add('edit-focus')});
+      el.addEventListener('blur',function(){restorePH(el);el.classList.remove('edit-focus');if(editMode)el.classList.add('edit-outline')});
       el.addEventListener('input',markChanged);
       el.addEventListener('paste',function(e){e.preventDefault();var text=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,text)});
     });
@@ -502,7 +549,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       var mi=0;sts.textContent=msgs[0];var timer=setInterval(function(){mi++;if(mi<msgs.length)sts.textContent=msgs[mi]},3e3);
 
       var payload={slug:SLUG,email:'update@solia.me',theme:current};
-      fields.forEach(function(el){var f=el.dataset.field,txt=el.innerText.replace(/[\\r\\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt.split(',').map(function(s){return s.trim()}).filter(Boolean)}else{payload[f]=txt}});
+      fields.forEach(function(el){var f=el.dataset.field;var isph=el.classList.contains('field-placeholder');var txt=isph?'':el.innerText.replace(/[\\r\\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt?txt.split(',').map(function(s){return s.trim()}).filter(Boolean):[]}else{payload[f]=txt}});
       if(specRow){var sp=[];specRow.querySelectorAll('.specialite-tag').forEach(function(t){sp.push(t.textContent.trim())});payload.services=sp.join('\\n')}
       socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
       if(photoDataUri)payload.photo_profil=photoDataUri;
@@ -554,7 +601,7 @@ function generatePage(p, template) {
 
   fs.mkdirSync(outDir, { recursive: true });
 
-  let html = render(template, p);
+  let html = render(template, p, isDemo);
 
   // Injecter le bandeau preview pour les pages démo
   if (isDemo) html = injectPreviewBanner(html, p.slug, p.demo_created_at);
