@@ -496,6 +496,13 @@ function generatePage(p, template) {
     return { slug: p.slug, status: 'skipped', reason: 'existe déjà (utilisez --force)' };
   }
 
+  // Préserver la date de création du compteur lors d'un rebuild --force
+  if (isDemo && !p.demo_created_at && fs.existsSync(outFile)) {
+    const existing = fs.readFileSync(outFile, 'utf8');
+    const match = existing.match(/var created=new Date\('([^']+)'\)/);
+    if (match) p.demo_created_at = match[1];
+  }
+
   fs.mkdirSync(outDir, { recursive: true });
 
   let html = render(template, p);

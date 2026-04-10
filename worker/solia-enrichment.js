@@ -114,6 +114,9 @@ async function handlePersonalize(request, env) {
     sha = null;
   }
 
+  // 1b. Fixer la date de création pour le compteur (comme handleTogglePage)
+  if (!prospect.demo_created_at) prospect.demo_created_at = new Date().toISOString();
+
   // 2. Enrichir via Claude (placeholder tant que la clé n'est pas branchée)
   const enriched = await enrichWithClaude(body, prospect, env);
 
