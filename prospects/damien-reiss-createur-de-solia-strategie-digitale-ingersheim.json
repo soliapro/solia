@@ -29,10 +29,10 @@
   "adresse": "",
   "zone_intervention": "",
   "publics": [],
-  "rdv_url": "",
+  "rdv_url": "https://api.whatsapp.com/send/?phone=33651731482",
   "annees_experience": "",
   "formations": [],
   "whatsapp_url": "https://wa.me/33651731482",
   "cta_text": "Contactez-moi",
-  "contact_title": ""
+  "contact_title": "Prenons rendez-vous"
 }
