@@ -1,0 +1,32 @@
+{
+  "slug": "carine-pfeiffer-sophrologue-grassendorf",
+  "prenom": "Carine",
+  "nom": "Pfeiffer",
+  "metier": "Sophrologue",
+  "ville": "Grassendorf",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJH48O2YGVlkcRxxPA6Jjg2-Y/photos/AU_ZVEHBkNJfQIbfNxwv6ndf9SJn3kWMLI40MGZh-0dVhXNCyPN_z82pGCpwwB9I4b5vsXE-TjLnGtUlGmJm8E700HlxawoTf_trEd2GckbpDZ03KBLmFZ8swqhr13U62hbQju8t1OSVKAVYH31FqcwIS0z09SnorZFfe9qT5i697vAciprbEby_kt-AfXlyzwmp32DYmc_FXna3pqMuVppmqPc5w-Ki8hS3CU93k6gjfUVlQWbYwSqB2v9K7zAnvjkrcLsN09RuNOe3WhH6_eDSUZ326LfMik7e9RRoUyZUSQ6pfA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 33 95 46 45",
+  "adresse": "13 Rue des Noyers, 67350 Grassendorf, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 15:00 – 21:00 | mardi: 15:00 – 21:00 | mercredi: 15:00 – 21:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 40,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
