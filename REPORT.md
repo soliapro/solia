@@ -1,6 +1,6 @@
 # Rapport Solia
 
-**Généré le** : 10/04/2026 20:25:12  
+**Généré le** : 10/04/2026 20:56:02  
 **Source** : `prospects/exemple.json`  
 **Durée** : 0.01s
 

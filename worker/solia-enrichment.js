@@ -342,11 +342,14 @@ function mergeProspect(prospect, formData, enriched) {
     facebook_url:     pick('facebook_url', ''),
     linkedin_url:     pick('linkedin_url', ''),
     site_actuel:      pick('site_actuel', ''),
+    whatsapp_url:     pick('whatsapp_url', ''),
     // Infos pratiques
     adresse:           pick('adresse', ''),
     zone_intervention: pick('zone_intervention', ''),
     publics:           'publics' in formData ? (formData.publics || []) : prospect.publics || [],
     rdv_url:           pick('rdv_url', ''),
+    cta_text:          pick('cta_text', ''),
+    contact_title:     pick('contact_title', ''),
     annees_experience: pick('annees_experience', ''),
     formations:        'formations' in formData ? (formData.formations || []) : prospect.formations || [],
     // Thème visuel

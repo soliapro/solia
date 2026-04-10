@@ -308,12 +308,15 @@ function render(template, p, isDemo) {
     avis_etoiles:         p.avis_google_note ? starsHtml(p.avis_google_note) : '',
     avis_etoiles_svg:     p.avis_google_note ? svgStarsHtml(p.avis_google_note) : '',
     map_embed_url:        buildMapUrl(p),
+    cta_text:             escapeHtml(p.cta_text || 'Prendre rendez-vous'),
+    contact_title:        escapeHtml(p.contact_title || 'Prenons rendez-vous'),
     rdv_url:              escapeHtml(p.rdv_url || ''),
     google_business_url:  escapeHtml(p.google_business_url || ''),
     instagram_url:        escapeHtml(p.instagram_url || ''),
     facebook_url:         escapeHtml(p.facebook_url || ''),
     linkedin_url:         escapeHtml(p.linkedin_url || ''),
     site_actuel:          escapeHtml(p.site_actuel || ''),
+    whatsapp_url:         escapeHtml(p.whatsapp_url || ''),
     social_links_html:    socialLinksHtml
   };
 
@@ -545,7 +548,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     // SOCIAL ICONS
     socIcons.forEach(function(ic){
       ic.addEventListener('click',function(e){
-        e.preventDefault();if(!editMode)return;
+        if(!editMode)return;e.preventDefault();
         var soc=ic.dataset.soc,pfx=ic.dataset.prefix||'',cur=(ic.getAttribute('href')||'').replace(pfx,'');
         var val=soc==='site'?prompt('URL de votre site web :',ic.getAttribute('href')||'https://'):prompt('Votre pseudo '+soc.charAt(0).toUpperCase()+soc.slice(1)+' :',cur);
         if(val===null)return;
@@ -618,7 +621,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       var payload={slug:SLUG,email:'update@solia.me',theme:current};
       fields.forEach(function(el){var f=el.dataset.field;var isph=el.classList.contains('field-placeholder');var txt=isph?'':el.innerText.replace(/[\\r\\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt?txt.split(',').map(function(s){return s.trim()}).filter(Boolean):[]}else{payload[f]=txt}});
       if(specRow){var sp=[];specRow.querySelectorAll('.specialite-tag').forEach(function(t){sp.push(t.textContent.trim())});payload.services=sp.join('\\n')}
-      socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
+      socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',whatsapp:'whatsapp_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
       if(photoDataUri)payload.photo_profil=photoDataUri;
       if(zoneVal)payload.zone_intervention=zoneVal.dataset.val||'';
       var cHref=heroCta?heroCta.getAttribute('href'):'';if(cHref&&!cHref.startsWith('#')&&!cHref.startsWith('mailto:'))payload.rdv_url=cHref;
