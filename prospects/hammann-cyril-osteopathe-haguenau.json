@@ -1,0 +1,32 @@
+{
+  "slug": "hammann-cyril-osteopathe-haguenau",
+  "prenom": "Hammann",
+  "nom": "Cyril",
+  "metier": "Ostéopathe",
+  "ville": "Haguenau",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "",
+  "theme": "",
+  "telephone": "09 80 43 03 00",
+  "adresse": "32a Rte de Schweighouse, 67500 Haguenau, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:00 – 19:30 | mardi: 08:00 – 19:30 | mercredi: 08:00 – 19:30",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.7,
+  "avis_google_nb": 83,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
