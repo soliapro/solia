@@ -7,12 +7,14 @@
   "ville": "Ingersheim",
   "telephone": "",
   "email": "damien.reiss@gmail.com",
-  "description": "Je crée des pages web professionnelles pour les indépendants qui n'ont pas le temps, l'envie, ou les compétences de s'en occuper eux-mêmes. Mon truc : je construis ta page avant même de te contacter. Tu la reçois prête, tu la partages. Zéro technique, zéro prise de tête. En parallèle, j'écris Fullness, une lettre hebdomadaire où j'explore comment redevenir présent dans un monde qui nous disperse — et ce que ça change dans ma manière de travailler, d'aimer et de vivre.",
-  "approche": "Je ne vends pas un site web, je livre une page terminée — créée avant le premier contact. Pas de brief interminable, pas de template à remplir. Le prospect reçoit sa page en ligne, il décide s'il la garde. C'est du \"show don't tell\" appliqué à la prospection. J'ai construit tout le système moi-même : GitHub Pages, Cloudflare, Stripe, Brevo, GitHub Actions. Tout roule sans intervention manuelle.",
+  "description": "Je construis des pages web pour les indépendants qui veulent être pris au sérieux sans y passer leurs soirées. Et j'écris Fullness, une lettre sur la présence — comment revenir à l'essentiel dans un monde qui nous disperse.",
+  "approche": "Je crée ta page avant même de te parler. Tu la reçois en ligne, tu décides. Pas de brief, pas de template, pas de technique. En parallèle, j'écris chaque semaine sur ce que ça veut dire d'être vraiment là — dans son travail, ses relations, sa vie.",
   "specialites": [
-    "Je crée des pages web professionnelles pour les indépendants qui n'ont pas le temps, l'envie, ou les compétences de s'en occuper eux-mêmes. Mon truc : je construis ta page avant même de te contacter. Tu la reçois prête, tu la partages. Zéro technique, zéro prise de tête. En parallèle, j'écris Fullness, une lettre hebdomadaire où j'explore comment redevenir présent dans un monde qui nous disperse — et ce que ça change dans ma manière de travailler, d'aimer et de vivre."
+    "Pages pro pour indépendants (Solia)",
+    "Stratégie digitale & positionnement",
+    "Lettre Fullness — présence, travail, vie"
   ],
-  "horaires": "",
+  "horaires": "24h/24",
   "tarif": "9€/mois",
   "duree_seance": "",
   "theme": "charbon",
