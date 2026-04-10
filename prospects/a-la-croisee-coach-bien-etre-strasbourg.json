@@ -17,7 +17,9 @@
   "tarif": "",
   "duree_seance": "",
   "approche": "",
-  "specialites": [],
+  "specialites": [
+    "petit test"
+  ],
   "formations": [],
   "certifications": [],
   "publics": [],
