@@ -300,8 +300,10 @@ function render(template, p) {
 
 /* ─── Bandeau preview (pages démo) ─── */
 
-function injectPreviewBanner(html, slug) {
-  const formUrl = `https://solia.me/formulaire/?prospect=${slug}`;
+function injectPreviewBanner(html, slug, demoCreatedAt) {
+  const formUrl  = `https://solia.me/formulaire/?prospect=${slug}`;
+  const stripeUrl = `https://buy.stripe.com/28E4gAd7XawU2xl0WA67S0a?client_reference_id=${slug}`;
+  const created  = demoCreatedAt || new Date().toISOString();
 
   const bannerCss = `
 <style id="solia-preview-banner-style">
@@ -309,66 +311,105 @@ function injectPreviewBanner(html, slug) {
     position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
     background: #1A1A18; color: #fff;
     display: flex; align-items: center; justify-content: center;
-    gap: 12px; padding: 10px 16px;
+    gap: 10px; padding: 9px 16px;
     font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
-    font-size: 0.78rem; font-weight: 500;
+    font-size: 0.75rem; font-weight: 500;
     box-shadow: 0 2px 16px rgba(0,0,0,0.18);
   }
-  #solia-preview-banner .banner-btn {
-    background: #C4704F; color: #fff; font-weight: 700; font-size: 0.72rem;
-    padding: 6px 14px; border-radius: 100px; text-decoration: none;
+  .banner-btn {
+    font-weight: 700; font-size: 0.7rem;
+    padding: 5px 13px; border-radius: 100px; text-decoration: none;
     white-space: nowrap; transition: opacity 0.2s; flex-shrink: 0;
   }
-  #solia-preview-banner .banner-btn:hover { opacity: 0.85; }
-  .banner-text { white-space: nowrap; }
-  .theme-dots { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
-  .theme-dots span { font-size: 0.68rem; color: rgba(255,255,255,0.5); }
+  .banner-btn-secondary { background: rgba(255,255,255,0.15); color: #fff; }
+  .banner-btn-primary { background: #C4704F; color: #fff; }
+  .banner-btn:hover { opacity: 0.85; }
+  .banner-countdown { color: rgba(255,255,255,0.6); white-space: nowrap; font-size: 0.68rem; flex-shrink: 0; }
+  .theme-dots { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
   .theme-dot-btn {
-    width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25);
+    width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2);
     cursor: pointer; transition: border-color 0.2s, transform 0.15s; flex-shrink: 0;
   }
   .theme-dot-btn:hover { transform: scale(1.15); }
   .theme-dot-btn.active { border-color: #fff; transform: scale(1.15); }
-  body { padding-top: 42px !important; }
-  @media (max-width: 600px) {
-    #solia-preview-banner { gap: 8px; padding: 8px 12px; font-size: 0.72rem; }
-    .banner-text { display: none; }
-    .theme-dot-btn { width: 22px; height: 22px; }
-    body { padding-top: 40px !important; }
+  body { padding-top: 40px !important; }
+  @media (max-width: 640px) {
+    #solia-preview-banner { gap: 6px; padding: 7px 10px; }
+    .banner-btn { font-size: 0.65rem; padding: 5px 10px; }
+    .theme-dot-btn { width: 18px; height: 18px; }
+    body { padding-top: 38px !important; }
   }
+  #solia-expired-overlay {
+    display: none; position: fixed; inset: 0; z-index: 999999;
+    background: rgba(253,250,246,0.96); backdrop-filter: blur(8px);
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 20px; text-align: center; padding: 32px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  #solia-expired-overlay.visible { display: flex; }
+  .expired-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; color: #1A1A18; }
+  .expired-sub { font-size: 0.9rem; color: #8A8074; max-width: 380px; line-height: 1.6; }
+  .expired-btn { background: #C4704F; color: #fff; font-weight: 700; font-size: 0.9rem; padding: 14px 32px; border-radius: 100px; text-decoration: none; }
+  .expired-btn:hover { background: #A85C3E; }
+  .expired-link { font-size: 0.82rem; color: #8A8074; }
 </style>`;
 
   const bannerHtml = `
 <div id="solia-preview-banner">
-  <span class="banner-text">Aperçu</span>
   <div class="theme-dots">
-    <span>Thème</span>
     <div class="theme-dot-btn" data-t="terracotta" style="background:#C4704F" title="Terracotta"></div>
     <div class="theme-dot-btn" data-t="sauge" style="background:#6B8F5E" title="Sauge"></div>
     <div class="theme-dot-btn" data-t="ocean" style="background:#2E6B8A" title="Océan"></div>
     <div class="theme-dot-btn" data-t="lavande" style="background:#8B6DAF" title="Lavande"></div>
     <div class="theme-dot-btn" data-t="charbon" style="background:#3D3D3D" title="Charbon"></div>
   </div>
-  <a href="${formUrl}" class="banner-btn" id="banner-cta">Personnaliser ma page →</a>
+  <span class="banner-countdown" id="banner-countdown"></span>
+  <a href="${formUrl}" class="banner-btn banner-btn-secondary" id="banner-cta">Personnaliser</a>
+  <a href="${stripeUrl}" class="banner-btn banner-btn-primary">Publier ma page</a>
 </div>
+
+<div id="solia-expired-overlay">
+  <div class="expired-title">Votre essai a expiré</div>
+  <div class="expired-sub">Votre page de démonstration n'est plus disponible. Publiez-la pour la garder en ligne.</div>
+  <a href="${stripeUrl}" class="expired-btn">Publier ma page →</a>
+  <a href="mailto:damien.reiss@gmail.com?subject=Page%20Solia%20—%20${slug}" class="expired-link">Nous contacter</a>
+</div>
+
 <script>
 (function(){
   var slug = '${slug}';
+  var created = new Date('${created}');
+  var expires = new Date(created.getTime() + 7*24*60*60*1000);
+  var cdEl = document.getElementById('banner-countdown');
+
+  function tick() {
+    var diff = expires.getTime() - Date.now();
+    if (diff <= 0) {
+      document.getElementById('solia-expired-overlay').classList.add('visible');
+      cdEl.textContent = 'Expiré';
+      return;
+    }
+    var d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
+    cdEl.textContent = d > 0 ? d+'j '+h+'h' : h+'h';
+    setTimeout(tick, 60000);
+  }
+  tick();
+
   var current = document.documentElement.getAttribute('data-theme') || 'terracotta';
-  var stored = localStorage.getItem('solia_theme_' + slug);
+  var stored = localStorage.getItem('solia_theme_'+slug);
   if (stored) { current = stored; document.documentElement.setAttribute('data-theme', current); }
-  document.querySelectorAll('.theme-dot-btn').forEach(function(d){
-    if (d.dataset.t === current) d.classList.add('active');
-    d.addEventListener('click', function(){
-      var t = d.dataset.t;
-      document.documentElement.setAttribute('data-theme', t);
+  document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
+    if (dot.dataset.t === current) dot.classList.add('active');
+    dot.addEventListener('click', function(){
+      current = dot.dataset.t;
+      document.documentElement.setAttribute('data-theme', current);
       document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
-      d.classList.add('active');
-      localStorage.setItem('solia_theme_' + slug, t);
-      document.getElementById('banner-cta').href = '${formUrl}&theme=' + t;
+      dot.classList.add('active');
+      localStorage.setItem('solia_theme_'+slug, current);
+      document.getElementById('banner-cta').href = '${formUrl}&theme='+current;
     });
   });
-  document.getElementById('banner-cta').href = '${formUrl}&theme=' + current;
+  document.getElementById('banner-cta').href = '${formUrl}&theme='+current;
 })();
 </script>`;
 
@@ -397,7 +438,7 @@ function generatePage(p, template) {
   let html = render(template, p);
 
   // Injecter le bandeau preview pour les pages démo
-  if (isDemo) html = injectPreviewBanner(html, p.slug);
+  if (isDemo) html = injectPreviewBanner(html, p.slug, p.demo_created_at);
 
   fs.writeFileSync(outFile, html, 'utf8');
 

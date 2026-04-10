@@ -448,11 +448,12 @@ async function handleTogglePage(request, env) {
     // ── METTRE EN LIGNE : activer le prospect → GitHub Actions génère avec le vrai template ──
     const { prospect, sha } = await getProspectFromGitHub(slug, env);
     prospect.page_active = true;
+    if (!prospect.demo_created_at) prospect.demo_created_at = new Date().toISOString();
     await commitProspectToGitHub(slug, prospect, sha, env);
     await triggerRebuild(slug, env);
     return jsonResponse({ status: 'online', slug, message: 'Page en cours de génération (~1 min)' });
   } else {
-    // ── HORS LIGNE : désactiver et supprimer la page ──
+    // ── HORS LIGNE : désactiver ──
     const { prospect, sha } = await getProspectFromGitHub(slug, env);
     prospect.page_active = false;
     await commitProspectToGitHub(slug, prospect, sha, env);
