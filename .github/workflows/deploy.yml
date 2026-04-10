@@ -8,8 +8,7 @@ on:
       - 'prospects/**'
       - 'templates/**'
       - 'scripts/**'
-      - 'demos/formulaire/**'
-      - 'demos/index.html'
+      - 'demos/**'
 
   # Trigger depuis le Worker Cloudflare (POST /api/personalize → triggerRebuild)
   repository_dispatch:
