@@ -1,0 +1,32 @@
+{
+  "slug": "pandoreve-sophrologue-haguenau",
+  "prenom": "",
+  "nom": "Pandoreve",
+  "metier": "Sophrologue",
+  "ville": "Haguenau",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJmwRk-cTqlkcRYWrUsY1k5k4/photos/AU_ZVEE3RwAl4F2sGj8yTvBfjyVXeyaR3tmP9jytLcqduuFIwAHMP898ditFADzV29jJmX1g2C8zhDNT4hYmpq8d9bL1A9qEzEERL4OE3NkamOSMa2dsYZDadhxsQ-VS8jU7cxsCrkYQV3SuWxXIh7Sg4TCEYmDJKVU3ycFxMTGlUCVZpkgsxIJfNWx2N5HQ5qRPPGpeqWxC7jy0en9GPDj0uk-v3G-mR4_FJP8TUhJS1OYJM6PB99VDpZ4AAzX6iHM18AiiMfWOMAIia-FCKV0PYY1VlGg2Wib1xxeyd-XkZKVBgQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "07 70 76 24 44",
+  "adresse": "2 Rue de la Romaine, 67500 Haguenau, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 09:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.7,
+  "avis_google_nb": 13,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
