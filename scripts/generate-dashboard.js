@@ -203,9 +203,25 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
     .empty-row td { text-align: center; padding: 48px; color: var(--muted); font-size: 0.9rem; }
 
     @media (max-width: 768px) {
-      .prospect-table { font-size: 0.8rem; }
       .hide-mobile { display: none; }
-      .main { padding: 20px 12px 60px; }
+      .main { padding: 16px 10px 60px; }
+      .header h1 { font-size: 1.4rem; }
+      .stats-bar { gap: 8px; }
+      .stat-pill { font-size: 0.7rem; padding: 5px 12px; }
+      .filters { gap: 6px; }
+      .filter-btn { font-size: 0.7rem; padding: 5px 12px; }
+      .search-input { min-width: 0; font-size: 0.8rem; padding: 7px 14px; }
+      .csv-zone { padding: 16px; }
+
+      /* Table → cards sur mobile */
+      .prospect-table { border-spacing: 0 8px; }
+      .prospect-table thead { display: none; }
+      .prospect-table tbody tr { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px; background: var(--bg-card); border-radius: 12px; margin-bottom: 8px; align-items: center; }
+      .prospect-table tbody tr td { background: none; padding: 0; border: none; border-radius: 0; }
+      .prospect-table tbody tr td:first-child { width: 100%; border: none; }
+      .prospect-table tbody tr td:last-child { width: 100%; border: none; margin-top: 4px; }
+      .actions { flex-wrap: wrap; }
+      .cell-phone { font-size: 0.78rem; }
     }
   </style>
 </head>
@@ -346,9 +362,9 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
           '</td>' +
           '<td class="actions">' +
             (p.has_page
-              ? '<a href="https://solia.me/formulaire/?prospect=' + p.slug + '" target="_blank" class="btn-sm btn-primary">Lien prospect</a>' +
+              ? '<a href="https://solia.me/formulaire/?prospect=' + p.slug + '" target="_blank" class="btn-sm btn-primary">Personnaliser</a>' +
                 '<button class="btn-sm btn-danger" onclick="togglePage(\\'' + p.slug + '\\', false)">Hors ligne</button>'
-              : '<button class="btn-sm btn-primary" onclick="togglePage(\\'' + p.slug + '\\', true)">Mettre en ligne</button>'
+              : '<button class="btn-sm btn-primary" onclick="togglePage(\\'' + p.slug + '\\', true)">En ligne</button>'
             ) +
             (t
               ? '<button class="btn-sm btn-done" onclick="unmark(\\'' + p.slug + '\\')">&check; ' + dateStr + '</button>'
