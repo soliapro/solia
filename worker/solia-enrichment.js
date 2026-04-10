@@ -104,8 +104,15 @@ async function handlePersonalize(request, env) {
   if (!slug)  return jsonResponse({ error: 'Champ "slug" requis' }, 400);
   if (!email) return jsonResponse({ error: 'Champ "email" requis' }, 400);
 
-  // 1. Récupérer le JSON prospect depuis GitHub
-  const { prospect, sha } = await getProspectFromGitHub(slug, env);
+  // 1. Récupérer le JSON prospect depuis GitHub (ou créer un nouveau)
+  let prospect, sha;
+  try {
+    ({ prospect, sha } = await getProspectFromGitHub(slug, env));
+  } catch {
+    // Nouveau prospect (inscription depuis le formulaire)
+    prospect = { slug, source: 'inscription' };
+    sha = null;
+  }
 
   // 2. Enrichir via Claude (placeholder tant que la clé n'est pas branchée)
   const enriched = await enrichWithClaude(body, prospect, env);
@@ -374,11 +381,10 @@ async function commitProspectToGitHub(slug, prospect, sha, env) {
   const res = await githubFetch(url, env, {
     method:  'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      message: `feat(prospect): mise à jour ${slug} depuis formulaire`,
+    body: JSON.stringify(Object.assign({
+      message: sha ? `feat(prospect): mise à jour ${slug}` : `feat(prospect): nouveau ${slug} (inscription)`,
       content,
-      sha,
-    }),
+    }, sha ? { sha } : {})),
   });
 
   if (!res.ok) {

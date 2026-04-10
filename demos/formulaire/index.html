@@ -460,23 +460,31 @@
         <div class="section-body">
           <div class="field-row">
             <div class="field">
-              <label for="f-prenom">Prénom</label>
-              <input type="text" id="f-prenom" name="prenom" placeholder="Sophie">
+              <label for="f-prenom">Prénom <span class="required">*</span></label>
+              <input type="text" id="f-prenom" name="prenom" placeholder="Sophie" required>
             </div>
             <div class="field">
-              <label for="f-nom">Nom</label>
-              <input type="text" id="f-nom" name="nom" placeholder="Martin">
+              <label for="f-nom">Nom <span class="required">*</span></label>
+              <input type="text" id="f-nom" name="nom" placeholder="Martin" required>
             </div>
           </div>
           <div class="field-row">
             <div class="field">
-              <label for="f-metier">Activité / Métier</label>
-              <input type="text" id="f-metier" name="metier" placeholder="Naturopathe">
+              <label for="f-metier">Activité / Métier <span class="required">*</span></label>
+              <input type="text" id="f-metier" name="metier" placeholder="Naturopathe" required>
             </div>
             <div class="field">
-              <label for="f-ville">Ville</label>
-              <input type="text" id="f-ville" name="ville" placeholder="Colmar">
+              <label for="f-ville">Ville <span class="required">*</span></label>
+              <input type="text" id="f-ville" name="ville" placeholder="Colmar" required>
             </div>
+          </div>
+          <div class="field">
+            <label for="f-slug-display">Votre lien personnalisé</label>
+            <div style="display:flex;align-items:center;gap:0;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg)">
+              <span style="padding:11px 0 11px 14px;font-size:0.82rem;color:var(--muted);white-space:nowrap;flex-shrink:0">solia.me/</span>
+              <input type="text" id="f-slug-display" style="border:none;background:transparent;padding:11px 14px 11px 0;font-size:0.82rem;flex:1;outline:none;color:var(--dark);font-family:monospace" placeholder="sophie-martin-naturopathe-colmar">
+            </div>
+            <span class="field-hint">Généré automatiquement. Vous pouvez le modifier.</span>
           </div>
           <div class="field-row">
             <div class="field">
@@ -749,11 +757,51 @@
       });
     }
 
+    /* ─── SLUG AUTO-GENERATION ─── */
+    function toSlug(str) {
+      return str.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
+
+    function autoSlug() {
+      var p = document.getElementById('f-prenom').value.trim();
+      var n = document.getElementById('f-nom').value.trim();
+      var m = document.getElementById('f-metier').value.trim();
+      var v = document.getElementById('f-ville').value.trim();
+      if (p && n && m && v) {
+        var s = toSlug(p + ' ' + n + ' ' + m + ' ' + v);
+        document.getElementById('f-slug-display').value = s;
+        document.getElementById('f-slug').value = s;
+      }
+    }
+
+    // Auto-générer quand les 4 champs sont remplis (seulement si pas de prospect existant)
+    var slugLocked = false;
+    ['f-prenom','f-nom','f-metier','f-ville'].forEach(function(id) {
+      document.getElementById(id).addEventListener('blur', function() {
+        if (!slugLocked) autoSlug();
+      });
+    });
+
+    // Le champ slug personnalisé met à jour le hidden
+    document.getElementById('f-slug-display').addEventListener('input', function() {
+      var raw = toSlug(this.value);
+      this.value = raw;
+      document.getElementById('f-slug').value = raw;
+      slugLocked = true;
+    });
+
     /* ─── INIT ─── */
     const params = new URLSearchParams(location.search);
     const slug   = params.get('prospect') || '';
 
     document.getElementById('f-slug').value = slug;
+    if (slug) {
+      document.getElementById('f-slug-display').value = slug;
+      slugLocked = true;
+    }
 
     if (slug) loadProspectData(slug);
 
@@ -877,11 +925,23 @@
       e.preventDefault();
       errBox.classList.remove('visible');
 
-      // Validation email
-      const email = document.getElementById('f-email').value.trim();
-      if (!email || !email.includes('@')) {
-        showError('Veuillez saisir une adresse email valide.');
-        return;
+      // Validation champs obligatoires
+      const prenom = document.getElementById('f-prenom').value.trim();
+      const nom    = document.getElementById('f-nom').value.trim();
+      const metier = document.getElementById('f-metier').value.trim();
+      const ville  = document.getElementById('f-ville').value.trim();
+      const email  = document.getElementById('f-email').value.trim();
+      const slugVal = document.getElementById('f-slug').value.trim();
+
+      if (!prenom || !nom) { showError('Veuillez saisir votre prénom et nom.'); return; }
+      if (!metier || !ville) { showError('Veuillez saisir votre métier et votre ville.'); return; }
+      if (!email || !email.includes('@')) { showError('Veuillez saisir une adresse email valide.'); return; }
+
+      // Générer le slug si vide
+      if (!slugVal) {
+        var generated = toSlug(prenom + ' ' + nom + ' ' + metier + ' ' + ville);
+        document.getElementById('f-slug').value = generated;
+        document.getElementById('f-slug-display').value = generated;
       }
 
       // Afficher le loader
