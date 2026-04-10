@@ -307,8 +307,11 @@ function mergeProspect(prospect, formData, enriched) {
     horaires:     enriched.horaires     || formData.horaires  || prospect.horaires || '',
     tarif:        formData.tarif        || prospect.tarif     || '',
     duree_seance: formData.duree_seance || prospect.duree_seance || '',
-    // Flags
-    email_confirme: prospect.email_confirme || false,
+    // Thème visuel
+    theme:        formData.theme        || prospect.theme       || '',
+    // Flags — le prospect a rempli le formulaire = email confirmé + page active
+    email_confirme: true,
+    page_active:    true,
   };
 }
 
