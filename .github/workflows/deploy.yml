@@ -1,11 +1,9 @@
 name: Deploy Solia Pages
 
 on:
-  # Rebuild automatique quand un JSON est modifié sur main
   push:
     branches: [main]
     paths:
-      - 'prospects/**'
       - 'templates/**'
       - 'scripts/**'
       - 'demos/**'
