@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personnalisez votre page — Solia</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── VARIABLES ─── */
+    :root {
+      --bg:       #FDFAF6;
+      --bg-alt:   #F4EFE8;
+      --dark:     #1A1A18;
+      --accent:   #C4704F;
+      --accent-d: #A85C3E;
+      --muted:    #8A8074;
+      --border:   #E4DDD4;
+      --radius:   14px;
+      --ff-serif: 'Playfair Display', Georgia, serif;
+      --ff-sans:  'DM Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--ff-sans);
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ─── NAV ─── */
+    .nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 740px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-logo {
+      font-family: var(--ff-serif);
+      font-style: italic;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .nav-sep { color: var(--border); font-size: 1.1rem; }
+    .nav-step { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: var(--ff-serif);
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: var(--dark);
+    }
+    .hero p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ─── CONTEXT BANNER ─── */
+    #context-banner {
+      display: none;
+      max-width: 740px;
+      margin: 24px auto 0;
+      padding: 14px 20px;
+      background: rgba(196,112,79,0.08);
+      border: 1.5px solid rgba(196,112,79,0.25);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      color: var(--dark);
+    }
+    #context-banner strong { color: var(--accent); }
+
+    /* ─── MAIN ─── */
+    .main {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 36px 24px 80px;
+    }
+
+    /* ─── FORM SECTIONS ─── */
+    .form-section {
+      margin-bottom: 36px;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 18px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-family: var(--ff-serif);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .section-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+    .section-body {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ─── FORM FIELDS ─── */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--dark);
+      letter-spacing: 0.01em;
+    }
+    .field label .required { color: var(--accent); margin-left: 2px; }
+    .field label .optional {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.75rem;
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-family: var(--ff-sans);
+      font-size: 0.9rem;
+      color: var(--dark);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      resize: vertical;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(196,112,79,0.12);
+    }
+    input::placeholder, textarea::placeholder { color: var(--muted); font-size: 0.875rem; }
+    textarea { min-height: 110px; line-height: 1.6; }
+
+    .field-hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: -2px;
+    }
+
+    /* ─── UPLOAD ZONE ─── */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--accent);
+      background: rgba(196,112,79,0.04);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon {
+      width: 40px; height: 40px;
+      margin: 0 auto 10px;
+      color: var(--muted);
+    }
+    .upload-label { font-size: 0.875rem; color: var(--muted); }
+    .upload-label strong { color: var(--accent); }
+    .upload-label-small { font-size: 0.75rem; color: var(--border); margin-top: 4px; }
+
+    /* Prévisualisation photo profil */
+    .avatar-preview-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .avatar-preview {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--bg-alt);
+      border: 2px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .avatar-preview .avatar-placeholder {
+      font-family: var(--ff-serif);
+      font-size: 1.4rem;
+      color: var(--muted);
+    }
+
+    /* Grille prévisualisation photos cabinet */
+    .photos-preview-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .photo-thumb {
+      width: 80px; height: 80px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1.5px solid var(--border);
+    }
+
+    /* ─── SUBMIT ZONE ─── */
+    .submit-zone {
+      text-align: center;
+      padding-top: 8px;
+    }
+    .submit-zone p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--ff-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 16px 40px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-submit:hover:not(:disabled) { background: var(--accent-d); transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-submit svg { flex-shrink: 0; }
+
+    /* ─── LOADER OVERLAY ─── */
+    #loader-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(253,250,246,0.92);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      text-align: center;
+      padding: 24px;
+    }
+    #loader-overlay.visible { display: flex; }
+    .loader-spinner {
+      width: 48px; height: 48px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-title {
+      font-family: var(--ff-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .loader-sub { font-size: 0.875rem; color: var(--muted); }
+    .loader-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .loader-step {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.4;
+      transition: opacity 0.4s;
+    }
+    .loader-step.active { opacity: 1; color: var(--dark); }
+    .loader-step.done { opacity: 0.7; }
+    .loader-step .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .loader-step.active .step-dot { background: var(--accent); }
+    .loader-step.done .step-dot { background: #4CAF50; }
+
+    /* ─── ERROR / SUCCESS INLINE ─── */
+    .form-error {
+      display: none;
+      background: rgba(196,112,79,0.1);
+      border: 1.5px solid rgba(196,112,79,0.3);
+      color: var(--accent-d);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      margin-bottom: 20px;
+    }
+    .form-error.visible { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <span class="nav-logo">Solia</span>
+      <span class="nav-sep">›</span>
+      <span class="nav-step">Personnalisation de votre page</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-tag">Gratuit · Sans engagement</span>
+    <h1>Votre page pro,<br><em>à votre image</em></h1>
+    <p>Remplissez ce formulaire en 3 minutes. Claude optimise votre contenu, votre page se met à jour instantanément.</p>
+    <div id="context-banner">
+      Vous personnalisez la page de <strong id="ctx-name">votre praticien</strong>
+      — <span id="ctx-meta"></span>
+    </div>
+  </div>
+
+  <!-- MAIN FORM -->
+  <main class="main">
+    <div id="form-error" class="form-error"></div>
+
+    <form id="prospect-form" novalidate>
+      <input type="hidden" id="f-slug" name="slug">
+
+      <!-- SECTION 1 : Infos de base -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <div>
+            <div class="section-title">Vos informations</div>
+            <div class="section-sub">Pré-remplies depuis votre fiche</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field-row">
+            <div class="field">
+              <label for="f-prenom">Prénom</label>
+              <input type="text" id="f-prenom" name="prenom" placeholder="Sophie">
+            </div>
+            <div class="field">
+              <label for="f-nom">Nom</label>
+              <input type="text" id="f-nom" name="nom" placeholder="Martin">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-metier">Activité / Métier</label>
+              <input type="text" id="f-metier" name="metier" placeholder="Naturopathe">
+            </div>
+            <div class="field">
+              <label for="f-ville">Ville</label>
+              <input type="text" id="f-ville" name="ville" placeholder="Colmar">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-telephone">Téléphone</label>
+              <input type="tel" id="f-telephone" name="telephone" placeholder="06 xx xx xx xx">
+            </div>
+            <div class="field">
+              <label for="f-email">Email <span class="required">*</span></label>
+              <input type="email" id="f-email" name="email" placeholder="vous@exemple.fr" required>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 : Activité -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <div>
+            <div class="section-title">Votre activité</div>
+            <div class="section-sub">Ce sera la présentation principale de votre page</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label for="f-description">Décrivez votre activité en quelques phrases</label>
+            <textarea id="f-description" name="description"
+              placeholder="Ex : Naturopathe certifiée depuis 8 ans, j'accompagne mes patients vers un mieux-être naturel et durable. Ma pratique s'appuie sur l'alimentation, la phytothérapie et la gestion du stress..."
+              style="min-height:140px;"></textarea>
+            <span class="field-hint">Claude reformulera votre texte pour le SEO — restez authentique, c'est votre voix qui compte.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 : Services -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <div>
+            <div class="section-title">Vos services</div>
+            <div class="section-sub">Un service par ligne</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label for="f-services">Quels sont vos principaux services ?</label>
+            <textarea id="f-services" name="services"
+              placeholder="Bilan de santé naturopathique&#10;Accompagnement perte de poids&#10;Gestion du stress et anxiété&#10;Detox et purification&#10;Alimentation vivante"></textarea>
+            <span class="field-hint">Saisissez chaque service sur une nouvelle ligne.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 : Différenciation -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <div>
+            <div class="section-title">Vos points forts</div>
+            <div class="section-sub">Ce qui vous différencie de vos confrères</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label for="f-arguments">Qu'est-ce qui vous différencie ?</label>
+            <textarea id="f-arguments" name="arguments"
+              placeholder="Ex : Formée à l'iridologie et à la naturopathie ayurvédique. Consultations possibles en visio. Suivi personnalisé entre les séances par message..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 : Pratique -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">5</div>
+          <div>
+            <div class="section-title">Pratique</div>
+            <div class="section-sub">Horaires et tarifs</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label for="f-horaires">Vos horaires <span class="optional">(optionnel)</span></label>
+            <input type="text" id="f-horaires" name="horaires"
+              placeholder="Ex : Lun–Ven 9h–19h · Sam 9h–13h · Sur rendez-vous">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-tarif">Tarif <span class="optional">(optionnel)</span></label>
+              <input type="text" id="f-tarif" name="tarif" placeholder="Ex : 70€ / séance">
+            </div>
+            <div class="field">
+              <label for="f-duree">Durée d'une séance <span class="optional">(optionnel)</span></label>
+              <input type="text" id="f-duree" name="duree_seance" placeholder="Ex : 1h, 1h30">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 : Photo de profil -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">6</div>
+          <div>
+            <div class="section-title">Votre photo</div>
+            <div class="section-sub">Optionnel — améliore nettement la conversion</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="avatar-preview-wrap">
+            <div class="avatar-preview" id="avatar-preview">
+              <span class="avatar-placeholder" id="avatar-initials">?</span>
+              <img id="avatar-img" alt="Photo de profil">
+            </div>
+            <div style="flex:1">
+              <div class="upload-zone" id="zone-profil">
+                <input type="file" id="f-photo-profil" name="photo_profil" accept="image/*">
+                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 8v8M8 12l4-4 4 4"/>
+                </svg>
+                <div class="upload-label">
+                  <strong>Cliquez</strong> ou glissez votre photo ici
+                </div>
+                <div class="upload-label-small">JPG, PNG — max 5 Mo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7 : Photos cabinet -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">7</div>
+          <div>
+            <div class="section-title">Photos de votre cabinet</div>
+            <div class="section-sub">Optionnel — jusqu'à 5 photos</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="upload-zone" id="zone-cabinet">
+            <input type="file" id="f-photos-cabinet" name="photos_cabinet" accept="image/*" multiple>
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            <div class="upload-label">
+              <strong>Cliquez</strong> ou glissez vos photos (max 5)
+            </div>
+            <div class="upload-label-small">JPG, PNG — max 5 Mo par photo</div>
+          </div>
+          <div class="photos-preview-grid" id="cabinet-preview"></div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="submit-zone">
+        <p>Gratuit, sans engagement. Votre page sera prête en quelques secondes.</p>
+        <button type="submit" class="btn-submit" id="btn-submit">
+          <span>Voir ma page personnalisée</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <!-- LOADER OVERLAY -->
+  <div id="loader-overlay">
+    <div class="loader-spinner"></div>
+    <div class="loader-title">Claude optimise votre page…</div>
+    <div class="loader-sub">Cela prend généralement 20 à 40 secondes</div>
+    <div class="loader-steps">
+      <div class="loader-step" id="step-1">
+        <div class="step-dot"></div>Envoi de vos informations
+      </div>
+      <div class="loader-step" id="step-2">
+        <div class="step-dot"></div>Rédaction par Claude
+      </div>
+      <div class="loader-step" id="step-3">
+        <div class="step-dot"></div>Mise à jour de votre page
+      </div>
+      <div class="loader-step" id="step-4">
+        <div class="step-dot"></div>Déploiement en ligne
+      </div>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+
+    /* ─── CONFIG ─── */
+    // Remplacer par l'URL du Worker une fois déployé sur Cloudflare
+    const WORKER_URL = 'https://solia-enrichment.workers.dev';
+
+    /* ─── INIT ─── */
+    const params = new URLSearchParams(location.search);
+    const slug   = params.get('prospect') || '';
+
+    document.getElementById('f-slug').value = slug;
+
+    if (slug) loadProspectData(slug);
+
+    /* ─── Chargement des données prospect via le Worker ─── */
+    async function loadProspectData(slug) {
+      try {
+        const res = await fetch(`${WORKER_URL}/api/prospect/${slug}`, {
+          signal: AbortSignal.timeout(5000)
+        });
+        if (!res.ok) return;
+        const p = await res.json();
+        prefillForm(p);
+      } catch {
+        // Worker pas encore déployé ou indisponible — formulaire vide, pas de blocage
+      }
+    }
+
+    function prefillForm(p) {
+      setVal('f-prenom',    p.prenom    || '');
+      setVal('f-nom',       p.nom       || '');
+      setVal('f-metier',    p.metier    || '');
+      setVal('f-ville',     p.ville     || '');
+      setVal('f-telephone', p.telephone || '');
+      setVal('f-horaires',  p.horaires  || '');
+      setVal('f-tarif',     p.tarif     || '');
+
+      // Bandeau de contexte
+      const name = [p.prenom, p.nom].filter(Boolean).join(' ') || p.slug;
+      if (name) {
+        document.getElementById('ctx-name').textContent = name;
+        document.getElementById('ctx-meta').textContent =
+          [p.metier, p.ville].filter(Boolean).join(' · ');
+        document.getElementById('context-banner').style.display = 'block';
+      }
+
+      // Initiales avatar
+      const ini = ((p.prenom || '').charAt(0) + (p.nom || '').charAt(0)).toUpperCase();
+      document.getElementById('avatar-initials').textContent = ini || '?';
+
+      // Photo existante
+      if (p.photo_url) {
+        const img = document.getElementById('avatar-img');
+        img.src = p.photo_url;
+        img.style.display = 'block';
+        document.getElementById('avatar-initials').style.display = 'none';
+      }
+    }
+
+    function setVal(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.value = val;
+    }
+
+    /* ─── Upload — photo de profil ─── */
+    const photoProfil = document.getElementById('f-photo-profil');
+    photoProfil.addEventListener('change', () => {
+      const file = photoProfil.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.getElementById('avatar-img');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        document.getElementById('avatar-initials').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    /* ─── Upload — photos cabinet ─── */
+    const photosCabinet   = document.getElementById('f-photos-cabinet');
+    const cabinetPreview  = document.getElementById('cabinet-preview');
+    let   cabinetFiles    = [];
+
+    photosCabinet.addEventListener('change', () => {
+      const newFiles = Array.from(photosCabinet.files).slice(0, 5 - cabinetFiles.length);
+      newFiles.forEach(file => {
+        if (cabinetFiles.length >= 5) return;
+        cabinetFiles.push(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.className = 'photo-thumb';
+          cabinetPreview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    /* ─── Drag & drop ─── */
+    ['zone-profil', 'zone-cabinet'].forEach(id => {
+      const zone = document.getElementById(id);
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', ()  => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); });
+    });
+
+    /* ─── Soumission du formulaire ─── */
+    const form    = document.getElementById('prospect-form');
+    const errBox  = document.getElementById('form-error');
+    const overlay = document.getElementById('loader-overlay');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errBox.classList.remove('visible');
+
+      // Validation email
+      const email = document.getElementById('f-email').value.trim();
+      if (!email || !email.includes('@')) {
+        showError('Veuillez saisir une adresse email valide.');
+        return;
+      }
+
+      // Afficher le loader
+      overlay.classList.add('visible');
+      setStep(1);
+
+      try {
+        const payload = await buildPayload();
+        setStep(2);
+
+        const res = await fetch(`${WORKER_URL}/api/personalize`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `Erreur serveur (${res.status})`);
+        }
+
+        setStep(3);
+        const data = await res.json();
+
+        // Poll jusqu'à ce que la page soit reconstruite
+        await pollStatus(data.slug || slug);
+        setStep(4);
+
+        // Attendre 1s puis rediriger
+        await delay(1000);
+        window.location.href = `https://${data.slug || slug}.solia.me`;
+
+      } catch (err) {
+        overlay.classList.remove('visible');
+        showError(err.message || 'Une erreur est survenue. Réessayez dans quelques instants.');
+      }
+    });
+
+    /* ─── Construire le payload avec photos en base64 ─── */
+    async function buildPayload() {
+      const fd = new FormData(form);
+      const payload = {};
+      for (const [key, val] of fd.entries()) {
+        payload[key] = typeof val === 'string' ? val.trim() : val;
+      }
+
+      // Photo de profil → base64
+      const profilFile = document.getElementById('f-photo-profil').files[0];
+      if (profilFile) {
+        payload.photo_profil = await fileToBase64(profilFile);
+      }
+
+      // Photos cabinet → tableau base64
+      if (cabinetFiles.length) {
+        payload.photos_cabinet = await Promise.all(cabinetFiles.map(fileToBase64));
+      }
+
+      return payload;
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    /* ─── Poll status ─── */
+    async function pollStatus(slug, maxAttempts = 30) {
+      for (let i = 0; i < maxAttempts; i++) {
+        await delay(2000);
+        try {
+          const res = await fetch(`${WORKER_URL}/api/status/${slug}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'ready') return;
+          }
+        } catch { /* continue */ }
+      }
+      // Timeout → on redirige quand même, la page existe
+    }
+
+    /* ─── Helpers UI ─── */
+    function setStep(n) {
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(`step-${i}`);
+        el.classList.remove('active', 'done');
+        if (i < n)  el.classList.add('done');
+        if (i === n) el.classList.add('active');
+      }
+    }
+
+    function showError(msg) {
+      errBox.textContent = msg;
+      errBox.classList.add('visible');
+      errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+  </script>
+</body>
+</html>

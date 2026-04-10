@@ -1,0 +1,20 @@
+name             = "solia-enrichment"
+main             = "worker/solia-enrichment.js"
+compatibility_date = "2024-09-23"
+
+# ─── Variables non-secrètes ───
+[vars]
+REPO_OWNER = "soliapro"
+REPO_NAME  = "solia"
+
+# ─── Secrets à configurer via CLI (ne jamais mettre ici) ───
+# wrangler secret put ANTHROPIC_API_KEY
+# wrangler secret put GITHUB_TOKEN
+#
+# GitHub Token requis : Personal Access Token
+#   Scopes : repo (lecture + écriture), workflow
+
+# ─── Routes (optionnel si domaine custom) ───
+# [[routes]]
+# pattern = "api.solia.me/*"
+# zone_name = "solia.me"
