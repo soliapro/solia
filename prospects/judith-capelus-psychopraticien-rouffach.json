@@ -1,0 +1,32 @@
+{
+  "slug": "judith-capelus-psychopraticien-rouffach",
+  "prenom": "Judith",
+  "nom": "Capelus",
+  "metier": "Psychopraticien",
+  "ville": "Rouffach",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJr5k_oa17kUcRjHkF36Kq5m8/photos/AU_ZVEFgG16rldlt2vdUPOgdgDy_ZbbTM9nWcar4wl9wCs0zhIX6Hnck0_63Z_q3l1e9gzCINu58IvVqM9B2cPKHeQj36ke6c34yRcyJqbY0ZRQnst9haaadTJAK95e3Qs42dDp89LYZOkYgyPmpuoS07KszbzrckW6tR164R8hXgAsN8-3OZRUGJtwFy1fdFlItFv2don5_a_UBggxfR7-mRe6LrJcY1zY5-JbmdNGrAizGwSCyaaA9T9AnJDQhsxYu_kflbc2LUUqlREjknLPh9ZoJfzDV3yyYPkWsU5HBjSf83Q/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 61 14 22 55",
+  "adresse": "1 Rue de la Demi Lune, 68250 Rouffach, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 10:00 – 19:00 | mardi: 09:00 – 18:00 | mercredi: 09:00 – 18:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.8,
+  "avis_google_nb": 45,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
