@@ -13,9 +13,9 @@
 
 'use strict';
 
-const fs        = require('fs');
-const path      = require('path');
-const Anthropic = require('@anthropic-ai/sdk');
+const fs           = require('fs');
+const path         = require('path');
+const { spawnSync } = require('child_process');
 
 /* ─── Config ─── */
 
@@ -323,19 +323,40 @@ Génère le contenu JSON pour sa page vitrine avec cette structure exacte :
 }
 `.trim();
 
-async function enrichWithClaude(client, prospect) {
+function enrichWithClaude(prospect) {
   console.log(`  → Appel Claude (${MODEL})...`);
 
-  const response = await client.messages.create({
-    model:      MODEL,
-    max_tokens: 1200,
-    system:     SYSTEM_PROMPT,
-    messages:   [{ role: 'user', content: USER_PROMPT_TEMPLATE(prospect) }]
-  });
+  // curl est utilisé directement (pas fetch/SDK) car le proxy réseau de cet
+  // environnement bloque les connexions Node.js vers api.anthropic.com.
+  // spawnSync sans shell = pas d'injection possible.
+  const result = spawnSync('curl', [
+    '-s', '--max-time', '45',
+    '-X', 'POST',
+    '-H', `x-api-key: ${process.env.ANTHROPIC_API_KEY}`,
+    '-H', 'anthropic-version: 2023-06-01',
+    '-H', 'content-type: application/json',
+    '-d', JSON.stringify({
+      model:      MODEL,
+      max_tokens: 1200,
+      system:     SYSTEM_PROMPT,
+      messages:   [{ role: 'user', content: USER_PROMPT_TEMPLATE(prospect) }],
+    }),
+    'https://api.anthropic.com/v1/messages',
+  ], { encoding: 'utf8', timeout: 50000 });
 
-  const raw = response.content[0].text.trim();
+  if (result.error) throw new Error(`curl : ${result.error.message}`);
+  if (result.status !== 0) throw new Error(`curl exit ${result.status} : ${result.stderr}`);
 
-  // Extraire le JSON même si Claude a ajouté du texte autour
+  let resp;
+  try {
+    resp = JSON.parse(result.stdout);
+  } catch (e) {
+    throw new Error(`Réponse non-JSON : ${result.stdout.slice(0, 200)}`);
+  }
+
+  if (resp.error) throw new Error(`Anthropic API : ${resp.error.message}`);
+
+  const raw   = resp.content[0].text.trim();
   const match = raw.match(/\{[\s\S]*\}/);
   if (!match) throw new Error(`Claude n'a pas retourné de JSON valide :\n${raw}`);
 
@@ -343,7 +364,7 @@ async function enrichWithClaude(client, prospect) {
   try {
     enriched = JSON.parse(match[0]);
   } catch (e) {
-    throw new Error(`JSON malformé depuis Claude : ${e.message}\n${match[0]}`);
+    throw new Error(`JSON malformé depuis Claude : ${e.message}`);
   }
 
   return enriched;
@@ -351,7 +372,7 @@ async function enrichWithClaude(client, prospect) {
 
 /* ─── Génération d'une page preview ─── */
 
-async function generatePreviewPage(client, prospect, template) {
+async function generatePreviewPage(prospect, template) {
   const slug    = prospect.slug;
   const outDir  = path.join(DEMOS_DIR, slug);
   const outFile = path.join(outDir, 'index.html');
@@ -362,7 +383,7 @@ async function generatePreviewPage(client, prospect, template) {
   // Enrichissement Claude
   let enriched;
   try {
-    enriched = await enrichWithClaude(client, prospect);
+    enriched = enrichWithClaude(prospect);
   } catch (err) {
     console.error(`  ✗ Erreur Claude : ${err.message}`);
     return { slug, status: 'error', reason: err.message };
@@ -448,7 +469,6 @@ async function main() {
     process.exit(1);
   }
 
-  const client   = new Anthropic({ apiKey });
   const template = fs.readFileSync(TEMPLATE_PATH, 'utf8');
   const isAll    = process.argv.includes('--all');
   const filePath = process.argv.find(a => !a.startsWith('-') && a.endsWith('.json'));
@@ -473,7 +493,7 @@ async function main() {
 
   const results = [];
   for (const prospect of prospects) {
-    const result = await generatePreviewPage(client, prospect, template);
+    const result = await generatePreviewPage(prospect, template);
     results.push(result);
   }
 
