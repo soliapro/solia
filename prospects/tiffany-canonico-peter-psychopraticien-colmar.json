@@ -1,0 +1,32 @@
+{
+  "slug": "tiffany-canonico-peter-psychopraticien-colmar",
+  "prenom": "Tiffany",
+  "nom": "Canonico Peter",
+  "metier": "Psychopraticien",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJcXH7529rkUcRsd9QX6HQIFA/photos/AU_ZVEHI7s7yn4bwgUSA9aCJCgpk8aVfl_dXZp6YoErKY83nwK85DPmfgtpOK89azA9haEEFcJHZDFDX2Sh3jbY-QYsVJKwlyx1dEOgFmIspWlQ5m6S9WTmfAVE2VNbo6rLIDWsTeLmg5yKuhYOZzC9q2iPb-lV2V97EdloMenbfkF1kccb17Id1iQsVhkrNK_b_g852Vt-YCXczfXyUQig24zDMDTdL6XWr_zij9d5m5E4--0hYbFr8VbLvczqkhA6UI6kugHAdjxVJSBB6oLmaCLvzgwrYyQ9kwqZfToMPgwwAew/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 75 58 03 20",
+  "adresse": "60 Rue de Turckheim, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:30 – 16:00 | mardi: Fermé | mercredi: 14:00 – 20:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 24,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
