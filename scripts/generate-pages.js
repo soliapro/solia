@@ -309,31 +309,38 @@ function injectPreviewBanner(html, slug) {
     position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
     background: #1A1A18; color: #fff;
     display: flex; align-items: center; justify-content: center;
-    gap: 16px; padding: 11px 24px;
+    gap: 12px; padding: 10px 16px;
     font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
-    font-size: 0.82rem; font-weight: 500;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.18); flex-wrap: wrap;
+    font-size: 0.78rem; font-weight: 500;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
   }
   #solia-preview-banner .banner-btn {
-    background: #C4704F; color: #fff; font-weight: 700; font-size: 0.78rem;
-    padding: 7px 18px; border-radius: 100px; text-decoration: none;
-    white-space: nowrap; transition: opacity 0.2s;
+    background: #C4704F; color: #fff; font-weight: 700; font-size: 0.72rem;
+    padding: 6px 14px; border-radius: 100px; text-decoration: none;
+    white-space: nowrap; transition: opacity 0.2s; flex-shrink: 0;
   }
   #solia-preview-banner .banner-btn:hover { opacity: 0.85; }
-  .theme-dots { display: flex; gap: 6px; align-items: center; }
-  .theme-dots span { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-right: 2px; }
+  .banner-text { white-space: nowrap; }
+  .theme-dots { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
+  .theme-dots span { font-size: 0.68rem; color: rgba(255,255,255,0.5); }
   .theme-dot-btn {
-    width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25);
-    cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+    width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25);
+    cursor: pointer; transition: border-color 0.2s, transform 0.15s; flex-shrink: 0;
   }
   .theme-dot-btn:hover { transform: scale(1.15); }
   .theme-dot-btn.active { border-color: #fff; transform: scale(1.15); }
-  body { padding-top: 48px !important; }
+  body { padding-top: 42px !important; }
+  @media (max-width: 600px) {
+    #solia-preview-banner { gap: 8px; padding: 8px 12px; font-size: 0.72rem; }
+    .banner-text { display: none; }
+    .theme-dot-btn { width: 22px; height: 22px; }
+    body { padding-top: 40px !important; }
+  }
 </style>`;
 
   const bannerHtml = `
 <div id="solia-preview-banner">
-  <span>Aperçu de votre page</span>
+  <span class="banner-text">Aperçu</span>
   <div class="theme-dots">
     <span>Thème</span>
     <div class="theme-dot-btn" data-t="terracotta" style="background:#C4704F" title="Terracotta"></div>
