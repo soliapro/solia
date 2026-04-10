@@ -1,0 +1,32 @@
+{
+  "slug": "olivier-fritz-diffuseur-energeticien-strasbourg",
+  "prenom": "Olivier",
+  "nom": "Fritz diffuseur",
+  "metier": "Énergéticien",
+  "ville": "Strasbourg",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJvfEplBfJlkcR1DCQ0geQp_w/photos/AU_ZVEFqITdOhFNhagszw7dCGVqz9VGO_LuEgf2Ud9spEyaJs1aEx8jSkAdjCwsZG-Aiy-OnbevcNjRIUplE_Zq3d-kobgfYc4zhSm7u4kxAgc6SzfG1Lo4Z5ItZBmW5xB9tID29mzEAz3Ey1wWkcp6VnVkHjamPPsm7qYr4yUrCUfvZNCC02q4YIolUjmN4SkZLd6j0IGsJnxI6XjXT0Q9jVqeT8EQEHtNoAcXPKfuRb196KHj-FXmLK_sW5IlBOktbTb-iPnE9Dsx0zap_qVnUURf9kh6ueEgLnGlR7FVdfgOjaA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 34 54 72 02",
+  "adresse": "3 Rue Sainte-Cécile, 67100 Strasbourg, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:00 – 22:00 | mardi: 08:00 – 22:00 | mercredi: 08:00 – 22:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 12,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
