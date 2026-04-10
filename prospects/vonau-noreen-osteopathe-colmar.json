@@ -1,0 +1,32 @@
+{
+  "slug": "vonau-noreen-osteopathe-colmar",
+  "prenom": "VONAU",
+  "nom": "Noreen",
+  "metier": "Ostéopathe",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJx7KB5vlnkUcRtMXdVTRHVmw/photos/AU_ZVEGRhwq8nSub5cRxXbAzuxIb6ViVnc-NzsWpJ1-EQQFVyVzkMk69Lv3OH1GmKvgDrHJDngf7uX9hgLF6lVLTaYEAiyqw6tFqUC6SUjm_2VeSKPgKGVmXrzcVI3iIAHRpnLw8d9a7yn1lIjxo-834N8LOAb3GbjziXCRVDJHVvgfStXLcnOCATs6_h9428o1hNCJLl_f1gNDHfObexnm8yzWJuVgDSC7EltriZM0F8NZ9_3qUmUrQeZTCy-WhMpI6Aweyy6aJgqGobCzvNoWJwPEKuPvv8CrJ9QcJRpc-oM0bNQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 63 84 43 55",
+  "adresse": "164C Rue du Ladhof, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:00 – 18:30 | mardi: 08:00 – 13:00 | mercredi: 08:00 – 18:30",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 130,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
