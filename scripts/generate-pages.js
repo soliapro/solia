@@ -266,6 +266,10 @@ function render(template, p) {
     avis_etoiles_svg:     p.avis_google_note ? svgStarsHtml(p.avis_google_note) : '',
     rdv_url:              escapeHtml(p.rdv_url || ''),
     google_business_url:  escapeHtml(p.google_business_url || ''),
+    instagram_url:        escapeHtml(p.instagram_url || ''),
+    facebook_url:         escapeHtml(p.facebook_url || ''),
+    linkedin_url:         escapeHtml(p.linkedin_url || ''),
+    site_actuel:          escapeHtml(p.site_actuel || ''),
     social_links_html:    socialLinksHtml
   };
 
