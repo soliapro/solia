@@ -435,10 +435,12 @@ async function handleTogglePage(request, env) {
     const { prospect } = await getProspectFromGitHub(slug, env);
     const html = buildDemoPage(prospect);
     await commitFileToGitHub(`demos/${slug}/index.html`, html, `feat: page démo ${slug}`, env);
+    await triggerRebuild(slug, env);
     return jsonResponse({ status: 'online', slug });
   } else {
     // ── HORS LIGNE : supprimer la page ──
     await deleteFileFromGitHub(`demos/${slug}/index.html`, `feat: retrait page ${slug}`, env);
+    await triggerRebuild(slug, env);
     return jsonResponse({ status: 'offline', slug });
   }
 }
