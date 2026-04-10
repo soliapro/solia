@@ -4,13 +4,17 @@
  * Routes :
  *   POST /api/personalize       → Enrichit le JSON via Claude, commit sur GitHub, trigger rebuild
  *   POST /api/toggle-page       → Met en ligne / hors ligne une page démo prospect
+ *   POST /api/publish           → Publie une page (demo → payée)
  *   POST /api/import            → Import bulk de prospects (depuis CSV dashboard)
+ *   POST /api/stripe-webhook    → Webhook Stripe (checkout.session.completed, customer.subscription.deleted)
  *   GET  /api/status/:slug      → Vérifie si la page a été reconstruite récemment
  *   GET  /api/prospect/:slug    → Retourne les données de base du prospect (pré-remplissage form)
  *
  * Variables d'environnement (Cloudflare Secrets) :
  *   ANTHROPIC_API_KEY   → à brancher quand disponible
  *   GITHUB_TOKEN        → Personal Access Token, scope: repo
+ *   STRIPE_WEBHOOK_SECRET → whsec_... pour vérifier les signatures Stripe
+ *   BREVO_API_KEY       → clé API Brevo pour les emails transactionnels
  *
  * Variables wrangler.toml :
  *   REPO_OWNER          → soliapro
@@ -36,6 +40,11 @@ const CORS_HEADERS = {
 ═══════════════════════════════════════════════════════ */
 
 export default {
+  /* Cron Trigger — séquence emails J1/J3/J6 */
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(scheduledHandler(env));
+  },
+
   async fetch(request, env) {
     // Preflight CORS
     if (request.method === 'OPTIONS') {
@@ -66,6 +75,11 @@ export default {
         return await handleImport(request, env);
       }
 
+      // POST /api/stripe-webhook
+      if (request.method === 'POST' && path === '/api/stripe-webhook') {
+        return await handleStripeWebhook(request, env);
+      }
+
       // GET /api/status/:slug
       if (request.method === 'GET' && path.startsWith('/api/status/')) {
         const slug = path.replace('/api/status/', '').replace(/\/$/, '');
@@ -75,7 +89,7 @@ export default {
       // GET /api/prospect/:slug
       if (request.method === 'GET' && path.startsWith('/api/prospect/')) {
         const slug = path.replace('/api/prospect/', '').replace(/\/$/, '');
-        return await handleProspect(slug, env);
+        return await handleProspect(slug, env, url);
       }
 
       return jsonResponse({ error: 'Route introuvable' }, 404);
@@ -106,15 +120,23 @@ async function handlePersonalize(request, env) {
 
   // 1. Récupérer le JSON prospect depuis GitHub (ou créer un nouveau)
   let prospect, sha;
+  let isNewProspect = false;
   try {
     ({ prospect, sha } = await getProspectFromGitHub(slug, env));
   } catch {
-    // Nouveau prospect (inscription depuis le formulaire)
-    prospect = { slug, source: 'inscription' };
+    // Nouveau prospect (inscription organique depuis le formulaire)
+    prospect = { slug, source: 'organic' };
     sha = null;
+    isNewProspect = true;
   }
 
-  // 1b. Fixer la date de création pour le compteur (comme handleTogglePage)
+  // Préserver la source si déjà définie, sinon déduire
+  if (!prospect.source) {
+    prospect.source = isNewProspect ? 'organic' : 'prospected';
+  }
+
+  // 1b. Fixer la date de création pour le compteur UNE SEULE FOIS
+  //     Ne jamais écraser → le compteur ne se reset plus à chaque modif
   if (!prospect.demo_created_at) prospect.demo_created_at = new Date().toISOString();
 
   // 2. Enrichir via Claude (placeholder tant que la clé n'est pas branchée)
@@ -136,11 +158,23 @@ async function handlePersonalize(request, env) {
     }
   }
 
-  // 5. Committer le JSON mis à jour sur GitHub (avec photo_url)
+  // 5. Générer un edit_token si absent (pour édition post-pub)
+  if (!updated.edit_token) {
+    updated.edit_token = generateToken();
+  }
+
+  // 6. Committer le JSON mis à jour sur GitHub (avec photo_url)
   await commitProspectToGitHub(slug, updated, sha, env);
 
-  // 6. Trigger le rebuild GitHub Actions
+  // 7. Trigger le rebuild GitHub Actions
   await triggerRebuild(slug, env);
+
+  // 8. Envoyer l'email J1 pour les nouveaux prospects organiques
+  if (isNewProspect && updated.email) {
+    await sendTrialSequenceEmail(env, updated, 1);
+    // Marquer l'email comme envoyé (sera persisté au prochain commit)
+    updated.emails_sent = ['j1'];
+  }
 
   return jsonResponse({
     status:  'building',
@@ -188,12 +222,21 @@ async function handleStatus(slug, env) {
    ROUTE — GET /api/prospect/:slug
 ═══════════════════════════════════════════════════════ */
 
-async function handleProspect(slug, env) {
+async function handleProspect(slug, env, url) {
   let prospect, sha;
   try {
     ({ prospect, sha } = await getProspectFromGitHub(slug, env));
   } catch (err) {
     return jsonResponse({ error: `Prospect introuvable : ${slug}` }, 404);
+  }
+
+  // Vérifier le token d'édition si prospect publié
+  const token = url.searchParams.get('token');
+  const isPublished = prospect.published === true;
+
+  // Si publié et token requis, vérifier
+  if (isPublished && prospect.edit_token && token !== prospect.edit_token) {
+    return jsonResponse({ error: 'Token invalide', published: true }, 403);
   }
 
   // Retourner tous les champs utiles pour le pré-remplissage
@@ -216,6 +259,7 @@ async function handleProspect(slug, env) {
     photo_url:         prospect.photo_url         || '',
     avis_google_note:  prospect.avis_google_note  ?? null,
     avis_google_nb:    prospect.avis_google_nb    ?? null,
+    published:         isPublished,
   };
 
   return jsonResponse(safe);
@@ -516,6 +560,9 @@ async function handlePublish(request, env) {
   prospect.published = true;
   prospect.published_at = new Date().toISOString();
   prospect.email_confirme = true;
+  prospect.paid = true;
+  prospect.paid_at = new Date().toISOString();
+  if (!prospect.edit_token) prospect.edit_token = generateToken();
   await commitProspectToGitHub(slug, prospect, sha, env);
   await triggerRebuild(slug, env);
 
@@ -574,6 +621,10 @@ async function handleImport(request, env) {
       avis_google_nb:    p.avis_nb   ? parseInt(p.avis_nb)     : null,
       langues:        ['fr'],
       instagram_url:  '',
+      source:         'prospected',
+      prospected_at:  new Date().toISOString(),
+      priorite:       p.priorite || p.priorite_solia || '',
+      paid:           false,
     };
 
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(prospect, null, 2))));
@@ -755,6 +806,374 @@ async function deleteFileFromGitHub(path, message, env) {
 }
 
 /* ═══════════════════════════════════════════════════════
+   ROUTE — POST /api/stripe-webhook
+═══════════════════════════════════════════════════════ */
+
+async function handleStripeWebhook(request, env) {
+  const body = await request.text();
+  const sig  = request.headers.get('stripe-signature');
+
+  // Vérifier la signature Stripe
+  if (env.STRIPE_WEBHOOK_SECRET && sig) {
+    const valid = await verifyStripeSignature(body, sig, env.STRIPE_WEBHOOK_SECRET);
+    if (!valid) return jsonResponse({ error: 'Signature invalide' }, 401);
+  }
+
+  let event;
+  try {
+    event = JSON.parse(body);
+  } catch {
+    return jsonResponse({ error: 'JSON invalide' }, 400);
+  }
+
+  const type = event.type;
+
+  // ── checkout.session.completed → paiement réussi ──
+  if (type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const slug = session.client_reference_id;
+    if (!slug) return jsonResponse({ error: 'Pas de client_reference_id' }, 400);
+
+    try {
+      const { prospect, sha } = await getProspectFromGitHub(slug, env);
+      prospect.published = true;
+      prospect.published_at = new Date().toISOString();
+      prospect.paid = true;
+      prospect.paid_at = new Date().toISOString();
+      prospect.stripe_customer_id = session.customer || '';
+      prospect.stripe_subscription_id = session.subscription || '';
+      prospect.email_confirme = true;
+      await commitProspectToGitHub(slug, prospect, sha, env);
+      await triggerRebuild(slug, env);
+
+      // Envoyer l'email de bienvenue (J1)
+      if (prospect.email) {
+        await sendBrevoEmail(env, {
+          to: prospect.email,
+          toName: [prospect.prenom, prospect.nom].filter(Boolean).join(' '),
+          subject: '🎉 Votre page Solia est en ligne !',
+          html: buildWelcomeEmail(prospect),
+        });
+      }
+
+      return jsonResponse({ status: 'published', slug });
+    } catch (err) {
+      console.error('Stripe checkout error:', err);
+      return jsonResponse({ error: err.message }, 500);
+    }
+  }
+
+  // ── customer.subscription.deleted → résiliation ──
+  if (type === 'customer.subscription.deleted') {
+    const subscription = event.data.object;
+    const subId = subscription.id;
+
+    // Trouver le prospect par subscription ID
+    const slug = await findSlugBySubscription(subId, subscription.metadata, env);
+    if (!slug) {
+      console.warn('Résiliation: prospect introuvable pour subscription', subId);
+      return jsonResponse({ status: 'ignored', reason: 'prospect not found' });
+    }
+
+    try {
+      const { prospect, sha } = await getProspectFromGitHub(slug, env);
+      prospect.paid = false;
+      prospect.cancelled_at = new Date().toISOString();
+      prospect.page_active = false;
+      prospect.published = false;
+      await commitProspectToGitHub(slug, prospect, sha, env);
+      await triggerRebuild(slug, env);
+
+      // Email de confirmation de résiliation
+      if (prospect.email) {
+        await sendBrevoEmail(env, {
+          to: prospect.email,
+          toName: [prospect.prenom, prospect.nom].filter(Boolean).join(' '),
+          subject: 'Votre page Solia a été désactivée',
+          html: buildCancellationEmail(prospect),
+        });
+      }
+
+      return jsonResponse({ status: 'cancelled', slug });
+    } catch (err) {
+      console.error('Stripe cancellation error:', err);
+      return jsonResponse({ error: err.message }, 500);
+    }
+  }
+
+  // ── invoice.payment_failed → paiement échoué ──
+  if (type === 'invoice.payment_failed') {
+    const invoice = event.data.object;
+    const subId = invoice.subscription;
+    const slug = await findSlugBySubscription(subId, invoice.metadata || {}, env);
+    if (slug) {
+      const { prospect, sha } = await getProspectFromGitHub(slug, env);
+      prospect.payment_failed_at = new Date().toISOString();
+      await commitProspectToGitHub(slug, prospect, sha, env);
+    }
+    return jsonResponse({ status: 'noted' });
+  }
+
+  return jsonResponse({ status: 'ignored', type });
+}
+
+/* ── Stripe signature verification (HMAC-SHA256) ── */
+
+async function verifyStripeSignature(payload, sigHeader, secret) {
+  try {
+    const parts = {};
+    sigHeader.split(',').forEach(item => {
+      const [key, val] = item.split('=');
+      parts[key] = val;
+    });
+
+    const timestamp = parts['t'];
+    const signature = parts['v1'];
+    if (!timestamp || !signature) return false;
+
+    // Tolérance de 5 minutes
+    const age = Math.abs(Date.now() / 1000 - parseInt(timestamp));
+    if (age > 300) return false;
+
+    const signedPayload = `${timestamp}.${payload}`;
+    const key = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signedPayload));
+    const expected = Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+    return expected === signature;
+  } catch {
+    return false;
+  }
+}
+
+/* ── Helper: trouver un slug par subscription ID ── */
+
+async function findSlugBySubscription(subId, metadata, env) {
+  // 1. Metadata du webhook (si on a passé le slug dans Stripe)
+  if (metadata && metadata.slug) return metadata.slug;
+
+  // 2. Recherche dans les prospects récents (derniers fichiers modifiés)
+  // On cherche dans les prospects qui ont un stripe_subscription_id correspondant
+  const listUrl = `${GITHUB_API}/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/prospects`;
+  const res = await githubFetch(listUrl, env);
+  if (!res.ok) return null;
+
+  const files = await res.json();
+  // Limiter la recherche aux 100 derniers fichiers pour perf
+  const recentFiles = files.slice(-100);
+
+  for (const file of recentFiles) {
+    if (!file.name.endsWith('.json')) continue;
+    try {
+      const slug = file.name.replace('.json', '');
+      const { prospect } = await getProspectFromGitHub(slug, env);
+      if (prospect.stripe_subscription_id === subId) return slug;
+    } catch { continue; }
+  }
+
+  return null;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BREVO — Emails transactionnels
+═══════════════════════════════════════════════════════ */
+
+const BREVO_API = 'https://api.brevo.com/v3';
+
+async function sendBrevoEmail(env, { to, toName, subject, html }) {
+  if (!env.BREVO_API_KEY) {
+    console.warn('BREVO_API_KEY non configurée, email ignoré');
+    return;
+  }
+
+  const res = await fetch(`${BREVO_API}/smtp/email`, {
+    method: 'POST',
+    headers: {
+      'api-key': env.BREVO_API_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { name: 'Solia', email: 'contact@solia.me' },
+      to: [{ email: to, name: toName || to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error('Brevo email error:', err);
+  }
+}
+
+/* ── Séquence emails (J1 = bienvenue, J3 = relance, J6 = urgence) ──
+   J1 est envoyé dans handleStripeWebhook (checkout.session.completed)
+   et handlePersonalize (nouveau prospect organique).
+   J3 et J6 sont déclenchés par un Cron Trigger Cloudflare (voir scheduledHandler). */
+
+async function sendTrialSequenceEmail(env, prospect, dayNumber) {
+  if (!prospect.email) return;
+
+  const name = [prospect.prenom, prospect.nom].filter(Boolean).join(' ');
+  const pageUrl = `https://${prospect.slug}.solia.me`;
+  const formUrl = `https://solia.me/formulaire/?prospect=${prospect.slug}`;
+
+  let subject, html;
+
+  if (dayNumber === 1) {
+    subject = `${prospect.prenom || 'Bonjour'}, votre page pro est prête !`;
+    html = `
+      <div style="font-family:'DM Sans',Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
+        <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#1A1A18;margin-bottom:16px">Bienvenue sur Solia ✨</h1>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Bonjour ${prospect.prenom || ''},</p>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Votre page vitrine est en ligne et prête à recevoir vos futurs clients :</p>
+        <p style="text-align:center;margin:24px 0">
+          <a href="${pageUrl}" style="display:inline-block;background:#C4704F;color:#fff;font-weight:600;padding:14px 32px;border-radius:100px;text-decoration:none">Voir ma page →</a>
+        </p>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Vous avez <strong>7 jours d'essai gratuit</strong> pour la personnaliser à votre image. Modifiez vos textes, ajoutez votre photo, choisissez votre thème.</p>
+        <p style="text-align:center;margin:24px 0">
+          <a href="${formUrl}" style="display:inline-block;background:#fff;color:#C4704F;border:2px solid #C4704F;font-weight:600;padding:12px 28px;border-radius:100px;text-decoration:none">Personnaliser →</a>
+        </p>
+        <p style="color:#8A8074;font-size:0.85rem;margin-top:32px;border-top:1px solid #E4DDD4;padding-top:16px">L'équipe Solia<br><span style="font-family:Georgia,serif;font-style:italic;color:#1A1A18">Solia</span> — Votre vitrine bien-être</p>
+      </div>`;
+  } else if (dayNumber === 3) {
+    subject = `${prospect.prenom || 'Bonjour'}, plus que 4 jours pour votre page`;
+    html = `
+      <div style="font-family:'DM Sans',Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
+        <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#1A1A18;margin-bottom:16px">Votre essai continue 🕐</h1>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Bonjour ${prospect.prenom || ''},</p>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Il vous reste <strong>4 jours</strong> pour profiter de votre essai gratuit Solia. Avez-vous déjà personnalisé votre page ?</p>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Vos confrères qui personnalisent leur page reçoivent en moyenne <strong>3× plus de demandes de rendez-vous</strong>.</p>
+        <p style="text-align:center;margin:24px 0">
+          <a href="${formUrl}" style="display:inline-block;background:#C4704F;color:#fff;font-weight:600;padding:14px 32px;border-radius:100px;text-decoration:none">Personnaliser ma page →</a>
+        </p>
+        <p style="text-align:center"><a href="${pageUrl}" style="color:#C4704F;font-size:0.9rem">Voir ma page actuelle →</a></p>
+        <p style="color:#8A8074;font-size:0.85rem;margin-top:32px;border-top:1px solid #E4DDD4;padding-top:16px">L'équipe Solia</p>
+      </div>`;
+  } else if (dayNumber === 6) {
+    subject = `⚠️ ${prospect.prenom || 'Attention'}, votre page expire demain`;
+    html = `
+      <div style="font-family:'DM Sans',Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
+        <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#1A1A18;margin-bottom:16px">Dernière chance ⏳</h1>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Bonjour ${prospect.prenom || ''},</p>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Votre essai gratuit Solia expire <strong>demain</strong>. Après expiration, votre page ne sera plus accessible.</p>
+        <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Pour la garder en ligne et continuer à recevoir des clients, publiez-la maintenant :</p>
+        <p style="text-align:center;margin:24px 0">
+          <a href="${pageUrl}" style="display:inline-block;background:#C4704F;color:#fff;font-weight:600;padding:14px 32px;border-radius:100px;text-decoration:none">Publier ma page →</a>
+        </p>
+        <p style="color:#8A8074;font-size:0.85rem;line-height:1.6">Si vous ne souhaitez pas continuer, votre page sera simplement désactivée. Aucun engagement, aucun frais.</p>
+        <p style="color:#8A8074;font-size:0.85rem;margin-top:32px;border-top:1px solid #E4DDD4;padding-top:16px">L'équipe Solia</p>
+      </div>`;
+  }
+
+  if (subject && html) {
+    await sendBrevoEmail(env, {
+      to: prospect.email,
+      toName: name,
+      subject,
+      html,
+    });
+  }
+}
+
+/* ── Emails de bienvenue et résiliation ── */
+
+function buildWelcomeEmail(prospect) {
+  const name = [prospect.prenom, prospect.nom].filter(Boolean).join(' ');
+  const pageUrl = `https://${prospect.slug}.solia.me`;
+  const editUrl = `https://solia.me/formulaire/?prospect=${prospect.slug}` +
+    (prospect.edit_token ? `&token=${prospect.edit_token}` : '');
+
+  return `
+    <div style="font-family:'DM Sans',Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
+      <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#1A1A18;margin-bottom:16px">Votre page est publiée ! 🎉</h1>
+      <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Bonjour ${prospect.prenom || ''},</p>
+      <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Merci pour votre confiance ! Votre page pro est désormais en ligne de façon permanente :</p>
+      <p style="text-align:center;margin:24px 0">
+        <a href="${pageUrl}" style="display:inline-block;background:#C4704F;color:#fff;font-weight:600;padding:14px 32px;border-radius:100px;text-decoration:none">${prospect.slug}.solia.me</a>
+      </p>
+      <p style="color:#4A4A4A;line-height:1.6;margin-bottom:8px"><strong>Modifier votre page :</strong></p>
+      <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Vous pouvez à tout moment mettre à jour vos informations grâce à ce lien personnel :</p>
+      <p style="text-align:center;margin:24px 0">
+        <a href="${editUrl}" style="display:inline-block;background:#fff;color:#C4704F;border:2px solid #C4704F;font-weight:600;padding:12px 28px;border-radius:100px;text-decoration:none">Modifier ma page →</a>
+      </p>
+      <p style="color:#8A8074;font-size:0.82rem;line-height:1.5">⚠️ Conservez ce lien, il est personnel et permet de modifier votre page.</p>
+      <p style="color:#8A8074;font-size:0.85rem;margin-top:32px;border-top:1px solid #E4DDD4;padding-top:16px">L'équipe Solia<br><span style="font-family:Georgia,serif;font-style:italic;color:#1A1A18">Solia</span></p>
+    </div>`;
+}
+
+function buildCancellationEmail(prospect) {
+  return `
+    <div style="font-family:'DM Sans',Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
+      <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#1A1A18;margin-bottom:16px">Votre page a été désactivée</h1>
+      <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Bonjour ${prospect.prenom || ''},</p>
+      <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Suite à la résiliation de votre abonnement, votre page <strong>${prospect.slug}.solia.me</strong> a été désactivée.</p>
+      <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Vos données sont conservées. Si vous souhaitez réactiver votre page, il suffit de nous contacter.</p>
+      <p style="color:#4A4A4A;line-height:1.6;margin-bottom:16px">Merci d'avoir utilisé Solia, et à bientôt peut-être !</p>
+      <p style="color:#8A8074;font-size:0.85rem;margin-top:32px;border-top:1px solid #E4DDD4;padding-top:16px">L'équipe Solia</p>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CRON — Séquence emails J1/J3/J6 (Cloudflare Scheduled)
+═══════════════════════════════════════════════════════ */
+
+async function scheduledHandler(env) {
+  if (!env.BREVO_API_KEY) return;
+
+  // Lister tous les prospects
+  const listUrl = `${GITHUB_API}/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/prospects`;
+  const res = await githubFetch(listUrl, env);
+  if (!res.ok) return;
+
+  const files = await res.json();
+  const now = Date.now();
+
+  for (const file of files) {
+    if (!file.name.endsWith('.json')) continue;
+    try {
+      const slug = file.name.replace('.json', '');
+      const { prospect } = await getProspectFromGitHub(slug, env);
+
+      // Ne traiter que les prospects en essai (page active, non publiés, avec email)
+      if (!prospect.page_active || prospect.published || prospect.paid || !prospect.email) continue;
+      if (!prospect.demo_created_at) continue;
+
+      const created = new Date(prospect.demo_created_at).getTime();
+      const daysSinceCreation = Math.floor((now - created) / 86400000);
+
+      // Vérifier si l'email a déjà été envoyé (via un champ emails_sent)
+      const sent = prospect.emails_sent || [];
+
+      if (daysSinceCreation >= 1 && daysSinceCreation < 3 && !sent.includes('j1')) {
+        await sendTrialSequenceEmail(env, prospect, 1);
+        prospect.emails_sent = [...sent, 'j1'];
+        const { sha } = await getProspectFromGitHub(slug, env);
+        await commitProspectToGitHub(slug, prospect, sha, env);
+      } else if (daysSinceCreation >= 3 && daysSinceCreation < 6 && !sent.includes('j3')) {
+        await sendTrialSequenceEmail(env, prospect, 3);
+        prospect.emails_sent = [...sent, 'j3'];
+        const { sha } = await getProspectFromGitHub(slug, env);
+        await commitProspectToGitHub(slug, prospect, sha, env);
+      } else if (daysSinceCreation >= 6 && !sent.includes('j6')) {
+        await sendTrialSequenceEmail(env, prospect, 6);
+        prospect.emails_sent = [...sent, 'j6'];
+        const { sha } = await getProspectFromGitHub(slug, env);
+        await commitProspectToGitHub(slug, prospect, sha, env);
+      }
+    } catch (err) {
+      console.error(`Cron email error for ${file.name}:`, err);
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
    UTILITAIRES
 ═══════════════════════════════════════════════════════ */
 
@@ -771,4 +1190,10 @@ function jsonResponse(data, status = 200) {
 function parseLines(str) {
   if (!str) return [];
   return str.split('\n').map(s => s.trim()).filter(Boolean);
+}
+
+function generateToken() {
+  const bytes = new Uint8Array(24);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
 }

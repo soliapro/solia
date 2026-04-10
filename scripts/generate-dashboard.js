@@ -57,6 +57,14 @@ function loadAllProspects() {
 
         const hasPage = fs.existsSync(path.join(DEMOS_DIR, p.slug, 'index.html'));
 
+        // Calculer le temps restant d'essai
+        let trial_days_left = null;
+        if (p.demo_created_at && !p.published) {
+          const created = new Date(p.demo_created_at).getTime();
+          const remaining = 7 - Math.floor((Date.now() - created) / 86400000);
+          trial_days_left = Math.max(0, remaining);
+        }
+
         prospects.push({
           slug:           p.slug,
           prenom:         p.prenom         || '',
@@ -72,7 +80,14 @@ function loadAllProspects() {
           horaires:       p.horaires       || '',
           adresse:        p.adresse        || '',
           has_page:       hasPage,
-          priorite:       p.priorite       || '',
+          priorite:       p.priorite || p.priorite_solia || '',
+          source:         p.source         || '',
+          paid:           p.paid === true,
+          published:      p.published === true,
+          prospected_at:  p.prospected_at  || '',
+          demo_created_at: p.demo_created_at || '',
+          trial_days_left,
+          cancelled_at:   p.cancelled_at   || '',
         });
       }
     } catch (err) {
@@ -93,9 +108,11 @@ function generate() {
   const total     = prospects.length;
   const withPage  = prospects.filter(p => p.has_page).length;
   const withPhone = prospects.filter(p => p.telephone).length;
+  const paidCount = prospects.filter(p => p.paid).length;
+  const organicCount = prospects.filter(p => p.source === 'organic').length;
 
   const prospectsJson = JSON.stringify(prospects);
-  const html = buildHtml(prospectsJson, total, withPage, withPhone);
+  const html = buildHtml(prospectsJson, total, withPage, withPhone, paidCount, organicCount);
 
   fs.writeFileSync(OUT_FILE, html, 'utf8');
   console.log(`Dashboard généré — ${total} prospect(s), ${withPage} page(s) en ligne.`);
@@ -103,7 +120,7 @@ function generate() {
 
 /* ─── HTML ─── */
 
-function buildHtml(prospectsJson, total, withPage, withPhone) {
+function buildHtml(prospectsJson, total, withPage, withPhone, paidCount, organicCount) {
   return `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -189,6 +206,12 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
     .badge-page { background: var(--green-bg); color: var(--green); }
     .badge-no-page { background: rgba(0,0,0,0.04); color: var(--muted); }
     .badge-contacted { background: rgba(196,112,79,0.1); color: var(--accent); }
+    .badge-paid { background: rgba(212,175,55,0.12); color: #9A7B10; }
+    .badge-organic { background: rgba(46,125,50,0.12); color: #2E7D32; }
+    .badge-prospected { background: rgba(30,100,200,0.10); color: #1E64C8; }
+    .badge-trial { background: rgba(255,152,0,0.12); color: #E65100; }
+    .badge-expired { background: rgba(200,50,50,0.10); color: #c33; }
+    .badge-cancelled { background: rgba(200,50,50,0.10); color: #c33; }
 
     .actions { display: flex; gap: 6px; flex-wrap: wrap; }
     .btn-sm { font-family: var(--ff-sans); font-size: 0.72rem; font-weight: 600; padding: 6px 12px; border-radius: 100px; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--dark); transition: all 0.2s; white-space: nowrap; }
@@ -255,17 +278,24 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
     <div class="stats-bar">
       <div class="stat-pill"><strong id="stat-total">${total}</strong> prospects</div>
       <div class="stat-pill"><strong id="stat-pages">${withPage}</strong> en ligne</div>
-      <div class="stat-pill"><strong id="stat-contacted">0</strong> prospect&eacute;s</div>
+      <div class="stat-pill"><strong id="stat-paid">${paidCount}</strong> pay&eacute;s</div>
+      <div class="stat-pill"><strong id="stat-organic">${organicCount}</strong> organiques</div>
+      <div class="stat-pill"><strong id="stat-contacted">0</strong> contact&eacute;s</div>
     </div>
 
     <div class="filters">
       <input type="text" class="search-input" id="search" placeholder="Rechercher un nom, m&eacute;tier, ville...">
       <button class="filter-btn active" data-filter="all">Tous</button>
-      <button class="filter-btn" data-filter="not-contacted">Pas prospect&eacute;s</button>
-      <button class="filter-btn" data-filter="contacted">Prospect&eacute;s</button>
-      <button class="filter-btn" data-filter="has-page">Page en ligne</button>
+      <button class="filter-btn" data-filter="has-page">En ligne</button>
+      <button class="filter-btn" data-filter="paid">Pay&eacute;s</button>
+      <button class="filter-btn" data-filter="not-paid">Non pay&eacute;s</button>
+      <button class="filter-btn" data-filter="organic">Organiques</button>
+      <button class="filter-btn" data-filter="prospected">Prospect&eacute;s</button>
+      <button class="filter-btn" data-filter="contacted">Contact&eacute;s</button>
+      <button class="filter-btn" data-filter="not-contacted">Pas contact&eacute;s</button>
+      <button class="filter-btn" data-filter="trial-active">Essai actif</button>
+      <button class="filter-btn" data-filter="trial-expired">Essai expir&eacute;</button>
       <button class="filter-btn" data-filter="haute">Haute priorit&eacute;</button>
-      <button class="filter-btn" data-filter="moyenne">Moyenne</button>
     </div>
 
     <table class="prospect-table">
@@ -321,19 +351,27 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
       const filtered = PROSPECTS.filter(p => {
         if (searchQuery) {
           const q = searchQuery.toLowerCase();
-          const hay = (p.prenom + ' ' + p.nom + ' ' + p.metier + ' ' + p.ville).toLowerCase();
+          const hay = (p.prenom + ' ' + p.nom + ' ' + p.metier + ' ' + p.ville + ' ' + p.departement + ' ' + p.email).toLowerCase();
           if (!hay.includes(q)) return false;
         }
         const t = tracking[p.slug];
         if (currentFilter === 'contacted' && !t) return false;
         if (currentFilter === 'not-contacted' && t) return false;
         if (currentFilter === 'has-page' && !p.has_page) return false;
+        if (currentFilter === 'paid' && !p.paid) return false;
+        if (currentFilter === 'not-paid' && p.paid) return false;
+        if (currentFilter === 'organic' && p.source !== 'organic') return false;
+        if (currentFilter === 'prospected' && p.source === 'organic') return false;
         if (currentFilter === 'haute' && p.priorite !== 'HAUTE') return false;
-        if (currentFilter === 'moyenne' && p.priorite !== 'MOYENNE') return false;
+        if (currentFilter === 'trial-active' && (p.paid || !p.has_page || p.trial_days_left === null || p.trial_days_left <= 0)) return false;
+        if (currentFilter === 'trial-expired' && (p.paid || p.trial_days_left === null || p.trial_days_left > 0)) return false;
         return true;
       });
 
       document.getElementById('stat-total').textContent = PROSPECTS.length;
+      document.getElementById('stat-pages').textContent = PROSPECTS.filter(pr => pr.has_page).length;
+      document.getElementById('stat-paid').textContent = PROSPECTS.filter(pr => pr.paid).length;
+      document.getElementById('stat-organic').textContent = PROSPECTS.filter(pr => pr.source === 'organic').length;
       document.getElementById('stat-contacted').textContent = Object.keys(tracking).length;
 
       if (!filtered.length) {
@@ -347,12 +385,31 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
         const dateStr = t ? new Date(t).toLocaleDateString('fr-FR') : '';
         const phoneRaw = p.telephone ? p.telephone.replace(/\\s/g, '') : '';
 
+        // Badges de source
+        let sourceBadge = '';
+        if (p.source === 'organic') sourceBadge = '<span class="badge badge-organic">organique</span> ';
+        else if (p.source === 'prospected') sourceBadge = '<span class="badge badge-prospected">prospect&eacute;</span> ';
+
+        // Badge paiement
+        let payBadge = '';
+        if (p.paid) payBadge = '<span class="badge badge-paid">&check; pay&eacute;</span> ';
+        else if (p.cancelled_at) payBadge = '<span class="badge badge-cancelled">r&eacute;sili&eacute;</span> ';
+
+        // Badge essai
+        let trialBadge = '';
+        if (!p.paid && p.trial_days_left !== null) {
+          if (p.trial_days_left > 0) trialBadge = '<span class="badge badge-trial">J-' + p.trial_days_left + '</span> ';
+          else trialBadge = '<span class="badge badge-expired">expir&eacute;</span> ';
+        }
+
+        // Date de prospection
+        const prospDate = p.prospected_at ? new Date(p.prospected_at).toLocaleDateString('fr-FR') : '';
+
         return '<tr>' +
           '<td>' +
             '<div class="cell-name">' + esc(name) + '</div>' +
             '<div class="cell-meta">' + esc(p.metier) + ' &middot; ' + esc(p.ville) + (p.departement ? ' (' + esc(p.departement) + ')' : '') +
               (p.priorite === 'HAUTE' ? ' <span class="badge" style="background:rgba(196,112,79,0.12);color:var(--accent)">haute</span>' : '') +
-              (p.priorite === 'MOYENNE' ? ' <span class="badge" style="background:rgba(0,0,0,0.05);color:var(--muted)">moyenne</span>' : '') +
             '</div>' +
           '</td>' +
           '<td class="cell-phone">' +
@@ -362,11 +419,15 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
             (p.avis_note ? '<span class="star">&#9733;</span> ' + p.avis_note + '/5 <span style="color:var(--muted)">(' + p.avis_nb + ')</span>' : '<span style="color:var(--border)">&mdash;</span>') +
           '</td>' +
           '<td class="hide-mobile">' +
+            sourceBadge +
             (p.has_page
-              ? '<span class="badge badge-page">En ligne</span> <a href="https://' + p.slug + '.solia.me" target="_blank" class="page-link">' + p.slug + '.solia.me</a>'
-              : '<span class="badge badge-no-page">Hors ligne</span>'
+              ? '<span class="badge badge-page">En ligne</span> '
+              : '<span class="badge badge-no-page">Hors ligne</span> '
             ) +
-            (t ? ' <span class="badge badge-contacted">' + dateStr + '</span>' : '') +
+            payBadge +
+            trialBadge +
+            (t ? '<span class="badge badge-contacted">' + dateStr + '</span> ' : '') +
+            (p.has_page ? '<a href="https://' + p.slug + '.solia.me" target="_blank" class="page-link">' + p.slug + '.solia.me</a>' : '') +
           '</td>' +
           '<td class="actions">' +
             (p.has_page
@@ -377,7 +438,7 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
             ) +
             (t
               ? '<button class="btn-sm btn-done" onclick="unmark(\\'' + p.slug + '\\')">&check; ' + dateStr + '</button>'
-              : '<button class="btn-sm" onclick="mark(\\'' + p.slug + '\\')">Prospect&eacute;</button>'
+              : '<button class="btn-sm" onclick="mark(\\'' + p.slug + '\\')">Contact&eacute;</button>'
             ) +
           '</td>' +
         '</tr>';
