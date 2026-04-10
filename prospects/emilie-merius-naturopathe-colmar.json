@@ -1,0 +1,32 @@
+{
+  "slug": "emilie-merius-naturopathe-colmar",
+  "prenom": "Emilie",
+  "nom": "Mérius",
+  "metier": "Naturopathe",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJy2pD2LJlkUcR5TB7MaslNFM/photos/AU_ZVEFd41UgbGho0QF9sGC7NEfQtNwKI0Dv3NetuX8BrM6e54FTd09QGwpw2r_nGUX0Wg9RfGPXnLPgYpVPaLpub_Z7aqDHMZschwKIOivSm2aPZUHLwhxmcEO5UNFmB9tQlCsQuI8ThzbuRSRM1cx5kKlioXSDbltBQBPgk_Tp07UJ_fgLyBuclLaw_-hqahdbGuaTvPZo_4cHpSwtSRAXm64oTKpDYy58bWseKSXVrDimsQykKgZjFU8Juh5zmAT0dZtdNwX96fifdwgc2MJzxOjqZOv7oi0-Cz3XcPlFV6zBcw/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 37 18 33 40",
+  "adresse": "22 Rue du Noyer, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:30 – 17:00 | mardi: 08:30 – 19:00 | mercredi: 08:30 – 12:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 109,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
