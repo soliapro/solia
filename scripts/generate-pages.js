@@ -209,8 +209,8 @@ function render(template, p, isDemo) {
     flags.telephone = true;
     flags.rdv_url = true;
     flags.adresse = true;
-    flags.annees_experience = true;
-    flags.langues_extra = true;
+    // annees_experience et langues_extra : pas forcées, les boutons "+ Expérience" / "+ Langues"
+    // dans le JS s'en chargent pour éviter les chips vides/NaN
   }
 
   // Spécialités → tags HTML
@@ -453,12 +453,13 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     function hideEmpties(){
       empties.forEach(function(el){el.classList.remove('empty-hide')});empties=[];
       fields.forEach(restorePH);
-      if(chipExp&&(!chipExp.dataset.val||chipExp.dataset.val==='0'))markE(chipExp);
+      if(chipExp&&(!chipExp.dataset.val||chipExp.dataset.val==='0'||chipExp.dataset.val===''))markE(chipExp);
       if(chipLangues&&!chipLangues.textContent.trim())markE(chipLangues);
       var addE=document.getElementById('add-chip-exp');if(addE)markE(addE);
       var addL=document.getElementById('add-chip-langues');if(addL)markE(addL);
       ['duree_seance','tarif','horaires','publics'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var c=el.closest('.info-card');if(c)markE(c)}}});
       if(formList&&!formList.querySelectorAll('li').length){var fs=formList.closest('section');if(fs)markE(fs)}
+      if(specRow&&!specRow.querySelectorAll('.specialite-tag').length){var ss=specRow.closest('section');if(ss)markE(ss)}
       if(fieldEmpty('approche')){var sep=document.querySelector('.sep');if(sep)markE(sep);var ap=document.querySelector('[data-field="approche"]');if(ap)markE(ap)}
       ['telephone','adresse'].forEach(function(f){if(fieldEmpty(f)){var el=document.querySelector('[data-field="'+f+'"]');if(el){var r=el.closest('.contact-row');if(r)markE(r)}}});
       if(mapEl&&fieldEmpty('adresse'))markE(mapEl);
