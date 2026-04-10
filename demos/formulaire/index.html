@@ -763,13 +763,30 @@
     }
 
     function prefillForm(p) {
-      setVal('f-prenom',    p.prenom    || '');
-      setVal('f-nom',       p.nom       || '');
-      setVal('f-metier',    p.metier    || '');
-      setVal('f-ville',     p.ville     || '');
-      setVal('f-telephone', p.telephone || '');
-      setVal('f-horaires',  p.horaires  || '');
-      setVal('f-tarif',     p.tarif     || '');
+      setVal('f-prenom',      p.prenom      || '');
+      setVal('f-nom',         p.nom         || '');
+      setVal('f-metier',      p.metier      || '');
+      setVal('f-ville',       p.ville       || '');
+      setVal('f-email',       p.email       || '');
+      setVal('f-telephone',   p.telephone   || '');
+      setVal('f-horaires',    p.horaires    || '');
+      setVal('f-tarif',       p.tarif       || '');
+      setVal('f-duree',       p.duree_seance || '');
+      setVal('f-description', p.description || '');
+      setVal('f-arguments',   p.approche    || '');
+
+      // Spécialités → une par ligne
+      if (p.specialites && p.specialites.length) {
+        setVal('f-services', p.specialites.join('\n'));
+      }
+
+      // Thème visuel
+      if (p.theme) {
+        document.getElementById('f-theme').value = p.theme;
+        document.querySelectorAll('.theme-card').forEach(c => {
+          c.classList.toggle('selected', c.dataset.theme === p.theme);
+        });
+      }
 
       // Bandeau de contexte
       const name = [p.prenom, p.nom].filter(Boolean).join(' ') || p.slug;

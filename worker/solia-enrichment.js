@@ -181,18 +181,23 @@ async function handleProspect(slug, env) {
     return jsonResponse({ error: `Prospect introuvable : ${slug}` }, 404);
   }
 
-  // Ne retourner que les champs utiles pour le pré-remplissage
+  // Retourner tous les champs utiles pour le pré-remplissage
   const safe = {
     slug:              prospect.slug,
     prenom:            prospect.prenom            || '',
     nom:               prospect.nom               || '',
     metier:            prospect.metier            || '',
     ville:             prospect.ville             || '',
+    email:             prospect.email             || '',
     telephone:         prospect.telephone         || '',
     adresse:           prospect.adresse           || '',
     horaires:          prospect.horaires          || '',
     tarif:             prospect.tarif             || '',
     duree_seance:      prospect.duree_seance      || '',
+    description:       prospect.description       || '',
+    approche:          prospect.approche          || '',
+    specialites:       prospect.specialites       || [],
+    theme:             prospect.theme             || '',
     photo_url:         prospect.photo_url         || '',
     avis_google_note:  prospect.avis_google_note  ?? null,
     avis_google_nb:    prospect.avis_google_nb    ?? null,
