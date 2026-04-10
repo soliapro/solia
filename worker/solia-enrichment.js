@@ -332,6 +332,13 @@ function mergeProspect(prospect, formData, enriched) {
     facebook_url:     formData.facebook_url     || prospect.facebook_url     || '',
     linkedin_url:     formData.linkedin_url     || prospect.linkedin_url     || '',
     site_actuel:      formData.site_actuel      || prospect.site_actuel      || '',
+    // Infos pratiques (éditables en ligne)
+    adresse:          formData.adresse          || prospect.adresse          || '',
+    zone_intervention: formData.zone_intervention || prospect.zone_intervention || '',
+    publics:          formData.publics?.length   ? formData.publics : prospect.publics || [],
+    rdv_url:          formData.rdv_url          || prospect.rdv_url          || '',
+    annees_experience: formData.annees_experience || prospect.annees_experience || '',
+    formations:       formData.formations?.length ? formData.formations : prospect.formations || [],
     // Thème visuel
     theme:        formData.theme        || prospect.theme       || '',
     // Flags — le prospect a rempli le formulaire = email confirmé + page active

@@ -337,6 +337,13 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   .photo-edit-overlay{display:none;position:absolute;inset:0;z-index:10;cursor:pointer;background:rgba(0,0,0,.5);align-items:center;justify-content:center;color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600}
   .spec-add-btn{display:none;cursor:pointer;font-size:.75rem;padding:5px 14px;border-radius:100px;border:1.5px dashed var(--c-border);color:var(--c-muted);background:none;font-family:'DM Sans',sans-serif}
   .spec-add-btn:hover{border-color:var(--c-accent);color:var(--c-accent)}
+  .edit-add-btn{display:none;cursor:pointer;font-size:.75rem;padding:5px 14px;border-radius:100px;border:1.5px dashed var(--c-border);color:var(--c-muted);background:none;font-family:'DM Sans',sans-serif;margin-top:8px}
+  .edit-add-btn:hover{border-color:var(--c-accent);color:var(--c-accent)}
+  .formation-del{display:none;cursor:pointer;background:none;border:none;color:#999;font-size:.9rem;margin-left:8px;padding:0 4px;vertical-align:middle}
+  .formation-del:hover{color:var(--c-accent)}
+  .edit-mode .chip[id]{cursor:pointer}.edit-mode .chip[id]:hover{outline:2px dashed rgba(196,112,79,.3);outline-offset:2px;border-radius:100px}
+  .edit-mode #zone-value{cursor:pointer}.edit-mode #zone-value:hover{outline:2px dashed rgba(196,112,79,.3);outline-offset:4px;border-radius:4px}
+  .edit-mode .contact-list a{cursor:text}
 </style>`;
 
   const bannerHtml = `
@@ -388,6 +395,16 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     var photoInput=document.getElementById('photo-file-input');
     var socIcons=document.querySelectorAll('.hero-soc');
     var editBtn=document.getElementById('edit-toggle');
+    var formList=document.getElementById('formations-list');
+    var zoneVal=document.getElementById('zone-value');
+    var chipExp=document.getElementById('chip-exp');
+    var chipZone=document.getElementById('chip-zone');
+    var chipLangues=document.getElementById('chip-langues');
+    var heroCta=document.getElementById('heroCta');
+    var ctaMain=document.getElementById('ctaMain');
+    var contactLinks=document.querySelectorAll('#contact-email-link,#contact-phone-link');
+    var ZONES={cabinet:'En cabinet',domicile:'\\u00c0 domicile','les deux':'Cabinet & domicile'};
+    var zoneKeys=Object.keys(ZONES);
 
     // Hide empty social icons by default
     socIcons.forEach(function(ic){if(!ic.getAttribute('href'))ic.style.display='none'});
@@ -404,15 +421,21 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       var po=document.getElementById('photo-edit-overlay');
       if(po)po.style.display=editMode?'flex':'none';
       socIcons.forEach(function(ic){if(editMode){ic.style.display='flex';ic.style.opacity=ic.getAttribute('href')?'1':'0.35';ic.style.cursor='pointer'}else{ic.style.display=ic.getAttribute('href')?'flex':'none';ic.style.cursor='';ic.style.opacity='1'}});
-      var ab=document.getElementById('spec-add-btn');if(ab)ab.style.display=editMode?'inline-block':'none';
+      document.querySelectorAll('.spec-add-btn,.edit-add-btn').forEach(function(b){b.style.display=editMode?'inline-block':'none'});
+      if(formList)formList.querySelectorAll('.formation-del').forEach(function(b){b.style.display=editMode?'inline':'none'});
+      contactLinks.forEach(function(lk){if(editMode){lk.removeAttribute('target')}});
     });
 
-    // FIELD EVENTS
+    // FIELD EVENTS + PASTE AS PLAIN TEXT
     fields.forEach(function(el){
       el.addEventListener('focus',function(){el.classList.remove('edit-outline');el.classList.add('edit-focus')});
       el.addEventListener('blur',function(){el.classList.remove('edit-focus');if(editMode)el.classList.add('edit-outline')});
       el.addEventListener('input',markChanged);
+      el.addEventListener('paste',function(e){e.preventDefault();var text=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,text)});
     });
+
+    // CONTACT LINKS — prevent navigation in edit mode
+    contactLinks.forEach(function(lk){lk.addEventListener('click',function(e){if(editMode)e.preventDefault()})});
 
     // PHOTO
     if(heroVisual){
@@ -450,6 +473,27 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       specRow.querySelectorAll('.specialite-tag').forEach(function(t){t.addEventListener('click',function(){if(!editMode)return;if(confirm('Supprimer "'+t.textContent+'" ?')){t.remove();markChanged()}})});
     }
 
+    // ZONE INTERVENTION — click to cycle
+    if(zoneVal){
+      zoneVal.addEventListener('click',function(){if(!editMode)return;var curKey=zoneVal.dataset.val||'cabinet';var idx=(zoneKeys.indexOf(curKey)+1)%zoneKeys.length;var nk=zoneKeys[idx];zoneVal.dataset.val=nk;zoneVal.textContent=ZONES[nk];if(chipZone){chipZone.dataset.val=nk;chipZone.textContent=ZONES[nk]}markChanged()});
+    }
+
+    // HERO CHIPS — click to edit
+    if(chipExp){chipExp.addEventListener('click',function(){if(!editMode)return;var cur=chipExp.dataset.val||'';var v=prompt('Ann\\u00e9es d\\'exp\\u00e9rience :',cur);if(v===null)return;var n=parseInt(v,10);if(!isNaN(n)&&n>0){chipExp.dataset.val=String(n);chipExp.innerHTML=n+' ans d\\'exp\\u00e9rience';markChanged()}})}
+    if(chipLangues){chipLangues.addEventListener('click',function(){if(!editMode)return;var cur=chipLangues.textContent.trim();var v=prompt('Langues parl\\u00e9es (s\\u00e9par\\u00e9es par virgule) :',cur);if(v===null)return;chipLangues.textContent=v.trim();markChanged()})}
+
+    // CTA — click to edit URL
+    function ctaEdit(btn){if(!btn)return;btn.addEventListener('click',function(e){if(!editMode)return;e.preventDefault();var cur=btn.getAttribute('href')||'';var v=prompt('URL de prise de rendez-vous :',cur.startsWith('#')||cur.startsWith('mailto:')?'https://':cur);if(v===null)return;v=v.trim();if(v){btn.setAttribute('href',v);btn.setAttribute('target','_blank')}markChanged()})}
+    ctaEdit(heroCta);ctaEdit(ctaMain);
+
+    // FORMATIONS — editable timeline
+    if(formList){
+      function setupFormItem(li){var del=document.createElement('button');del.className='formation-del';del.innerHTML='&times;';del.title='Supprimer';del.style.display='none';li.appendChild(del);del.addEventListener('click',function(e){e.stopPropagation();if(confirm('Supprimer cette formation ?')){li.remove();markChanged()}});li.addEventListener('click',function(e){if(!editMode||e.target===del)return;var tn=li.firstChild;var cur=tn?tn.textContent.trim():'';var v=prompt('Modifier :',cur);if(v===null)return;if(v.trim()){if(tn&&tn.nodeType===3)tn.textContent=v.trim();else{li.insertBefore(document.createTextNode(v.trim()),li.firstChild)}markChanged()}})}
+      formList.querySelectorAll('li').forEach(setupFormItem);
+      var fab=document.createElement('button');fab.className='edit-add-btn';fab.textContent='+ Ajouter une formation';fab.style.display='none';formList.parentNode.appendChild(fab);
+      fab.addEventListener('click',function(){var v=prompt('Nouvelle formation ou certification :');if(!v||!v.trim())return;var li=document.createElement('li');li.textContent=v.trim();formList.appendChild(li);setupFormItem(li);if(editMode)li.querySelector('.formation-del').style.display='inline';markChanged()});
+    }
+
     // SAVE
     document.getElementById('save-btn').addEventListener('click',function(){
       var btn=this;btn.disabled=true;
@@ -458,10 +502,15 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       var mi=0;sts.textContent=msgs[0];var timer=setInterval(function(){mi++;if(mi<msgs.length)sts.textContent=msgs[mi]},3e3);
 
       var payload={slug:SLUG,email:'update@solia.me',theme:current};
-      fields.forEach(function(el){var f=el.dataset.field,txt=el.innerText.replace(/[\\r\\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else{payload[f]=txt}});
+      fields.forEach(function(el){var f=el.dataset.field,txt=el.innerText.replace(/[\\r\\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt.split(',').map(function(s){return s.trim()}).filter(Boolean)}else{payload[f]=txt}});
       if(specRow){var sp=[];specRow.querySelectorAll('.specialite-tag').forEach(function(t){sp.push(t.textContent.trim())});payload.services=sp.join('\\n')}
       socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
       if(photoDataUri)payload.photo_profil=photoDataUri;
+      if(zoneVal)payload.zone_intervention=zoneVal.dataset.val||'';
+      var cHref=heroCta?heroCta.getAttribute('href'):'';if(cHref&&!cHref.startsWith('#')&&!cHref.startsWith('mailto:'))payload.rdv_url=cHref;
+      if(chipExp&&chipExp.dataset.val)payload.annees_experience=parseInt(chipExp.dataset.val,10)||'';
+      if(chipLangues){var lg=chipLangues.textContent.trim();if(lg)payload.langues_display=lg}
+      if(formList){var fl=[];formList.querySelectorAll('li').forEach(function(li){var tn=li.firstChild;var txt=tn?tn.textContent.trim():'';if(txt)fl.push(txt)});if(fl.length)payload.formations=fl}
 
       fetch(W+'/api/personalize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
       .then(function(r){return r.json()})

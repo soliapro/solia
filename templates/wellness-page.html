@@ -426,7 +426,7 @@
       <div class="hero-meta" id="heroMeta">
         <span class="hero-loc">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          {{ville_display}}
+          <span data-field="ville">{{ville_display}}</span>
         </span>
         {{#if avis_google}}
         <span class="hero-rating">
@@ -445,9 +445,9 @@
       </div>
 
       <div class="hero-chips" id="heroChips">
-        {{#if annees_experience}}<span class="chip"><span class="count" data-to="{{annees_experience}}">{{annees_experience}}</span> ans d'expérience</span>{{/if}}
-        {{#if zone_intervention}}<span class="chip">{{zone_intervention_label}}</span>{{/if}}
-        {{#if langues_extra}}<span class="chip">{{langues_extra}}</span>{{/if}}
+        {{#if annees_experience}}<span class="chip" id="chip-exp" data-val="{{annees_experience}}"><span class="count" data-to="{{annees_experience}}">{{annees_experience}}</span> ans d'expérience</span>{{/if}}
+        {{#if zone_intervention}}<span class="chip" id="chip-zone" data-val="{{zone_intervention}}">{{zone_intervention_label}}</span>{{/if}}
+        {{#if langues_extra}}<span class="chip" id="chip-langues">{{langues_extra}}</span>{{/if}}
       </div>
 
       {{#if rdv_url}}
@@ -532,7 +532,7 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
             <div class="info-label">Lieu</div>
-            <div class="info-value">{{zone_intervention_label}}</div>
+            <div class="info-value" id="zone-value" data-val="{{zone_intervention}}">{{zone_intervention_label}}</div>
           </div>
           {{/if}}
 
@@ -542,7 +542,7 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
             </div>
             <div class="info-label">Publics</div>
-            <div class="info-value">{{publics_display}}</div>
+            <div class="info-value" id="publics-value" data-field="publics">{{publics_display}}</div>
           </div>
           {{/if}}
 
@@ -555,7 +555,7 @@
     <section class="s-formations s-surface fade-s">
       <div class="wrap">
         <span class="s-label">Formation &amp; parcours</span>
-        <ul class="timeline">{{formations_items}}</ul>
+        <ul class="timeline" id="formations-list">{{formations_items}}</ul>
       </div>
     </section>
     {{/if}}
@@ -589,18 +589,18 @@
         <ul class="contact-list">
           <li class="contact-row">
             <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:{{email}}">{{email}}</a>
+            <a href="mailto:{{email}}" id="contact-email-link"><span data-field="email">{{email}}</span></a>
           </li>
           {{#if telephone}}
           <li class="contact-row">
             <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.8a2 2 0 012-2.18h2.96a2 2 0 012 1.72c.128.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            <a href="tel:{{telephone_raw}}">{{telephone}}</a>
+            <a href="tel:{{telephone_raw}}" id="contact-phone-link"><span data-field="telephone">{{telephone}}</span></a>
           </li>
           {{/if}}
           {{#if adresse}}
           <li class="contact-row">
             <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span>{{adresse}}</span>
+            <span data-field="adresse">{{adresse}}</span>
           </li>
           {{/if}}
         </ul>
