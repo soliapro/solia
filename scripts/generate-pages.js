@@ -91,6 +91,26 @@ function nl2br(str) {
   return escapeHtml(str).replace(/\n/g, '<br>');
 }
 
+function extractPlaceId(p) {
+  // Extract Google Place ID from photo_url or google_business_url
+  const photoMatch = (p.photo_url || '').match(/places\/(ChIJ[A-Za-z0-9_-]+)\//);
+  if (photoMatch) return photoMatch[1];
+  const bizMatch = (p.google_business_url || '').match(/place_id[=:]([A-Za-z0-9_-]+)/);
+  if (bizMatch) return bizMatch[1];
+  return '';
+}
+
+function buildMapUrl(p) {
+  const placeId = extractPlaceId(p);
+  if (placeId) {
+    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&q=place_id:${placeId}`;
+  }
+  if (p.adresse) {
+    return `https://maps.google.com/maps?q=${encodeURIComponent(p.adresse)}&output=embed&z=15`;
+  }
+  return '';
+}
+
 /* ─── Validation minimale ─── */
 
 const REQUIRED = ['slug', 'prenom', 'nom', 'metier', 'ville', 'departement', 'email', 'description', 'email_confirme'];
@@ -290,6 +310,7 @@ function render(template, p, isDemo) {
     avis_google_nb:       String(p.avis_google_nb || ''),
     avis_etoiles:         p.avis_google_note ? starsHtml(p.avis_google_note) : '',
     avis_etoiles_svg:     p.avis_google_note ? svgStarsHtml(p.avis_google_note) : '',
+    map_embed_url:        buildMapUrl(p),
     rdv_url:              escapeHtml(p.rdv_url || ''),
     google_business_url:  escapeHtml(p.google_business_url || ''),
     instagram_url:        escapeHtml(p.instagram_url || ''),

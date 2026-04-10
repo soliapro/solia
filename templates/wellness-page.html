@@ -604,9 +604,9 @@
         {{#if adresse}}
         <div id="map-container" style="margin-top:24px;margin-bottom:32px;border-radius:14px;overflow:hidden;border:1.5px solid var(--c-border)">
           <iframe
-            width="100%" height="250" style="border:0;display:block"
+            width="100%" height="280" style="border:0;display:block"
             loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            src="https://maps.google.com/maps?q={{adresse}}&output=embed&z=15"
+            src="{{map_embed_url}}"
             allowfullscreen>
           </iframe>
         </div>
