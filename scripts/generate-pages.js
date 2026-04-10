@@ -353,8 +353,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   .expired-btn:hover { background: #A85C3E; }
   .expired-link { font-size: 0.82rem; color: #8A8074; }
 
-  /* Photo upload overlay */
-  [data-photo-upload] { cursor: pointer; position: relative; }
+  /* Photo upload overlay (visible seulement en mode édition via JS) */
+  [data-photo-upload] { position: relative; }
   [data-photo-upload]::after {
     content: 'Modifier la photo';
     position: absolute; inset: 0;
@@ -364,7 +364,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     opacity: 0; transition: opacity 0.3s;
     pointer-events: none;
   }
-  [data-photo-upload]:hover::after { opacity: 1; }
+  .edit-mode [data-photo-upload] { cursor: pointer; }
+  .edit-mode [data-photo-upload]:hover::after { opacity: 1; }
   #photo-file-input { display: none; }
 
   /* Social editor panel */
@@ -438,7 +439,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
       dot.classList.add('active');
       localStorage.setItem('solia_theme_'+slug, current);
-      // theme saved
+      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
     });
   });
   // theme applied
@@ -454,12 +455,16 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       editToggle.addEventListener('click', function(){
         editMode = !editMode;
         editToggle.textContent = editMode ? 'Masquer' : 'Modifier';
+        document.body.classList.toggle('edit-mode', editMode);
         editableFields.forEach(function(el){
           el.setAttribute('contenteditable', editMode ? 'true' : 'false');
           el.style.outline = editMode ? '2px dashed rgba(196,112,79,0.3)' : 'none';
           el.style.outlineOffset = '4px';
         });
-        // Scroll vers le premier champ
+        // Icônes sociales : visuellement cliquables en mode édition
+        document.querySelectorAll('.hero-social-icon').forEach(function(icon){
+          icon.style.cursor = editMode ? 'pointer' : '';
+        });
         if (editMode && editableFields.length) {
           editableFields[0].scrollIntoView({ behavior:'smooth', block:'center' });
         }
@@ -518,6 +523,13 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       }
     });
     payload.theme = current;
+    Object.keys(socialChanges).forEach(function(k){ payload[k] = socialChanges[k]; });
+    // Spécialités
+    if (specRow) {
+      var specs = [];
+      specRow.querySelectorAll('.specialite-tag').forEach(function(t){ specs.push(t.textContent.trim()); });
+      payload.services = specs.join('\\n');
+    }
 
     fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
       method: 'POST',
@@ -613,7 +625,39 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
       setTimeout(function(){ btn.textContent = 'Enregistrer'; btn.style.background = ''; }, 2000);
     });
   });
-  // ── SOCIAL ICONS (inline edit) ──
+  // ── SPECIALITES (ajout dynamique en mode édition) ──
+  var specRow = document.getElementById('specialites-row');
+  if (specRow) {
+    specRow.addEventListener('click', function(){
+      if (!editMode) return;
+      var input = prompt('Ajouter une spécialité :');
+      if (!input || !input.trim()) return;
+      var tag = document.createElement('span');
+      tag.className = 'specialite-tag';
+      tag.textContent = input.trim();
+      tag.style.cursor = 'pointer';
+      tag.title = 'Cliquer pour supprimer';
+      tag.addEventListener('click', function(e){
+        if (!editMode) return;
+        e.stopPropagation();
+        if (confirm('Supprimer "' + tag.textContent + '" ?')) tag.remove();
+        if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+      });
+      specRow.appendChild(tag);
+      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+    });
+    // Rendre les tags existants supprimables en mode édition
+    specRow.querySelectorAll('.specialite-tag').forEach(function(tag){
+      tag.addEventListener('click', function(e){
+        if (!editMode) return;
+        e.stopPropagation();
+        if (confirm('Supprimer "' + tag.textContent + '" ?')) tag.remove();
+        if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
+      });
+    });
+  }
+
+  // ── SOCIAL ICONS (inline edit — seulement en mode édition) ──
   var socialPrefixes = {
     instagram: 'https://instagram.com/',
     facebook: 'https://facebook.com/',
@@ -626,6 +670,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     linkedin: 'linkedin_url',
     site: 'site_actuel'
   };
+  var socialChanges = {};
 
   document.querySelectorAll('.hero-social-icon').forEach(function(icon){
     var social = icon.dataset.social;
@@ -633,6 +678,8 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
 
     icon.addEventListener('click', function(e){
       e.preventDefault();
+      if (!editMode) return; // seulement en mode édition
+
       var prefix = socialPrefixes[social];
       var currentHref = icon.getAttribute('href') || '';
       var currentVal = currentHref.replace(prefix, '');
@@ -648,31 +695,13 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
 
       icon.setAttribute('href', fullUrl);
       icon.style.opacity = fullUrl ? '1' : '0.25';
+      socialChanges[socialFields[social]] = fullUrl;
 
-      // Sauvegarder
-      var payload = { slug: slug, email: 'update@solia.me', theme: current };
-      payload[socialFields[social]] = fullUrl;
-
-      saveBar.style.display = 'flex';
-      document.getElementById('save-status').textContent = 'Sauvegarde du lien ' + social + '...';
-
-      fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(function(res){ return res.json(); })
-      .then(function(){
-        document.getElementById('save-status').textContent = 'Lien sauvegardé ! Mise à jour dans ~2 min.';
-        setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
-      })
-      .catch(function(err){
-        document.getElementById('save-status').textContent = 'Erreur : ' + err.message;
-      });
+      if (!hasChanges) { hasChanges = true; saveBar.style.display = 'flex'; }
     });
   });
 
-  // ── PHOTO UPLOAD ──
+  // ── PHOTO UPLOAD (seulement en mode édition) ──
   var photoInput = document.createElement('input');
   photoInput.type = 'file';
   photoInput.id = 'photo-file-input';
@@ -681,7 +710,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
 
   var heroVisual = document.getElementById('heroVisual');
   if (heroVisual) {
-    heroVisual.addEventListener('click', function(){ photoInput.click(); });
+    heroVisual.addEventListener('click', function(){ if (editMode) photoInput.click(); });
   }
 
   photoInput.addEventListener('change', function(){
