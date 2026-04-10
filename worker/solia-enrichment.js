@@ -339,7 +339,11 @@ async function getProspectFromGitHub(slug, env) {
   }
 
   const data    = await res.json();
-  const content = atob(data.content.replace(/\n/g, ''));
+  // Décodage base64 → UTF-8 propre (atob seul casse les caractères multi-octets)
+  const binary  = atob(data.content.replace(/\n/g, ''));
+  const bytes   = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const content = new TextDecoder().decode(bytes);
   let   parsed  = JSON.parse(content);
 
   // Normalise : un JSON peut être un tableau (format legacy exemple.json)
