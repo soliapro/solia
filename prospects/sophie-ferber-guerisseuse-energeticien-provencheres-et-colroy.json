@@ -1,0 +1,32 @@
+{
+  "slug": "sophie-ferber-guerisseuse-energeticien-provencheres-et-colroy",
+  "prenom": "Sophie",
+  "nom": "Ferber, guérisseuse",
+  "metier": "Énergéticien",
+  "ville": "Provenchères-et-Colroy",
+  "departement": "88",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJZYWqToFJkUcR1NKCWfcIbq8/photos/AU_ZVEFskIqtiZXiypXvvX4HS02LP23e5VBlFPU_glq9GYtoUmX54cR8y8nDyKd3AZchtFX8c4PCedv6d5AdtqjC2v3vdFuO3frvxV9-Y1il4WOv1ROcj148oc3THmZBCbp39JwQud39qWQ5dGuBk27O8CMCSQxIBMylX6Mar3SpREOmaLLbCzOEBlffICpiTTi4VWofu-IqXOfsxw6A8YmwflxDOjS196RKsgTsgdRpAJjvAt8V3PBuHVAGJM2oVepCcxUA9zueu8tijjIEFHjWBMnyKXggf0wNlAcK4ivdM6Wrkg/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 61 95 32 98",
+  "adresse": "3 Les Hautes Prayès, 88490 Provenchères-et-Colroy, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 09:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.7,
+  "avis_google_nb": 82,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
