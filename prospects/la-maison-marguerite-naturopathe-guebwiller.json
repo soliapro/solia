@@ -1,0 +1,32 @@
+{
+  "slug": "la-maison-marguerite-naturopathe-guebwiller",
+  "prenom": "La",
+  "nom": "Maison Marguerite",
+  "metier": "Naturopathe",
+  "ville": "Guebwiller",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJkywFdBZ_kUcRh2xU-zB8gyQ/photos/AU_ZVEG3_Iuy4d8tErGB_PyUYbFJ_a2vx2hOeAWUP8t5ZOrINcnM8q7ol0KlFTuVWRg7ui_qbK2fk0OrlhMMBDjaP9oX19IWLRU4YNyYnx7GhFHffVwVKGExXl5U0ufWS6IPEWCvhiJPYz3jSHK7yt8H_as4FqGymhS4hAF4taS94bGwFtFefZ-SN3CUOEUJ5E_UOywtoN1FWJsTPeR4wNiaXpppL7qYMieIrxBwzHMGYeELgCrvIYhClnyqUeBk6DJ87Ieiwtk8kxXU3yfqLG7_SomYpot64DEXzDXYHoAFSnxRpA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 14 29 92 49",
+  "adresse": "9 Rue Pierre Bûcher, 68500 Guebwiller, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:30 – 20:00 | mardi: 08:30 – 20:00 | mercredi: 08:30 – 20:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 9,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
