@@ -431,15 +431,17 @@ async function handleTogglePage(request, env) {
   if (!slug) return jsonResponse({ error: 'Champ "slug" requis' }, 400);
 
   if (active) {
-    // ── METTRE EN LIGNE : générer une page démo et la committer ──
-    const { prospect } = await getProspectFromGitHub(slug, env);
-    const html = buildDemoPage(prospect);
-    await commitFileToGitHub(`demos/${slug}/index.html`, html, `feat: page démo ${slug}`, env);
+    // ── METTRE EN LIGNE : activer le prospect → GitHub Actions génère avec le vrai template ──
+    const { prospect, sha } = await getProspectFromGitHub(slug, env);
+    prospect.page_active = true;
+    await commitProspectToGitHub(slug, prospect, sha, env);
     await triggerRebuild(slug, env);
-    return jsonResponse({ status: 'online', slug });
+    return jsonResponse({ status: 'online', slug, message: 'Page en cours de génération (~1 min)' });
   } else {
-    // ── HORS LIGNE : supprimer la page ──
-    await deleteFileFromGitHub(`demos/${slug}/index.html`, `feat: retrait page ${slug}`, env);
+    // ── HORS LIGNE : désactiver et supprimer la page ──
+    const { prospect, sha } = await getProspectFromGitHub(slug, env);
+    prospect.page_active = false;
+    await commitProspectToGitHub(slug, prospect, sha, env);
     await triggerRebuild(slug, env);
     return jsonResponse({ status: 'offline', slug });
   }

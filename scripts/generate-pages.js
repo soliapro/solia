@@ -94,12 +94,32 @@ function nl2br(str) {
 /* ─── Validation minimale ─── */
 
 const REQUIRED = ['slug', 'prenom', 'nom', 'metier', 'ville', 'departement', 'email', 'description', 'email_confirme'];
+const REQUIRED_DEMO = ['slug', 'metier', 'ville'];
 
 function isValid(p) {
+  // page_active = true → mode démo (moins de champs requis, fallbacks auto)
+  if (p.page_active === true) {
+    for (const f of REQUIRED_DEMO) {
+      if (!p[f]) return false;
+    }
+    return true;
+  }
   for (const f of REQUIRED) {
     if (p[f] === undefined || p[f] === null || p[f] === '') return false;
   }
   return p.email_confirme === true;
+}
+
+function applyDemoFallbacks(p) {
+  const name = [p.prenom, p.nom].filter(Boolean).join(' ') || p.metier;
+  if (!p.description) {
+    p.description = `${name}, ${p.metier.toLowerCase()} à ${p.ville}. Prenez rendez-vous pour une consultation personnalisée.`;
+  }
+  if (!p.prenom) p.prenom = '';
+  if (!p.nom) p.nom = p.metier;
+  if (!p.departement) p.departement = '';
+  if (!p.email) p.email = '';
+  return p;
 }
 
 /* ─── Schema.org JSON-LD ─── */
@@ -278,9 +298,50 @@ function render(template, p) {
   return html;
 }
 
+/* ─── Bandeau preview (pages démo) ─── */
+
+function injectPreviewBanner(html, slug) {
+  const formUrl = `https://solia.me/formulaire/?prospect=${slug}`;
+
+  const bannerCss = `
+<style id="solia-preview-banner-style">
+  #solia-preview-banner {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
+    background: #C4704F; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; padding: 13px 24px;
+    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+    font-size: 0.88rem; font-weight: 500;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18); flex-wrap: wrap;
+  }
+  #solia-preview-banner .banner-btn {
+    background: #fff; color: #C4704F; font-weight: 700; font-size: 0.82rem;
+    padding: 8px 20px; border-radius: 100px; text-decoration: none;
+    white-space: nowrap; transition: opacity 0.2s;
+  }
+  #solia-preview-banner .banner-btn:hover { opacity: 0.85; }
+  body { padding-top: 52px !important; }
+</style>`;
+
+  const bannerHtml = `
+<div id="solia-preview-banner">
+  <span>Ceci est un aperçu de votre future page &bull; Personnalisez-la gratuitement</span>
+  <a href="${formUrl}" class="banner-btn">Activer ma page →</a>
+</div>`;
+
+  html = html.replace('</head>', `${bannerCss}\n</head>`);
+  html = html.replace(/<body([^>]*)>/, `<body$1>\n${bannerHtml}`);
+  return html;
+}
+
 /* ─── Génération ─── */
 
 function generatePage(p, template) {
+  const isDemo = p.page_active === true && p.email_confirme !== true;
+
+  // Appliquer les fallbacks pour les pages démo
+  if (isDemo) applyDemoFallbacks(p);
+
   const outDir  = path.join(DEMOS_DIR, p.slug);
   const outFile = path.join(outDir, 'index.html');
 
@@ -290,7 +351,11 @@ function generatePage(p, template) {
 
   fs.mkdirSync(outDir, { recursive: true });
 
-  const html = render(template, p);
+  let html = render(template, p);
+
+  // Injecter le bandeau preview pour les pages démo
+  if (isDemo) html = injectPreviewBanner(html, p.slug);
+
   fs.writeFileSync(outFile, html, 'utf8');
 
   return { slug: p.slug, status: 'generated', path: path.relative(ROOT, outFile) };
