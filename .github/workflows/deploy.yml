@@ -42,9 +42,8 @@ jobs:
         run: node scripts/generate-dashboard.js
 
       - name: Déployer sur GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          branch: gh-pages
-          folder: demos
-          clean: true
-          single-commit: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./demos
+          force_orphan: true
