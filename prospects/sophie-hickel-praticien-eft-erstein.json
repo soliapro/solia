@@ -1,0 +1,32 @@
+{
+  "slug": "sophie-hickel-praticien-eft-erstein",
+  "prenom": "Sophie",
+  "nom": "Hickel",
+  "metier": "Praticien eft",
+  "ville": "Erstein",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ94awsnhKkUcRo9TY69-NdFg/photos/AU_ZVEFEAy8xrGO3QJGyQsAW0mW1Tqr_R1-sJ2NbxFjmYoz90fEkuGBffmLOg0_wznnNI4lFLQTwko7S3fGKcnvcfySe9snRNQZcLjYZqoL97tHC41BUWqIn7H0TFhH_R_o1NXDQP7tzsurrh77_7iLxOoVGSMWp3v6KulCWpckWcRq_BjpcN47v_G9GSsFKVXQR-vDnm6LuuimZWvHjobybTy2QE5ZMnUcoBcIzv3xu7zSAtyX8Qht544KUk6sLofHej_MaPQWWl_-gJmlS51if1YTFeSC3VP9AtgtLBKzhvfMWGQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 77 69 58 79",
+  "adresse": "47E Rue du Général de Gaulle, 67150 Erstein, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 14:00 – 19:00 | mardi: 09:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 28,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
