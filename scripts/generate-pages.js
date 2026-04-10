@@ -353,19 +353,7 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
   .expired-btn:hover { background: #A85C3E; }
   .expired-link { font-size: 0.82rem; color: #8A8074; }
 
-  /* Photo upload overlay (visible seulement en mode édition via JS) */
   [data-photo-upload] { position: relative; }
-  [data-photo-upload]::after {
-    content: 'Modifier la photo';
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.5); color: #fff;
-    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
-    opacity: 0; transition: opacity 0.3s;
-    pointer-events: none;
-  }
-  .edit-mode [data-photo-upload] { cursor: pointer; }
-  .edit-mode [data-photo-upload]:hover::after { opacity: 1; }
   #photo-file-input { display: none; }
 
   /* Social editor panel */
@@ -461,13 +449,15 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
           el.style.outline = editMode ? '2px dashed rgba(196,112,79,0.3)' : 'none';
           el.style.outlineOffset = '4px';
         });
-        // Icônes sociales : visuellement cliquables en mode édition
+        // Icônes sociales + photo overlay
         document.querySelectorAll('.hero-social-icon').forEach(function(icon){
           icon.style.cursor = editMode ? 'pointer' : '';
         });
-        if (editMode && editableFields.length) {
-          editableFields[0].scrollIntoView({ behavior:'smooth', block:'center' });
-        }
+        var po = document.getElementById('photo-overlay');
+        if (po) po.style.display = editMode ? 'flex' : 'none';
+        // Spécialités : cursor en mode édition
+        if (specRow) specRow.style.cursor = editMode ? 'pointer' : '';
+        // Pas de scroll auto — reste à la position actuelle
       });
     }
   var hasChanges = false;
@@ -710,7 +700,14 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
 
   var heroVisual = document.getElementById('heroVisual');
   if (heroVisual) {
-    heroVisual.addEventListener('click', function(){ if (editMode) photoInput.click(); });
+    // Overlay cliquable dédié (évite conflit avec parallax)
+    var photoOverlay = document.createElement('div');
+    photoOverlay.id = 'photo-overlay';
+    photoOverlay.style.cssText = 'display:none;position:absolute;inset:0;z-index:10;cursor:pointer;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;color:#fff;font-family:DM Sans,sans-serif;font-size:0.85rem;font-weight:600';
+    photoOverlay.textContent = 'Modifier la photo';
+    heroVisual.style.position = 'relative';
+    heroVisual.appendChild(photoOverlay);
+    photoOverlay.addEventListener('click', function(e){ e.stopPropagation(); photoInput.click(); });
   }
 
   photoInput.addEventListener('change', function(){
