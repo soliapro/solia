@@ -1,0 +1,32 @@
+{
+  "slug": "jessica-d-corps-reflexologue-selestat",
+  "prenom": "Jessica",
+  "nom": "D. Corps",
+  "metier": "Réflexologue",
+  "ville": "Sélestat",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJJ8v-6c1FkUcRjl-1tFDwsbg/photos/AU_ZVEGSBrsGjVy-S748o17gzP4JqOGau9roIX_BLPRgwHtPp_GZ7YkLvMrgyArJVTCmCIHDj11NVahsceSO2UPY-zkMEv4gUfM53071rHKnNJWCVKGTYF2WuotnJQRCx8j9oP3tsw1ygjoYrFLfeevIhV6loksdf-C6e-jC7fElXvyR7UkBUbzHpyenqG_FDnaUM93xCHJy0N08LOHd5AX6IYnHqM2YtlcgM9rV6tXGcW27qpkr6U5AbTO8b4cMf2OIBQYLvEophUYLyffEitFyH-7QQ510g6mkj6MYmMIC4OewPQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 40 71 58 77",
+  "adresse": "14 Rte de Strasbourg, 67600 Sélestat, France",
+  "zone_intervention": "",
+  "horaires": "lundi: Fermé | mardi: 10:00 – 19:00 | mercredi: 16:00 – 20:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 13,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
