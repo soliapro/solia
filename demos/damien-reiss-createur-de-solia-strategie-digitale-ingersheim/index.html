@@ -210,6 +210,11 @@
     .hero-rating-star { color: var(--c-accent); }
     .hero-rating-count { color: var(--c-muted); font-weight: 400; font-size: 0.78rem; }
 
+    .hero-socials { display:flex; gap:10px; margin-bottom:18px; }
+    .hero-soc { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; color:var(--c-muted); transition:color 0.2s, transform 0.15s; text-decoration:none; }
+    .hero-soc:hover { color:var(--c-accent); transform:scale(1.1); }
+    .hero-soc[href=""] { display:none; }
+
     .hero-chips {
       display: flex; flex-wrap: wrap; gap: 8px;
       margin-bottom: 32px;
@@ -391,7 +396,7 @@
       }
       .hero-content { padding: 36px 24px 52px; align-items: center; text-align: center; }
       .hero-name { text-align: center; }
-      .hero-meta, .hero-chips { justify-content: center; }
+      .hero-meta, .hero-chips, .hero-socials { justify-content: center; }
       .btn-cta { align-self: center; }
       .timeline li::before { box-shadow: 0 0 0 3px var(--c-bg), 0 0 0 5px var(--c-accent); }
     }
@@ -401,83 +406,32 @@
   </style>
 
 <style id="solia-preview-banner-style">
-  #solia-preview-banner {
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
-    background: #1A1A18; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    gap: 10px; padding: 9px 16px;
-    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
-    font-size: 0.75rem; font-weight: 500;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
-  }
-  .banner-btn {
-    font-weight: 700; font-size: 0.7rem;
-    padding: 5px 13px; border-radius: 100px; text-decoration: none;
-    white-space: nowrap; transition: opacity 0.2s; flex-shrink: 0;
-  }
-  .banner-btn-secondary { background: rgba(255,255,255,0.15); color: #fff; }
-  .banner-btn-primary { background: #C4704F; color: #fff; }
-  .banner-btn:hover { opacity: 0.85; }
-  .banner-countdown { color: rgba(255,255,255,0.6); white-space: nowrap; font-size: 0.68rem; flex-shrink: 0; }
-  .theme-dots { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
-  .theme-dot-btn {
-    width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2);
-    cursor: pointer; transition: border-color 0.2s, transform 0.15s; flex-shrink: 0;
-  }
-  .theme-dot-btn:hover { transform: scale(1.15); }
-  .theme-dot-btn.active { border-color: #fff; transform: scale(1.15); }
-  body { padding-top: 40px !important; }
-  @media (max-width: 640px) {
-    #solia-preview-banner { gap: 6px; padding: 7px 10px; }
-    .banner-btn { font-size: 0.65rem; padding: 5px 10px; }
-    .theme-dot-btn { width: 18px; height: 18px; }
-    body { padding-top: 38px !important; }
-  }
-  #solia-expired-overlay {
-    display: none; position: fixed; inset: 0; z-index: 999999;
-    background: rgba(253,250,246,0.96); backdrop-filter: blur(8px);
-    flex-direction: column; align-items: center; justify-content: center;
-    gap: 20px; text-align: center; padding: 32px;
-    font-family: 'DM Sans', sans-serif;
-  }
-  #solia-expired-overlay.visible { display: flex; }
-  .expired-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; color: #1A1A18; }
-  .expired-sub { font-size: 0.9rem; color: #8A8074; max-width: 380px; line-height: 1.6; }
-  .expired-btn { background: #C4704F; color: #fff; font-weight: 700; font-size: 0.9rem; padding: 14px 32px; border-radius: 100px; text-decoration: none; }
-  .expired-btn:hover { background: #A85C3E; }
-  .expired-link { font-size: 0.82rem; color: #8A8074; }
-
-  /* Photo upload overlay */
-  [data-photo-upload] { cursor: pointer; position: relative; }
-  [data-photo-upload]::after {
-    content: 'Modifier la photo';
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.5); color: #fff;
-    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
-    opacity: 0; transition: opacity 0.3s;
-    pointer-events: none;
-  }
-  [data-photo-upload]:hover::after { opacity: 1; }
-  #photo-file-input { display: none; }
-
-  /* Social editor panel */
-  .social-editor-btn { background:rgba(255,255,255,0.15); color:#fff; border:none; padding:5px 10px; border-radius:100px; font-size:0.65rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; }
-  .social-editor-btn:hover { background:rgba(255,255,255,0.25); }
-  #social-panel {
-    display:none; position:fixed; top:44px; right:16px; z-index:99998;
-    background:#fff; border-radius:14px; box-shadow:0 8px 32px rgba(0,0,0,0.18);
-    padding:20px; width:320px; max-width:calc(100vw - 32px);
-    font-family:'DM Sans',sans-serif;
-  }
-  #social-panel.visible { display:block; }
-  #social-panel h3 { font-size:0.88rem; font-weight:600; margin-bottom:12px; color:#1A1A18; }
-  .social-field { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
-  .social-field label { font-size:0.72rem; font-weight:600; color:#8A8074; width:70px; flex-shrink:0; }
-  .social-field input { flex:1; border:1.5px solid #E4DDD4; border-radius:8px; padding:7px 10px; font-size:0.78rem; font-family:'DM Sans',sans-serif; outline:none; color:#1A1A18; }
-  .social-field input:focus { border-color:#C4704F; }
-  .social-field input::placeholder { color:#E4DDD4; }
-  .social-save { background:#C4704F; color:#fff; border:none; padding:8px 20px; border-radius:100px; font-size:0.78rem; font-weight:700; cursor:pointer; width:100%; margin-top:4px; font-family:'DM Sans',sans-serif; }
+  #solia-preview-banner{position:fixed;top:0;left:0;width:100%;z-index:99999;background:#1A1A18;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;box-shadow:0 2px 16px rgba(0,0,0,.18)}
+  .banner-btn{font-weight:700;font-size:.7rem;padding:5px 13px;border-radius:100px;text-decoration:none;white-space:nowrap;transition:opacity .2s;flex-shrink:0;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+  .banner-btn-secondary{background:rgba(255,255,255,.15);color:#fff}
+  .banner-btn-primary{background:#C4704F;color:#fff}
+  .banner-btn:hover{opacity:.85}
+  .banner-countdown{color:rgba(255,255,255,.6);white-space:nowrap;font-size:.68rem;flex-shrink:0}
+  .theme-dots{display:flex;gap:4px;align-items:center;flex-shrink:0}
+  .theme-dot-btn{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.2);cursor:pointer;transition:border-color .2s,transform .15s;flex-shrink:0}
+  .theme-dot-btn:hover{transform:scale(1.15)}
+  .theme-dot-btn.active{border-color:#fff;transform:scale(1.15)}
+  body{padding-top:40px!important}
+  @media(max-width:640px){#solia-preview-banner{gap:6px;padding:7px 10px}.banner-btn{font-size:.65rem;padding:5px 10px}.theme-dot-btn{width:18px;height:18px}body{padding-top:38px!important}}
+  #solia-expired-overlay{display:none;position:fixed;inset:0;z-index:999999;background:rgba(253,250,246,.96);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:32px;font-family:'DM Sans',sans-serif}
+  #solia-expired-overlay.visible{display:flex}
+  .expired-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;color:#1A1A18}
+  .expired-sub{font-size:.9rem;color:#8A8074;max-width:380px;line-height:1.6}
+  .expired-btn{background:#C4704F;color:#fff;font-weight:700;font-size:.9rem;padding:14px 32px;border-radius:100px;text-decoration:none}
+  .expired-btn:hover{background:#A85C3E}
+  .expired-link{font-size:.82rem;color:#8A8074}
+  #solia-save-bar{display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,.15)}
+  #solia-save-bar button{background:#C4704F;color:#fff;border:none;padding:8px 20px;border-radius:100px;font-weight:700;font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+  .edit-outline{outline:2px dashed rgba(196,112,79,.3)!important;outline-offset:4px;border-radius:4px}
+  .edit-focus{outline:2px solid var(--c-accent)!important;outline-offset:4px}
+  .photo-edit-overlay{display:none;position:absolute;inset:0;z-index:10;cursor:pointer;background:rgba(0,0,0,.5);align-items:center;justify-content:center;color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600}
+  .spec-add-btn{display:none;cursor:pointer;font-size:.75rem;padding:5px 14px;border-radius:100px;border:1.5px dashed var(--c-border);color:var(--c-muted);background:none;font-family:'DM Sans',sans-serif}
+  .spec-add-btn:hover{border-color:var(--c-accent);color:var(--c-accent)}
 </style>
 </head>
 <body>
@@ -491,278 +445,128 @@
     <div class="theme-dot-btn" data-t="charbon" style="background:#3D3D3D" title="Charbon"></div>
   </div>
   <span class="banner-countdown" id="banner-countdown"></span>
-  <button class="social-editor-btn" id="social-toggle">Réseaux</button>
-  <a href="https://solia.me/formulaire/?prospect=damien-reiss-createur-de-solia-strategie-digitale-ingersheim" class="banner-btn banner-btn-secondary" id="banner-cta">Personnaliser</a>
+  <button class="banner-btn banner-btn-secondary" id="edit-toggle">Modifier</button>
   <a href="https://buy.stripe.com/28E4gAd7XawU2xl0WA67S0a?client_reference_id=damien-reiss-createur-de-solia-strategie-digitale-ingersheim" class="banner-btn banner-btn-primary">Publier ma page</a>
 </div>
-
-<div id="social-panel">
-  <h3>Vos réseaux sociaux</h3>
-  <div class="social-field"><label>Instagram</label><input id="soc-instagram" placeholder="https://instagram.com/..."></div>
-  <div class="social-field"><label>Facebook</label><input id="soc-facebook" placeholder="https://facebook.com/..."></div>
-  <div class="social-field"><label>LinkedIn</label><input id="soc-linkedin" placeholder="https://linkedin.com/in/..."></div>
-  <div class="social-field"><label>Site web</label><input id="soc-site" placeholder="https://monsite.fr"></div>
-  <button class="social-save" id="social-save">Enregistrer</button>
-</div>
-
+<div id="solia-save-bar"><span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button></div>
 <div id="solia-expired-overlay">
   <div class="expired-title">Votre essai a expiré</div>
   <div class="expired-sub">Votre page de démonstration n'est plus disponible. Publiez-la pour la garder en ligne.</div>
-  <a href="https://buy.stripe.com/28E4gAd7XawU2xl0WA67S0a?client_reference_id=damien-reiss-createur-de-solia-strategie-digitale-ingersheim" class="expired-btn">Publier ma page →</a>
-  <a href="mailto:damien.reiss@gmail.com?subject=Page%20Solia%20—%20damien-reiss-createur-de-solia-strategie-digitale-ingersheim" class="expired-link">Nous contacter</a>
+  <a href="https://buy.stripe.com/28E4gAd7XawU2xl0WA67S0a?client_reference_id=damien-reiss-createur-de-solia-strategie-digitale-ingersheim" class="expired-btn">Publier ma page &rarr;</a>
+  <a href="mailto:damien.reiss@gmail.com?subject=Page%20Solia%20%E2%80%94%20damien-reiss-createur-de-solia-strategie-digitale-ingersheim" class="expired-link">Nous contacter</a>
 </div>
-
+<input type="file" id="photo-file-input" accept="image/*" style="display:none">
 <script>
 (function(){
-  var slug = 'damien-reiss-createur-de-solia-strategie-digitale-ingersheim';
-  var created = new Date('2026-04-10T17:19:57.710Z');
-  var expires = new Date(created.getTime() + 7*24*60*60*1000);
-  var cdEl = document.getElementById('banner-countdown');
+  var SLUG='damien-reiss-createur-de-solia-strategie-digitale-ingersheim',W='https://solia-enrichment.damien-reiss.workers.dev',ST='https://buy.stripe.com/28E4gAd7XawU2xl0WA67S0a?client_reference_id=damien-reiss-createur-de-solia-strategie-digitale-ingersheim';
+  var created=new Date('2026-04-10T17:39:36.672Z'),expires=new Date(created.getTime()+7*864e5);
+  var cdEl=document.getElementById('banner-countdown');
+  var editMode=false,hasChanges=false,current,photoDataUri='';
+  var saveBar=document.getElementById('solia-save-bar');
 
-  function tick() {
-    var diff = expires.getTime() - Date.now();
-    if (diff <= 0) {
-      document.getElementById('solia-expired-overlay').classList.add('visible');
-      cdEl.textContent = 'Expiré';
-      return;
-    }
-    var d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000);
-    cdEl.textContent = d > 0 ? d+'j '+h+'h' : h+'h';
-    setTimeout(tick, 60000);
-  }
+  function tick(){var d=expires.getTime()-Date.now();if(d<=0){document.getElementById('solia-expired-overlay').classList.add('visible');cdEl.textContent='Expir\u00e9';return}var j=Math.floor(d/864e5),h=Math.floor(d%864e5/36e5),m=Math.floor(d%36e5/6e4);cdEl.textContent=j>0?j+'j '+h+'h':h+'h '+m+'min';setTimeout(tick,6e4)}
   tick();
 
-  var current = document.documentElement.getAttribute('data-theme') || 'terracotta';
-  var stored = localStorage.getItem('solia_theme_'+slug);
-  if (stored) { current = stored; document.documentElement.setAttribute('data-theme', current); }
-  document.querySelectorAll('.theme-dot-btn').forEach(function(dot){
-    if (dot.dataset.t === current) dot.classList.add('active');
-    dot.addEventListener('click', function(){
-      current = dot.dataset.t;
-      document.documentElement.setAttribute('data-theme', current);
-      document.querySelectorAll('.theme-dot-btn').forEach(function(x){ x.classList.remove('active'); });
-      dot.classList.add('active');
-      localStorage.setItem('solia_theme_'+slug, current);
-      document.getElementById('banner-cta').href = 'https://solia.me/formulaire/?prospect=damien-reiss-createur-de-solia-strategie-digitale-ingersheim&theme='+current;
-    });
-  });
-  document.getElementById('banner-cta').href = 'https://solia.me/formulaire/?prospect=damien-reiss-createur-de-solia-strategie-digitale-ingersheim&theme='+current;
-
-  /* ── INLINE EDITING ── */
-  document.addEventListener('DOMContentLoaded', function(){
-    var editableFields = document.querySelectorAll('[data-field]');
-  var hasChanges = false;
-  var saveBar = document.createElement('div');
-  saveBar.id = 'solia-save-bar';
-  saveBar.innerHTML = '<span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button>';
-  saveBar.style.cssText = 'display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:DM Sans,sans-serif;font-size:0.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,0.15)';
-  document.body.appendChild(saveBar);
-
-  editableFields.forEach(function(el){
-    el.style.cursor = 'text';
-    el.style.transition = 'outline 0.2s';
-    el.style.outline = '2px dashed transparent';
-    el.style.outlineOffset = '4px';
-    el.style.borderRadius = '4px';
-    el.addEventListener('mouseenter', function(){ if(!hasChanges) el.style.outline = '2px dashed rgba(196,112,79,0.3)'; });
-    el.addEventListener('mouseleave', function(){ if(!hasChanges) el.style.outline = '2px dashed transparent'; });
-    el.addEventListener('focus', function(){ el.style.outline = '2px solid var(--c-accent)'; });
-    el.addEventListener('blur', function(){ el.style.outline = '2px dashed transparent'; });
-    el.setAttribute('contenteditable', 'true');
-    el.addEventListener('input', function(){
-      if (!hasChanges) {
-        hasChanges = true;
-        saveBar.style.display = 'flex';
-      }
-    });
+  current=document.documentElement.getAttribute('data-theme')||'terracotta';
+  var st=localStorage.getItem('solia_theme_'+SLUG);
+  if(st){current=st;document.documentElement.setAttribute('data-theme',current)}
+  document.querySelectorAll('.theme-dot-btn').forEach(function(d){
+    if(d.dataset.t===current)d.classList.add('active');
+    d.addEventListener('click',function(){current=d.dataset.t;document.documentElement.setAttribute('data-theme',current);document.querySelectorAll('.theme-dot-btn').forEach(function(x){x.classList.remove('active')});d.classList.add('active');localStorage.setItem('solia_theme_'+SLUG,current);markChanged()})
   });
 
-  var funMessages = [
-    'Sauvegarde en cours...',
-    'Vos mots prennent forme...',
-    'Un instant, la magie opère...',
-    'Presque prêt...',
-    'Votre page se met à jour...'
-  ];
+  function markChanged(){if(!hasChanges){hasChanges=true;saveBar.style.display='flex'}}
 
-  document.getElementById('save-btn').addEventListener('click', function(){
-    var btn = this;
-    btn.disabled = true;
-    var statusEl = document.getElementById('save-status');
-    var msgIdx = 0;
-    statusEl.textContent = funMessages[0];
-    var msgTimer = setInterval(function(){
-      msgIdx++;
-      if (msgIdx < funMessages.length) statusEl.textContent = funMessages[msgIdx];
-    }, 3000);
+  function init(){
+    var fields=document.querySelectorAll('[data-field]');
+    var specRow=document.getElementById('specialites-row');
+    var heroVisual=document.getElementById('heroVisual');
+    var photoInput=document.getElementById('photo-file-input');
+    var socIcons=document.querySelectorAll('.hero-soc');
+    var editBtn=document.getElementById('edit-toggle');
 
-    var payload = { slug: slug, email: 'update@solia.me' };
-    editableFields.forEach(function(el){
-      var field = el.dataset.field;
-      var text = el.innerText.trim();
-      if (field === 'nom_complet') {
-        var parts = text.split(' ');
-        payload.prenom = parts[0] || '';
-        payload.nom = parts.slice(1).join(' ') || '';
-      } else {
-        payload[field] = text;
-      }
+    // Hide empty social icons by default
+    socIcons.forEach(function(ic){if(!ic.getAttribute('href'))ic.style.display='none'});
+
+    // EDIT TOGGLE
+    editBtn.addEventListener('click',function(){
+      editMode=!editMode;
+      editBtn.textContent=editMode?'Masquer':'Modifier';
+      document.body.classList.toggle('edit-mode',editMode);
+      fields.forEach(function(el){
+        el.setAttribute('contenteditable',editMode?'true':'false');
+        if(editMode)el.classList.add('edit-outline');else el.classList.remove('edit-outline');
+      });
+      var po=document.getElementById('photo-edit-overlay');
+      if(po)po.style.display=editMode?'flex':'none';
+      socIcons.forEach(function(ic){if(editMode){ic.style.display='flex';ic.style.opacity=ic.getAttribute('href')?'1':'0.35';ic.style.cursor='pointer'}else{ic.style.display=ic.getAttribute('href')?'flex':'none';ic.style.cursor='';ic.style.opacity='1'}});
+      var ab=document.getElementById('spec-add-btn');if(ab)ab.style.display=editMode?'inline-block':'none';
     });
-    payload.theme = current;
 
-    fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(function(res){ return res.json(); })
-    .then(function(){
-      clearInterval(msgTimer);
-      statusEl.textContent = 'Sauvegardé ! Votre page sera mise à jour dans ~1 minute.';
-      btn.textContent = '✓';
-      btn.style.background = '#2E7D32';
-      setTimeout(function(){
-        saveBar.style.display = 'none';
-        hasChanges = false;
-        btn.disabled = false;
-        btn.textContent = 'Valider les modifications';
-        btn.style.background = '';
-      }, 5000);
-    })
-    .catch(function(err){
-      clearInterval(msgTimer);
-      statusEl.textContent = 'Erreur : ' + err.message;
-      btn.disabled = false;
+    // FIELD EVENTS
+    fields.forEach(function(el){
+      el.addEventListener('focus',function(){el.classList.remove('edit-outline');el.classList.add('edit-focus')});
+      el.addEventListener('blur',function(){el.classList.remove('edit-focus');if(editMode)el.classList.add('edit-outline')});
+      el.addEventListener('input',markChanged);
     });
-  });
 
-  // Style du bouton save
-  var saveBtnEl = document.getElementById('save-btn');
-  saveBtnEl.style.cssText = 'background:#C4704F;color:#fff;border:none;padding:8px 20px;border-radius:100px;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap';
-
-  // ── SOCIAL PANEL ──
-  var socialPanel = document.getElementById('social-panel');
-  document.getElementById('social-toggle').addEventListener('click', function(){
-    socialPanel.classList.toggle('visible');
-  });
-  // Close on click outside
-  document.addEventListener('click', function(e){
-    if (socialPanel.classList.contains('visible') && !socialPanel.contains(e.target) && e.target.id !== 'social-toggle') {
-      socialPanel.classList.remove('visible');
+    // PHOTO
+    if(heroVisual){
+      heroVisual.style.position='relative';
+      var po=document.createElement('div');po.id='photo-edit-overlay';po.className='photo-edit-overlay';po.textContent='Modifier la photo';heroVisual.appendChild(po);
+      po.addEventListener('click',function(e){e.stopPropagation();photoInput.click()});
     }
-  });
-
-  document.getElementById('social-save').addEventListener('click', function(){
-    var btn = this;
-    btn.disabled = true;
-    btn.textContent = 'Enregistrement...';
-    var payload = {
-      slug: slug,
-      email: 'update@solia.me',
-      instagram_url: document.getElementById('soc-instagram').value.trim(),
-      facebook_url: document.getElementById('soc-facebook').value.trim(),
-      linkedin_url: document.getElementById('soc-linkedin').value.trim(),
-      site_actuel: document.getElementById('soc-site').value.trim()
-    };
-    payload.theme = current;
-
-    fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(function(res){ return res.json(); })
-    .then(function(){
-      btn.textContent = 'Enregistré !';
-      btn.style.background = '#2E7D32';
-      // Mettre à jour les liens sociaux visibles sur la page
-      var socialRow = document.getElementById('social-row');
-      if (socialRow) {
-        var links = '';
-        var socials = [
-          { id:'soc-instagram', label:'Instagram', icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/></svg>' },
-          { id:'soc-facebook', label:'Facebook', icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>' },
-          { id:'soc-linkedin', label:'LinkedIn', icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>' },
-          { id:'soc-site', label:'Mon site', icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>' }
-        ];
-        socials.forEach(function(s){
-          var val = document.getElementById(s.id).value.trim();
-          if (val) links += '<a href="' + val + '" class="social-link" target="_blank" rel="noopener">' + s.icon + '<span>' + s.label + '</span></a>';
-        });
-        socialRow.innerHTML = links;
-      }
-      setTimeout(function(){
-        btn.textContent = 'Enregistrer';
-        btn.style.background = '';
-        btn.disabled = false;
-        socialPanel.classList.remove('visible');
-      }, 2000);
-    })
-    .catch(function(err){
-      btn.textContent = 'Erreur';
-      btn.disabled = false;
-      setTimeout(function(){ btn.textContent = 'Enregistrer'; btn.style.background = ''; }, 2000);
+    photoInput.addEventListener('change',function(){
+      var f=photoInput.files[0];if(!f)return;
+      var r=new FileReader();
+      r.onload=function(e){
+        photoDataUri=e.target.result;
+        if(heroVisual.classList.contains('hero-visual--initials')){heroVisual.classList.remove('hero-visual--initials');heroVisual.classList.add('hero-visual--photo');heroVisual.innerHTML='<div class="hero-photo-circle"><img class="hero-photo-img" id="heroImg" src="'+photoDataUri+'" style="width:100%;height:100%;object-fit:cover"></div>';var po2=document.createElement('div');po2.id='photo-edit-overlay';po2.className='photo-edit-overlay';po2.textContent='Modifier la photo';po2.style.display='flex';heroVisual.appendChild(po2);po2.addEventListener('click',function(ev){ev.stopPropagation();photoInput.click()})}
+        else{var img=document.getElementById('heroImg');if(img)img.src=photoDataUri}
+        markChanged();
+      };r.readAsDataURL(f);
     });
-  });
-  // ── PHOTO UPLOAD ──
-  var photoInput = document.createElement('input');
-  photoInput.type = 'file';
-  photoInput.id = 'photo-file-input';
-  photoInput.accept = 'image/*';
-  document.body.appendChild(photoInput);
 
-  var heroVisual = document.getElementById('heroVisual');
-  if (heroVisual) {
-    heroVisual.addEventListener('click', function(){ photoInput.click(); });
+    // SOCIAL ICONS
+    socIcons.forEach(function(ic){
+      ic.addEventListener('click',function(e){
+        e.preventDefault();if(!editMode)return;
+        var soc=ic.dataset.soc,pfx=ic.dataset.prefix||'',cur=(ic.getAttribute('href')||'').replace(pfx,'');
+        var val=soc==='site'?prompt('URL de votre site web :',ic.getAttribute('href')||'https://'):prompt('Votre pseudo '+soc.charAt(0).toUpperCase()+soc.slice(1)+' :',cur);
+        if(val===null)return;
+        var url=soc==='site'?val.trim():(val.trim()?pfx+val.trim():'');
+        ic.setAttribute('href',url);ic.style.opacity=url?'1':'0.35';markChanged();
+      });
+    });
+
+    // SPECIALITES
+    if(specRow){
+      var ab=document.createElement('button');ab.id='spec-add-btn';ab.className='spec-add-btn';ab.textContent='+ Ajouter';ab.style.display='none';specRow.appendChild(ab);
+      ab.addEventListener('click',function(){var v=prompt('Nouvelle sp\u00e9cialit\u00e9 :');if(!v||!v.trim())return;var t=document.createElement('span');t.className='specialite-tag';t.textContent=v.trim();specRow.insertBefore(t,ab);markChanged();t.addEventListener('click',function(){if(!editMode)return;if(confirm('Supprimer "'+t.textContent+'" ?')){t.remove();markChanged()}})});
+      specRow.querySelectorAll('.specialite-tag').forEach(function(t){t.addEventListener('click',function(){if(!editMode)return;if(confirm('Supprimer "'+t.textContent+'" ?')){t.remove();markChanged()}})});
+    }
+
+    // SAVE
+    document.getElementById('save-btn').addEventListener('click',function(){
+      var btn=this;btn.disabled=true;
+      var sts=document.getElementById('save-status');
+      var msgs=['Sauvegarde en cours...','Vos mots prennent forme...','Un instant, la magie op\u00e8re...','Presque pr\u00eat...'];
+      var mi=0;sts.textContent=msgs[0];var timer=setInterval(function(){mi++;if(mi<msgs.length)sts.textContent=msgs[mi]},3e3);
+
+      var payload={slug:SLUG,email:'update@solia.me',theme:current};
+      fields.forEach(function(el){var f=el.dataset.field,txt=el.innerText.replace(/[\r\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else{payload[f]=txt}});
+      if(specRow){var sp=[];specRow.querySelectorAll('.specialite-tag').forEach(function(t){sp.push(t.textContent.trim())});payload.services=sp.join('\n')}
+      socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
+      if(photoDataUri)payload.photo_profil=photoDataUri;
+
+      fetch(W+'/api/personalize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+      .then(function(r){return r.json()})
+      .then(function(){clearInterval(timer);sts.textContent='Sauvegard\u00e9 ! Mise \u00e0 jour dans environ 2 minutes.';btn.textContent='\u2713';btn.style.background='#2E7D32';photoDataUri='';setTimeout(function(){saveBar.style.display='none';hasChanges=false;btn.disabled=false;btn.textContent='Valider les modifications';btn.style.background=''},5e3)})
+      .catch(function(err){clearInterval(timer);sts.textContent='Erreur : '+err.message;btn.disabled=false});
+    });
   }
 
-  photoInput.addEventListener('change', function(){
-    var file = photoInput.files[0];
-    if (!file) return;
-
-    // Aperçu instantané
-    var reader = new FileReader();
-    reader.onload = function(e){
-      var dataUri = e.target.result;
-
-      // Transformer en mode photo si c'était des initiales
-      if (heroVisual.classList.contains('hero-visual--initials')) {
-        heroVisual.classList.remove('hero-visual--initials');
-        heroVisual.classList.add('hero-visual--photo');
-        heroVisual.innerHTML = '<div class="hero-photo-circle"><img class="hero-photo-img" id="heroImg" src="' + dataUri + '" style="width:100%;height:100%;object-fit:cover" loading="eager"></div>';
-      } else {
-        var img = document.getElementById('heroImg');
-        if (img) img.src = dataUri;
-      }
-
-      // Upload au Worker
-      var statusEl = document.getElementById('save-status');
-      saveBar.style.display = 'flex';
-      statusEl.textContent = 'Upload de la photo...';
-
-      fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          slug: slug,
-          email: 'update@solia.me',
-          photo_profil: dataUri,
-          theme: current
-        })
-      })
-      .then(function(res){ return res.json(); })
-      .then(function(){
-        statusEl.textContent = 'Photo sauvegardée ! Mise à jour dans ~1 min.';
-        setTimeout(function(){ saveBar.style.display = 'none'; }, 4000);
-      })
-      .catch(function(err){
-        statusEl.textContent = 'Erreur : ' + err.message;
-      });
-    };
-    reader.readAsDataURL(file);
-  });
-
-  }); // fin DOMContentLoaded
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 
@@ -798,6 +602,13 @@
           Ingersheim
         </span>
         
+      </div>
+
+      <div class="hero-socials" id="heroSocials">
+        <a class="hero-soc" data-soc="instagram" data-prefix="https://instagram.com/" href="" target="_blank" rel="noopener" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a class="hero-soc" data-soc="facebook" data-prefix="https://facebook.com/" href="" target="_blank" rel="noopener" title="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a class="hero-soc" data-soc="linkedin" data-prefix="https://linkedin.com/in/" href="" target="_blank" rel="noopener" title="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a class="hero-soc" data-soc="site" data-prefix="" href="" target="_blank" rel="noopener" title="Site web"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></a>
       </div>
 
       <div class="hero-chips" id="heroChips">
@@ -842,7 +653,7 @@
     <section class="s-specialites s-surface fade-s">
       <div class="wrap" style="text-align:center">
         <span class="s-label">Spécialités</span>
-        <div class="tags-row"><span class="specialite-tag">Pages pro pour indépendants (Solia)</span>
+        <div class="tags-row" id="specialites-row"><span class="specialite-tag">Pages pro pour indépendants (Solia)</span>
           <span class="specialite-tag">Stratégie digitale &amp; positionnement</span>
           <span class="specialite-tag">Lettre Fullness — présence, travail, vie</span></div>
       </div>
@@ -909,7 +720,6 @@
         </a>
         
 
-        <div class="social-row" id="social-row"><a href="https://www.instagram.com/damienreiss/" class="social-link" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg><span>Instagram</span></a></div>
       </div>
     </section>
 
