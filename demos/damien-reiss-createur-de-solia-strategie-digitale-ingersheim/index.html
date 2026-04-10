@@ -517,7 +517,7 @@
 <script>
 (function(){
   var slug = 'damien-reiss-createur-de-solia-strategie-digitale-ingersheim';
-  var created = new Date('2026-04-10T16:04:04.767Z');
+  var created = new Date('2026-04-10T16:10:01.408Z');
   var expires = new Date(created.getTime() + 7*24*60*60*1000);
   var cdEl = document.getElementById('banner-countdown');
 
@@ -548,7 +548,7 @@
       // theme saved
     });
   });
-  document.getElementById('banner-cta').href = 'https://solia.me/formulaire/?prospect=damien-reiss-createur-de-solia-strategie-digitale-ingersheim&theme='+current;
+  // theme applied
 
   /* ── INLINE EDITING ── */
   document.addEventListener('DOMContentLoaded', function(){
@@ -616,13 +616,12 @@
       var field = el.dataset.field;
       var text = el.innerText.trim();
       if (field === 'nom_complet') {
-        var clean = text.replace(/s+/g, ' ').trim();
+        var clean = text.replace(/\s+/g, ' ').trim();
         var parts = clean.split(' ');
         payload.prenom = parts[0] || '';
         payload.nom = parts.slice(1).join(' ') || '';
       } else {
-        payload[field] = text.replace(/
-/g, ' ').trim();
+        payload[field] = text.replace(/\n/g, ' ').trim();
       }
     });
     payload.theme = current;
