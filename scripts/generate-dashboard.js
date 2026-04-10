@@ -12,7 +12,7 @@ const DASHBOARD_DIR = path.join(DEMOS_DIR, 'dashboard');
 const OUT_FILE      = path.join(DASHBOARD_DIR, 'index.html');
 
 // Dossiers à ignorer (pas des pages praticiens)
-const IGNORE = new Set(['dashboard']);
+const IGNORE = new Set(['dashboard', 'formulaire']);
 
 // Lire les prospects JSON pour enrichir les infos
 function loadProspects() {

@@ -1,5 +1,5 @@
 name             = "solia-enrichment"
-main             = "worker/solia-enrichment.js"
+main             = "solia-enrichment.js"
 compatibility_date = "2024-09-23"
 
 # ─── Variables non-secrètes ───
@@ -11,8 +11,15 @@ REPO_NAME  = "solia"
 # wrangler secret put ANTHROPIC_API_KEY
 # wrangler secret put GITHUB_TOKEN
 #
-# GitHub Token requis : Personal Access Token
-#   Scopes : repo (lecture + écriture), workflow
+# GitHub Token requis : Personal Access Token (classic)
+#   Scopes : repo (lecture + écriture), workflow (trigger dispatch)
+
+# ─── Déploiement ───
+# Depuis la racine du projet :
+#   npx wrangler deploy --config worker/wrangler.toml
+#
+# Ou depuis le dossier worker/ :
+#   cd worker && npx wrangler deploy
 
 # ─── Routes (optionnel si domaine custom) ───
 # [[routes]]
