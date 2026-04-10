@@ -593,6 +593,17 @@
           {{/if}}
         </ul>
 
+        {{#if adresse}}
+        <div style="margin-top:24px;border-radius:14px;overflow:hidden;border:1.5px solid var(--c-border)">
+          <iframe
+            width="100%" height="250" style="border:0;display:block"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q={{adresse}}&output=embed&z=15"
+            allowfullscreen>
+          </iframe>
+        </div>
+        {{/if}}
+
         {{#if rdv_url}}
         <a href="{{rdv_url}}" class="btn-cta btn-cta--lg" id="ctaMain" target="_blank" rel="noopener">
           Prendre rendez-vous
