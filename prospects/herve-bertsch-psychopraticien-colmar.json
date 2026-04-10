@@ -1,0 +1,32 @@
+{
+  "slug": "herve-bertsch-psychopraticien-colmar",
+  "prenom": "Hervé",
+  "nom": "Bertsch",
+  "metier": "Psychopraticien",
+  "ville": "Colmar",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJU42N-xNlkUcRICYADv_DNfU/photos/AU_ZVEHxodNdT8G1AuTFbOqgzlIelIA1ykGwoHqe2VQgeSenWL_XknV7NF1hJknqObFyU17jebGZax0FDXPahHIOx7xaNRWzWfWrZSNMw0v-EXHM8xOGnIyDAn_T4lgoIoHFou12tJ47oE-1LRdwijVwnHdt2VNVTAvtLFOL36t0kSfYwIIkDT8zSQiZSPjHm10LFpYgNUOliTM2pZWjiMpcLn4iWJ_vVJdamszj8hXQhYS3NLT3zZbZxD6smUtJHNtZkiozAgCWQGIEdjPZ7wuqqhxUd3DThlXSYk8gp_ov3SoGiw/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 23 68 77 45",
+  "adresse": "20 Rue d'Agen, 68000 Colmar, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 08:30 – 19:30 | mardi: 08:30 – 19:30 | mercredi: 08:30 – 19:30",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.7,
+  "avis_google_nb": 14,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
