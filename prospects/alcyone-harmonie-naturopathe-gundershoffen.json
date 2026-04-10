@@ -13,7 +13,7 @@
   "telephone": "06 14 28 84 04",
   "adresse": "4 Rue du Moulin, 67110 Gundershoffen, France",
   "zone_intervention": "les deux",
-  "horaires": "lundi: 08:00 – 17:00 | mardi: 08:00 – 17:00 | mercredi: 08:00 – 17:00",
+  "horaires": "lundi: 08:00âââ17:00 | mardi: 08:00âââ17:00 | mercredi: 08:00âââ17:00",
   "tarif": "",
   "duree_seance": "",
   "approche": "",
@@ -28,5 +28,6 @@
     "fr"
   ],
   "instagram_url": "",
-  "notes": ""
+  "notes": "",
+  "page_active": true
 }
