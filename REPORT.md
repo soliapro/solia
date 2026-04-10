@@ -1,7 +1,7 @@
 # Rapport Solia
 
-**Généré le** : 10/04/2026 20:07:40  
-**Source** : `prospects/alaric-camus-osteopathe-osteopathe-scherwiller.json`  
+**Généré le** : 10/04/2026 20:09:26  
+**Source** : `prospects/damien-reiss-createur-de-solia-strategie-digitale-ingersheim.json`  
 **Durée** : 0.01s
 
 ---
@@ -10,11 +10,11 @@
 
 | Statut | Nombre |
 |--------|--------|
-| ✓ Générées | 0 |
+| ✓ Générées | 1 |
 | ⏭ Ignorées | 0 |
-| ✗ Invalides | 1 |
+| ✗ Invalides | 0 |
 | **Total** | **1** |
 
-## Erreurs de validation
+## Pages générées
 
-- `alaric-camus-osteopathe-osteopathe-scherwiller` — email_confirme: false
+- [`damien-reiss-createur-de-solia-strategie-digitale-ingersheim`](demos/damien-reiss-createur-de-solia-strategie-digitale-ingersheim/index.html)
