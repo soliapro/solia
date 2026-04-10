@@ -6,7 +6,7 @@ on:
     paths:
       - 'templates/**'
       - 'scripts/**'
-      - 'demos/**'
+      - 'prospects/**'
 
   # Trigger depuis le Worker Cloudflare (POST /api/personalize → triggerRebuild)
   repository_dispatch:
@@ -30,7 +30,25 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Générer toutes les pages prospect
+      - name: Générer la page modifiée (rebuild ciblé)
+        if: github.event_name == 'repository_dispatch' && github.event.client_payload.slug != ''
+        run: |
+          SLUG="${{ github.event.client_payload.slug }}"
+          FILE="prospects/${SLUG}.json"
+          if [ -f "$FILE" ]; then
+            echo "→ Rebuild ciblé : $FILE"
+            node scripts/generate-pages.js "$FILE" --force
+          else
+            echo "⚠ Fichier non trouvé : $FILE — rebuild complet"
+            for f in prospects/*.json; do
+              [ -f "$f" ] || continue
+              echo "→ $f"
+              node scripts/generate-pages.js "$f" --force
+            done
+          fi
+
+      - name: Générer toutes les pages (rebuild complet)
+        if: github.event_name != 'repository_dispatch' || github.event.client_payload.slug == ''
         run: |
           for f in prospects/*.json; do
             [ -f "$f" ] || continue
@@ -46,4 +64,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./demos
-          force_orphan: true
+          keep_files: true
