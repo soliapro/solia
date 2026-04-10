@@ -1,0 +1,32 @@
+{
+  "slug": "diemer-deny-reflexologue-ribeauville",
+  "prenom": "Diemer",
+  "nom": "Deny",
+  "metier": "Réflexologue",
+  "ville": "Ribeauvillé",
+  "departement": "68",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJ-cYr8edlkUcRGT-RVCnH6j4/photos/AU_ZVEGFgtnmOlY1FT4-sbQnm-nX7oHzmFGawiZwoCZSmltQZ2nAATDEQV6ZrbPjR7FYYePfPdV1FCvanPRAVjnlVIEEfVlv5lFcUiPoSCqYnNzZvEHa41wt1-03_NKG_kSWwOLfWElg-gS4pxzoIukZr3Mr34nFG46HI7orpUbGCLDtUdq1ftp5-9Q1ll9u1QxWc076eIkjn15sr29xIl1eGcYGXwf2JVaefJf_NW9rHf9HFklKJeooyoLTpy3u9LqRBFm7BrzEbjBe7ZYTnfQChfDtiPa5uv41vLS1eRaHhfSeiA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 10 89 72 78",
+  "adresse": "55 Rue du 3 Décembre, 68150 Ribeauvillé, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 10:00 – 19:00 | mardi: 10:00 – 19:00 | mercredi: Fermé",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.9,
+  "avis_google_nb": 16,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
