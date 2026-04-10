@@ -1,0 +1,32 @@
+{
+  "slug": "claire-andre-praticien-eft-remiremont",
+  "prenom": "Claire",
+  "nom": "André",
+  "metier": "Praticien eft",
+  "ville": "Remiremont",
+  "departement": "88",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJHw59IyOwk0cRX_TRk1RygFg/photos/AU_ZVEGbtcuiJcyr2qklIvNEHkKYGY-zYuwFCGF08iG2CgdcpuslER9Q8opn8eCyWOPRJ_kurO907NRKDk5LT3Z2f-JuFhT0KzAQL4WyhW4cPYRPjdZRP6LY7TGj5q56LsgMGBHZ2nmlX-NfHnhjBp4dNVVQgqX_y7zeN1PPaOB33RZwJTPgXaijESCL5KL2QIuZ1JvnjctVGoQoNDbfSO4j82km4GU-EV_gzXvK_qbl22dEufRDhpnqchVbT3toNFmtPyqNlpnHFbtCOn86gm9MhwbIyEE0hgVVJ--p_QsEseBdIA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 03 53 65 90",
+  "adresse": "Pôle Bien-Être, 7 Av. Julien Méline 1er étage, 88200 Remiremont, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 18:00 | mardi: 09:00 – 18:00 | mercredi: Fermé",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 65,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
