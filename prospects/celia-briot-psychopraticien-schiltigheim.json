@@ -1,0 +1,32 @@
+{
+  "slug": "celia-briot-psychopraticien-schiltigheim",
+  "prenom": "Célia",
+  "nom": "Briot",
+  "metier": "Psychopraticien",
+  "ville": "Schiltigheim",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJoyCd4djJlkcRsDg-Sz9Jstc/photos/AU_ZVEEHfpGPiLPqMsIF2LFC0Q-UOhsIbvdtBPihJrDXxHAIaghkNwCW5SMTm6odKy8LCLDfipISkLgGDcJwi6r4F3aNYqV7sSOu_gQ55nL5iToglXIDnNlwRNJbpj91ZUxVC8iw1mYeO7NG5-oAg3Y9qwkg3KqF0PchqHIEACUf-g2OhAl4oPeojkikEMQB5yeWeLMLZ5rC6ANjnHytnGJXXhapOyoiOGwmRqA2tINW8OOVQ-JZyrGs3gzSHCjcvmcEm7pusI8oOmvfmh7JPDD83GdFMTNuThdLmzWavDdIpwZVmA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 51 41 81 78",
+  "adresse": "23 Rue de la Lune, 67300 Schiltigheim, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 13:45 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 4.3,
+  "avis_google_nb": 3,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
