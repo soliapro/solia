@@ -3,6 +3,8 @@
  *
  * Routes :
  *   POST /api/personalize       → Enrichit le JSON via Claude, commit sur GitHub, trigger rebuild
+ *   POST /api/toggle-page       → Met en ligne / hors ligne une page démo prospect
+ *   POST /api/import            → Import bulk de prospects (depuis CSV dashboard)
  *   GET  /api/status/:slug      → Vérifie si la page a été reconstruite récemment
  *   GET  /api/prospect/:slug    → Retourne les données de base du prospect (pré-remplissage form)
  *
@@ -47,6 +49,16 @@ export default {
       // POST /api/personalize
       if (request.method === 'POST' && path === '/api/personalize') {
         return await handlePersonalize(request, env);
+      }
+
+      // POST /api/toggle-page
+      if (request.method === 'POST' && path === '/api/toggle-page') {
+        return await handleTogglePage(request, env);
+      }
+
+      // POST /api/import
+      if (request.method === 'POST' && path === '/api/import') {
+        return await handleImport(request, env);
       }
 
       // GET /api/status/:slug
@@ -404,6 +416,263 @@ async function triggerRebuild(slug, env) {
   if (!res.ok && res.status !== 204) {
     const err = await res.json().catch(() => ({}));
     throw new Error(`Dispatch GitHub échoué : ${err.message || res.status}`);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ROUTE — POST /api/toggle-page
+═══════════════════════════════════════════════════════ */
+
+async function handleTogglePage(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'JSON invalide' }, 400); }
+
+  const { slug, active } = body;
+  if (!slug) return jsonResponse({ error: 'Champ "slug" requis' }, 400);
+
+  if (active) {
+    // ── METTRE EN LIGNE : générer une page démo et la committer ──
+    const { prospect } = await getProspectFromGitHub(slug, env);
+    const html = buildDemoPage(prospect);
+    await commitFileToGitHub(`demos/${slug}/index.html`, html, `feat: page démo ${slug}`, env);
+    return jsonResponse({ status: 'online', slug });
+  } else {
+    // ── HORS LIGNE : supprimer la page ──
+    await deleteFileFromGitHub(`demos/${slug}/index.html`, `feat: retrait page ${slug}`, env);
+    return jsonResponse({ status: 'offline', slug });
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ROUTE — POST /api/import
+═══════════════════════════════════════════════════════ */
+
+async function handleImport(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'JSON invalide' }, 400); }
+
+  const prospects = body.prospects;
+  if (!Array.isArray(prospects) || !prospects.length) {
+    return jsonResponse({ error: 'Tableau "prospects" requis' }, 400);
+  }
+
+  let created = 0, skipped = 0;
+
+  for (const p of prospects) {
+    if (!p.slug) { skipped++; continue; }
+
+    // Vérifier si le fichier existe déjà
+    const checkUrl = `${GITHUB_API}/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/prospects/${p.slug}.json`;
+    const check = await githubFetch(checkUrl, env);
+    if (check.ok) { skipped++; continue; }
+
+    // Construire le JSON prospect
+    const prospect = {
+      slug:           p.slug,
+      prenom:         p.prenom         || '',
+      nom:            p.nom            || '',
+      metier:         p.metier         || '',
+      ville:          p.ville          || '',
+      departement:    p.departement    || '',
+      email:          p.email          || '',
+      description:    '',
+      email_confirme: false,
+      photo_url:      p.photo_url      || '',
+      theme:          '',
+      telephone:      p.telephone      || '',
+      adresse:        p.adresse        || '',
+      zone_intervention: '',
+      horaires:       p.horaires       || '',
+      tarif:          '',
+      duree_seance:   '',
+      approche:       '',
+      specialites:    [],
+      formations:     [],
+      certifications: [],
+      publics:        [],
+      annees_experience: null,
+      avis_google_note:  p.avis_note ? parseFloat(p.avis_note) : null,
+      avis_google_nb:    p.avis_nb   ? parseInt(p.avis_nb)     : null,
+      langues:        ['fr'],
+      instagram_url:  '',
+      notes:          '',
+    };
+
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(prospect, null, 2))));
+    await githubFetch(checkUrl, env, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `feat(import): ajout prospect ${p.slug}`,
+        content,
+      }),
+    });
+    created++;
+  }
+
+  // Trigger rebuild pour régénérer le dashboard
+  if (created > 0) await triggerRebuild('import', env);
+
+  return jsonResponse({ status: 'ok', created, skipped });
+}
+
+/* ═══════════════════════════════════════════════════════
+   PAGE DÉMO — Template HTML
+═══════════════════════════════════════════════════════ */
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function initials(prenom, nom) {
+  return ((prenom || '').charAt(0) + (nom || '').charAt(0)).toUpperCase() || '?';
+}
+
+function buildDemoPage(p) {
+  const name     = esc([p.prenom, p.nom].filter(Boolean).join(' ') || p.slug);
+  const metier   = esc(p.metier || '');
+  const ville    = esc(p.ville || '');
+  const dept     = esc(p.departement || '');
+  const tel      = esc(p.telephone || '');
+  const telRaw   = tel.replace(/\s/g, '');
+  const adresse  = esc(p.adresse || '');
+  const horaires = esc(p.horaires || '').replace(/\|/g, '<br>');
+  const ini      = esc(initials(p.prenom, p.nom));
+  const formUrl  = `https://solia.me/formulaire/?prospect=${p.slug}`;
+  const note     = p.avis_google_note;
+  const nb       = p.avis_google_nb;
+
+  const photoHtml = p.photo_url
+    ? `<img src="${esc(p.photo_url)}" alt="${name}" style="width:140px;height:140px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 4px 20px rgba(0,0,0,0.12)">`
+    : `<div style="width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,#C4704F,#E8956A);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:3rem;font-weight:600;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,0.12)">${ini}</div>`;
+
+  const avisHtml = (note && nb)
+    ? `<div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-top:16px">
+        <span style="color:#F5A623;font-size:1.2rem">${'&#9733;'.repeat(Math.round(note))}</span>
+        <span style="font-size:0.9rem;color:#8A8074">${note}/5 (${nb} avis Google)</span>
+      </div>`
+    : '';
+
+  const telHtml = tel
+    ? `<a href="tel:${telRaw}" style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #E4DDD4;padding:12px 24px;border-radius:100px;font-size:0.9rem;color:#1A1A18;font-weight:500;transition:all 0.2s;text-decoration:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C4704F" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        ${tel}
+      </a>`
+    : '';
+
+  const hoursHtml = horaires
+    ? `<div style="background:#fff;border:1.5px solid #E4DDD4;border-radius:14px;padding:20px 24px;text-align:left;max-width:400px;margin:0 auto">
+        <div style="font-weight:600;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.08em;color:#8A8074;margin-bottom:8px">Horaires</div>
+        <div style="font-size:0.88rem;line-height:1.8;color:#1A1A18">${horaires}</div>
+      </div>`
+    : '';
+
+  const adresseHtml = adresse
+    ? `<div style="font-size:0.85rem;color:#8A8074;margin-top:8px">${adresse}</div>`
+    : '';
+
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>${name} — ${metier} à ${ville}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:#FDFAF6;color:#1A1A18;-webkit-font-smoothing:antialiased}
+    a{color:#C4704F;text-decoration:none}
+    .banner{position:fixed;top:0;left:0;width:100%;z-index:9999;background:#C4704F;color:#fff;display:flex;align-items:center;justify-content:center;gap:20px;padding:13px 24px;font-size:0.88rem;font-weight:500;box-shadow:0 2px 16px rgba(0,0,0,0.18);flex-wrap:wrap}
+    .banner-btn{background:#fff;color:#C4704F;font-weight:700;font-size:0.82rem;padding:8px 20px;border-radius:100px;white-space:nowrap;transition:opacity 0.2s}
+    .banner-btn:hover{opacity:0.85}
+    body{padding-top:52px}
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <span>Ceci est un aper&ccedil;u de votre future page &bull; Personnalisez-la gratuitement</span>
+    <a href="${formUrl}" class="banner-btn">Activer ma page &rarr;</a>
+  </div>
+
+  <div style="max-width:600px;margin:0 auto;padding:60px 24px 80px;text-align:center">
+    <div style="margin-bottom:24px">${photoHtml}</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:600;margin-bottom:8px">${name}</h1>
+    <p style="font-size:1rem;color:#C4704F;font-weight:500;margin-bottom:4px">${metier}</p>
+    <p style="font-size:0.9rem;color:#8A8074">${ville}${dept ? ' (' + dept + ')' : ''}</p>
+    ${avisHtml}
+    ${adresseHtml}
+
+    <div style="margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:12px">
+      <a href="${formUrl}" style="display:inline-flex;align-items:center;gap:10px;background:#C4704F;color:#fff;font-weight:600;padding:16px 36px;border-radius:100px;font-size:1rem;transition:background 0.2s">
+        Activer ma page &rarr;
+      </a>
+      ${telHtml}
+    </div>
+
+    ${hoursHtml ? '<div style="margin-top:32px">' + hoursHtml + '</div>' : ''}
+
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid #E4DDD4;font-size:0.78rem;color:#8A8074">
+      Page g&eacute;n&eacute;r&eacute;e par <span style="font-family:'Playfair Display',serif;font-style:italic;color:#1A1A18">Solia</span>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GITHUB — Commit / Delete helpers
+═══════════════════════════════════════════════════════ */
+
+async function commitFileToGitHub(path, content, message, env) {
+  const url = `${GITHUB_API}/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/${path}`;
+
+  // Vérifier si le fichier existe pour récupérer le SHA
+  let sha;
+  const check = await githubFetch(url, env);
+  if (check.ok) {
+    const existing = await check.json();
+    sha = existing.sha;
+  }
+
+  const body = {
+    message,
+    content: btoa(unescape(encodeURIComponent(content))),
+  };
+  if (sha) body.sha = sha;
+
+  const res = await githubFetch(url, env, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`Commit échoué (${path}) : ${err.message || res.status}`);
+  }
+}
+
+async function deleteFileFromGitHub(path, message, env) {
+  const url = `${GITHUB_API}/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/${path}`;
+
+  const check = await githubFetch(url, env);
+  if (!check.ok) return; // fichier n'existe pas, rien à faire
+
+  const existing = await check.json();
+
+  const res = await githubFetch(url, env, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, sha: existing.sha }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`Suppression échouée (${path}) : ${err.message || res.status}`);
   }
 }
 
