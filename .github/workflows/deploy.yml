@@ -1,9 +1,22 @@
 name: Deploy Solia Pages
 
 on:
+  # Rebuild automatique quand un JSON est modifié sur main
   push:
-    branches:
-      - 'claude/build-solia-generator-HCV3P'
+    branches: [main]
+    paths:
+      - 'prospects/**'
+      - 'templates/**'
+      - 'scripts/**'
+      - 'demos/formulaire/**'
+      - 'demos/index.html'
+
+  # Trigger depuis le Worker Cloudflare (POST /api/personalize → triggerRebuild)
+  repository_dispatch:
+    types: [rebuild-page]
+
+  # Rebuild manuel depuis l'interface GitHub
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -20,16 +33,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Générer toutes les pages
+      - name: Générer toutes les pages prospect
         run: |
           for f in prospects/*.json; do
+            [ -f "$f" ] || continue
             echo "→ $f"
             node scripts/generate-pages.js "$f" --force
           done
 
       - name: Régénérer le dashboard
-        run: |
-          node scripts/generate-dashboard.js
+        run: node scripts/generate-dashboard.js
 
       - name: Déployer sur GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

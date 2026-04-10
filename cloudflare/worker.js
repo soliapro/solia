@@ -3,44 +3,64 @@
  * Cloudflare Worker — intercepte *.solia.me et sert la bonne page
  *
  * Routing :
- *   solia.me                          → landing page
+ *   solia.me                          → landing page (demos/index.html)
+ *   solia.me/formulaire/*             → formulaire de contact
  *   www.solia.me                      → landing page
  *   dashboard.solia.me                → dashboard
- *   [slug].solia.me                   → page praticien
+ *   formulaire.solia.me               → formulaire de contact
+ *   [slug].solia.me                   → page praticien (demos/[slug]/index.html)
  *
  * Les fichiers sont servis depuis GitHub Pages :
- *   https://soliapro.github.io/solia/[path]
+ *   https://soliapro.github.io/solia-site/[path]
  */
 
 const GITHUB_BASE = 'https://soliapro.github.io/solia';
 
 // Sous-domaines réservés (pas des slugs praticiens)
-const RESERVED = new Set(['www', 'dashboard', 'mail', 'smtp', 'ftp']);
+const RESERVED = new Set(['www', 'dashboard', 'formulaire', 'mail', 'smtp', 'ftp', 'api']);
 
 export default {
   async fetch(request) {
-    const url = new URL(request.url);
-    const host = url.hostname; // ex: dominique-carry-sophrologue-poitiers.solia.me
+    const url  = new URL(request.url);
+    const host = url.hostname;
 
-    // Extraire le sous-domaine
+    // Extraire le sous-domaine (ex: "slug" depuis "slug.solia.me")
     const subdomain = host.replace(/\.solia\.me$/, '');
 
-    let targetPath;
+    let basePath;
 
-    if (subdomain === 'solia.me' || subdomain === 'www' || host === 'solia.me') {
-      // Racine → landing page
-      targetPath = '/';
+    if (subdomain === host || subdomain === 'www') {
+      // Racine solia.me ou www.solia.me → sert depuis /demos/
+      basePath = '';
     } else if (subdomain === 'dashboard') {
-      targetPath = '/dashboard/';
+      basePath = '/dashboard';
+    } else if (subdomain === 'formulaire') {
+      basePath = '/formulaire';
     } else if (RESERVED.has(subdomain)) {
       return new Response('Not found', { status: 404 });
     } else {
-      // Slug praticien
-      targetPath = `/${subdomain}/`;
+      // Slug praticien → sert depuis /demos/[slug]/
+      basePath = `/${subdomain}`;
     }
 
-    // Construire l'URL GitHub Pages à fetcher
-    const fetchUrl = `${GITHUB_BASE}${targetPath}${url.pathname === '/' ? '' : url.pathname}${url.search}`;
+    // Construire le chemin final sur GitHub Pages
+    // Pour les sous-domaines praticiens : sert uniquement index.html (pas de sous-chemins)
+    // Pour le domaine racine : passe le pathname complet (pour /formulaire/, assets, etc.)
+    let fetchPath;
+    if (!RESERVED.has(subdomain) && subdomain !== host && subdomain !== 'www') {
+      // Sous-domaine praticien → toujours servir index.html
+      fetchPath = `${basePath}/index.html`;
+    } else {
+      // Domaine racine ou sous-domaine réservé → passer le chemin tel quel
+      const pathname = url.pathname === '/' ? '/index.html' : url.pathname;
+      // Ajouter /index.html si le chemin finit par /
+      const resolvedPath = pathname.endsWith('/')
+        ? `${pathname}index.html`
+        : pathname;
+      fetchPath = `${basePath}${resolvedPath}`;
+    }
+
+    const fetchUrl = `${GITHUB_BASE}${fetchPath}${url.search}`;
 
     const response = await fetch(fetchUrl, {
       headers: { 'User-Agent': 'Solia-Worker/1.0' }
@@ -53,17 +73,38 @@ export default {
       });
     }
 
-    // Retransmettre la réponse en corrigeant les headers
+    // Retransmettre la réponse avec headers corrigés
     const newHeaders = new Headers(response.headers);
     newHeaders.set('X-Served-By', 'Solia-Worker');
-    // Activer cache 10 min pour les assets
-    if (url.pathname.match(/\.(css|js|woff2?|png|jpg|webp|svg|ico)$/)) {
+
+    // Content-Type correct selon l'extension
+    const ext = fetchPath.split('.').pop();
+    const MIME = {
+      html: 'text/html; charset=utf-8',
+      css:  'text/css',
+      js:   'application/javascript',
+      json: 'application/json',
+      png:  'image/png',
+      jpg:  'image/jpeg',
+      jpeg: 'image/jpeg',
+      webp: 'image/webp',
+      svg:  'image/svg+xml',
+      ico:  'image/x-icon',
+      woff: 'font/woff',
+      woff2:'font/woff2',
+    };
+    if (MIME[ext]) newHeaders.set('Content-Type', MIME[ext]);
+
+    // Cache 10 min pour les assets statiques
+    if (ext && ext !== 'html') {
       newHeaders.set('Cache-Control', 'public, max-age=600');
+    } else {
+      newHeaders.set('Cache-Control', 'public, max-age=60');
     }
 
     return new Response(response.body, {
       status: response.status,
-      headers: newHeaders
+      headers: newHeaders,
     });
   }
 };

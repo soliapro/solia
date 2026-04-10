@@ -240,7 +240,7 @@ function render(template, p) {
 /* ─── Bandeau de prévisualisation ─── */
 
 function injectPreviewBanner(html, slug) {
-  const formUrl = `/formulaire/?prospect=${slug}`;
+  const formUrl = `https://solia.me/formulaire/?prospect=${slug}`;
 
   const bannerCss = `
 <style id="solia-preview-banner-style">
