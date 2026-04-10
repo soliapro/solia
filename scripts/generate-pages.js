@@ -101,14 +101,11 @@ function extractPlaceId(p) {
 }
 
 function buildMapUrl(p) {
-  const placeId = extractPlaceId(p);
-  if (placeId) {
-    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&q=place_id:${placeId}`;
-  }
-  if (p.adresse) {
-    return `https://maps.google.com/maps?q=${encodeURIComponent(p.adresse)}&output=embed&z=15`;
-  }
-  return '';
+  if (!p.adresse) return '';
+  // Combine business name + address for a precise pin (free embed, no API key)
+  const name = [p.prenom, p.nom].filter(Boolean).join(' ');
+  const query = name ? `${name}, ${p.adresse}` : p.adresse;
+  return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&output=embed&z=15`;
 }
 
 /* ─── Validation minimale ─── */
