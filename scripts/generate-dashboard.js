@@ -72,6 +72,7 @@ function loadAllProspects() {
           horaires:       p.horaires       || '',
           adresse:        p.adresse        || '',
           has_page:       hasPage,
+          priorite:       p.priorite       || '',
         });
       }
     } catch (err) {
@@ -263,6 +264,8 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
       <button class="filter-btn" data-filter="not-contacted">Pas prospect&eacute;s</button>
       <button class="filter-btn" data-filter="contacted">Prospect&eacute;s</button>
       <button class="filter-btn" data-filter="has-page">Page en ligne</button>
+      <button class="filter-btn" data-filter="haute">Haute priorit&eacute;</button>
+      <button class="filter-btn" data-filter="moyenne">Moyenne</button>
     </div>
 
     <table class="prospect-table">
@@ -325,6 +328,8 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
         if (currentFilter === 'contacted' && !t) return false;
         if (currentFilter === 'not-contacted' && t) return false;
         if (currentFilter === 'has-page' && !p.has_page) return false;
+        if (currentFilter === 'haute' && p.priorite !== 'HAUTE') return false;
+        if (currentFilter === 'moyenne' && p.priorite !== 'MOYENNE') return false;
         return true;
       });
 
@@ -345,7 +350,10 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
         return '<tr>' +
           '<td>' +
             '<div class="cell-name">' + esc(name) + '</div>' +
-            '<div class="cell-meta">' + esc(p.metier) + ' &middot; ' + esc(p.ville) + (p.departement ? ' (' + esc(p.departement) + ')' : '') + '</div>' +
+            '<div class="cell-meta">' + esc(p.metier) + ' &middot; ' + esc(p.ville) + (p.departement ? ' (' + esc(p.departement) + ')' : '') +
+              (p.priorite === 'HAUTE' ? ' <span class="badge" style="background:rgba(196,112,79,0.12);color:var(--accent)">haute</span>' : '') +
+              (p.priorite === 'MOYENNE' ? ' <span class="badge" style="background:rgba(0,0,0,0.05);color:var(--muted)">moyenne</span>' : '') +
+            '</div>' +
           '</td>' +
           '<td class="cell-phone">' +
             (p.telephone ? '<a href="tel:' + esc(phoneRaw) + '">' + esc(p.telephone) + '</a>' : '<span style="color:var(--border)">&mdash;</span>') +
