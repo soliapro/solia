@@ -1,8 +1,8 @@
 {
   "slug": "alaric-camus-osteopathe-osteopathe-scherwiller",
   "prenom": "Alaric",
-  "nom": "CAMUS Ostéopathe",
-  "metier": "Ostéopathe",
+  "nom": "CAMUS OstÃ©opathe",
+  "metier": "OstÃ©opathe",
   "ville": "Scherwiller",
   "departement": "67",
   "email": "",
@@ -13,7 +13,7 @@
   "telephone": "06 95 40 96 68",
   "adresse": "6 Rue de l'Altenberg, 67750 Scherwiller, France",
   "zone_intervention": "les deux",
-  "horaires": "lundi: 09:00 – 13:00 | mardi: 09:00 – 20:00 | mercredi: 15:00 – 20:00",
+  "horaires": "lundi: 09:00âââ13:00 | mardi: 09:00âââ20:00 | mercredi: 15:00âââ20:00",
   "tarif": "",
   "duree_seance": "",
   "approche": "",
@@ -22,11 +22,12 @@
   "certifications": [],
   "publics": [],
   "annees_experience": null,
-  "avis_google_note": 5.0,
+  "avis_google_note": 5,
   "avis_google_nb": 7,
   "langues": [
     "fr"
   ],
   "instagram_url": "",
-  "notes": ""
+  "notes": "",
+  "page_active": true
 }
