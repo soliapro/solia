@@ -1,8 +1,8 @@
 # Rapport Solia
 
-**Généré le** : 10/04/2026 16:33:37  
+**Généré le** : 10/04/2026 16:43:21  
 **Source** : `prospects/damien-reiss-createur-de-solia-strategie-digitale-ingersheim.json`  
-**Durée** : 0.01s
+**Durée** : 0.02s
 
 ---
 
