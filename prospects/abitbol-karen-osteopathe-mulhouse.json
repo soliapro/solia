@@ -6,7 +6,7 @@
   "metier": "Ostéopathe",
   "ville": "Mulhouse",
   "departement": "68",
-  "email": "",
+  "email": "damien.reiss@gmail.com",
   "description": "",
   "email_confirme": false,
   "photo_url": "",
@@ -18,7 +18,9 @@
   "tarif": "",
   "duree_seance": "",
   "approche": "",
-  "specialites": [],
+  "specialites": [
+    "voici un test de modification de texte."
+  ],
   "formations": [],
   "certifications": [],
   "publics": [],
