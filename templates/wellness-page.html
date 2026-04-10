@@ -458,7 +458,7 @@
     <section class="s-about fade-s" id="about">
       <div class="wrap" style="text-align:center">
         <span class="s-label">À propos</span>
-        <blockquote class="bio-quote">{{description}}</blockquote>
+        <blockquote class="bio-quote" data-field="description">{{description}}</blockquote>
         {{#if approche}}
         <div class="sep">
           <span class="sep-line"></span>
@@ -469,7 +469,7 @@
           </span>
           <span class="sep-line"></span>
         </div>
-        <p class="approche-txt">{{approche}}</p>
+        <p class="approche-txt" data-field="approche">{{approche}}</p>
         {{/if}}
       </div>
     </section>

@@ -410,6 +410,91 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     });
   });
   document.getElementById('banner-cta').href = '${formUrl}&theme='+current;
+
+  /* ── INLINE EDITING ── */
+  var editableFields = document.querySelectorAll('[data-field]');
+  var hasChanges = false;
+  var saveBar = document.createElement('div');
+  saveBar.id = 'solia-save-bar';
+  saveBar.innerHTML = '<span id="save-status">Modifications non sauvegardées</span><button id="save-btn">Valider les modifications</button>';
+  saveBar.style.cssText = 'display:none;position:fixed;bottom:0;left:0;width:100%;z-index:99998;background:#1A1A18;color:#fff;padding:12px 24px;font-family:DM Sans,sans-serif;font-size:0.82rem;align-items:center;justify-content:center;gap:16px;box-shadow:0 -2px 16px rgba(0,0,0,0.15)';
+  document.body.appendChild(saveBar);
+
+  editableFields.forEach(function(el){
+    el.style.cursor = 'text';
+    el.style.transition = 'outline 0.2s';
+    el.style.outline = '2px dashed transparent';
+    el.style.outlineOffset = '4px';
+    el.style.borderRadius = '4px';
+    el.addEventListener('mouseenter', function(){ if(!hasChanges) el.style.outline = '2px dashed rgba(196,112,79,0.3)'; });
+    el.addEventListener('mouseleave', function(){ if(!hasChanges) el.style.outline = '2px dashed transparent'; });
+    el.addEventListener('focus', function(){ el.style.outline = '2px solid var(--c-accent)'; });
+    el.addEventListener('blur', function(){ el.style.outline = '2px dashed transparent'; });
+    el.setAttribute('contenteditable', 'true');
+    el.addEventListener('input', function(){
+      if (!hasChanges) {
+        hasChanges = true;
+        saveBar.style.display = 'flex';
+      }
+    });
+  });
+
+  var funMessages = [
+    'Sauvegarde en cours...',
+    'Vos mots prennent forme...',
+    'Un instant, la magie opère...',
+    'Presque prêt...',
+    'Votre page se met à jour...'
+  ];
+
+  document.getElementById('save-btn').addEventListener('click', function(){
+    var btn = this;
+    btn.disabled = true;
+    var statusEl = document.getElementById('save-status');
+    var msgIdx = 0;
+    statusEl.textContent = funMessages[0];
+    var msgTimer = setInterval(function(){
+      msgIdx++;
+      if (msgIdx < funMessages.length) statusEl.textContent = funMessages[msgIdx];
+    }, 3000);
+
+    var payload = { slug: slug, email: 'update@solia.me' };
+    editableFields.forEach(function(el){
+      var field = el.dataset.field;
+      var text = el.innerText.trim();
+      payload[field === 'description' ? 'description' : field] = text;
+    });
+    payload.theme = current;
+
+    fetch('https://solia-enrichment.damien-reiss.workers.dev/api/personalize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(){
+      clearInterval(msgTimer);
+      statusEl.textContent = 'Sauvegardé ! Votre page sera mise à jour dans ~1 minute.';
+      btn.textContent = '✓';
+      btn.style.background = '#2E7D32';
+      setTimeout(function(){
+        saveBar.style.display = 'none';
+        hasChanges = false;
+        btn.disabled = false;
+        btn.textContent = 'Valider les modifications';
+        btn.style.background = '';
+      }, 5000);
+    })
+    .catch(function(err){
+      clearInterval(msgTimer);
+      statusEl.textContent = 'Erreur : ' + err.message;
+      btn.disabled = false;
+    });
+  });
+
+  // Style du bouton save
+  var saveBtnEl = document.getElementById('save-btn');
+  saveBtnEl.style.cssText = 'background:#C4704F;color:#fff;border:none;padding:8px 20px;border-radius:100px;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap';
 })();
 </script>`;
 
