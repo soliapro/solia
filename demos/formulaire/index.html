@@ -382,6 +382,41 @@
       margin-bottom: 20px;
     }
     .form-error.visible { display: block; }
+
+    /* ─── THEME CARDS ─── */
+    .theme-card {
+      background: var(--tc-bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      text-align: center;
+    }
+    .theme-card:hover { border-color: var(--tc-accent); }
+    .theme-card.selected { border-color: var(--tc-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tc-accent) 20%, transparent); }
+    .theme-preview {
+      background: var(--tc-surface);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--tc-accent);
+      flex-shrink: 0;
+    }
+    .theme-lines { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .theme-lines div { height: 4px; border-radius: 2px; background: var(--tc-accent); opacity: 0.3; }
+    .theme-lines div:first-child { width: 80%; opacity: 0.6; }
+    .theme-lines div:nth-child(2) { width: 60%; }
+    .theme-lines div:last-child { width: 40%; }
+    .theme-name { font-weight: 600; font-size: 0.85rem; color: var(--dark); }
+    .theme-desc { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -513,10 +548,66 @@
         </div>
       </div>
 
-      <!-- SECTION 5 : Pratique -->
+      <!-- SECTION 5 : Thème visuel -->
       <div class="form-section">
         <div class="section-header">
           <div class="section-num">5</div>
+          <div>
+            <div class="section-title">Thème visuel</div>
+            <div class="section-sub">Choisissez l'ambiance de votre page</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <input type="hidden" id="f-theme" name="theme" value="terracotta">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">
+            <label class="theme-card selected" data-theme="terracotta" style="--tc-accent:#C4704F;--tc-bg:#FDFAF6;--tc-surface:#F4EFE8">
+              <div class="theme-preview">
+                <div class="theme-dot"></div>
+                <div class="theme-lines"><div></div><div></div><div></div></div>
+              </div>
+              <div class="theme-name">Terracotta</div>
+              <div class="theme-desc">Chaud, artisanal</div>
+            </label>
+            <label class="theme-card" data-theme="sauge" style="--tc-accent:#6B8F5E;--tc-bg:#F8FAF6;--tc-surface:#EDF2E8">
+              <div class="theme-preview">
+                <div class="theme-dot"></div>
+                <div class="theme-lines"><div></div><div></div><div></div></div>
+              </div>
+              <div class="theme-name">Sauge</div>
+              <div class="theme-desc">Nature, calme</div>
+            </label>
+            <label class="theme-card" data-theme="ocean" style="--tc-accent:#2E6B8A;--tc-bg:#F5F8FC;--tc-surface:#E8EEF6">
+              <div class="theme-preview">
+                <div class="theme-dot"></div>
+                <div class="theme-lines"><div></div><div></div><div></div></div>
+              </div>
+              <div class="theme-name">Océan</div>
+              <div class="theme-desc">Frais, professionnel</div>
+            </label>
+            <label class="theme-card" data-theme="lavande" style="--tc-accent:#8B6DAF;--tc-bg:#FAF7FC;--tc-surface:#F0EAF4">
+              <div class="theme-preview">
+                <div class="theme-dot"></div>
+                <div class="theme-lines"><div></div><div></div><div></div></div>
+              </div>
+              <div class="theme-name">Lavande</div>
+              <div class="theme-desc">Doux, élégant</div>
+            </label>
+            <label class="theme-card" data-theme="charbon" style="--tc-accent:#3D3D3D;--tc-bg:#FAFAFA;--tc-surface:#F0F0F0">
+              <div class="theme-preview">
+                <div class="theme-dot"></div>
+                <div class="theme-lines"><div></div><div></div><div></div></div>
+              </div>
+              <div class="theme-name">Charbon</div>
+              <div class="theme-desc">Moderne, sobre</div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 : Pratique -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">6</div>
           <div>
             <div class="section-title">Pratique</div>
             <div class="section-sub">Horaires et tarifs</div>
@@ -541,10 +632,10 @@
         </div>
       </div>
 
-      <!-- SECTION 6 : Photo de profil -->
+      <!-- SECTION 7 : Photo de profil -->
       <div class="form-section">
         <div class="section-header">
-          <div class="section-num">6</div>
+          <div class="section-num">7</div>
           <div>
             <div class="section-title">Votre photo</div>
             <div class="section-sub">Optionnel — améliore nettement la conversion</div>
@@ -573,10 +664,10 @@
         </div>
       </div>
 
-      <!-- SECTION 7 : Photos cabinet -->
+      <!-- SECTION 8 : Photos cabinet -->
       <div class="form-section">
         <div class="section-header">
-          <div class="section-num">7</div>
+          <div class="section-num">8</div>
           <div>
             <div class="section-title">Photos de votre cabinet</div>
             <div class="section-sub">Optionnel — jusqu'à 5 photos</div>
@@ -639,6 +730,15 @@
     /* ─── CONFIG ─── */
     // Remplacer par l'URL du Worker une fois déployé sur Cloudflare
     const WORKER_URL = 'https://solia-enrichment.damien-reiss.workers.dev';
+
+    /* ─── THEME SELECTOR ─── */
+    document.querySelectorAll('.theme-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        document.getElementById('f-theme').value = card.dataset.theme;
+      });
+    });
 
     /* ─── INIT ─── */
     const params = new URLSearchParams(location.search);

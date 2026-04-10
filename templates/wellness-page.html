@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="{{theme}}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600&family=Prata&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
   <script type="application/ld+json">
   {{schema_org}}
@@ -20,7 +20,8 @@
 
   <style>
     /* ─── VARIABLES ─── */
-    :root {
+    /* ─── THÈME TERRACOTTA (défaut) ─── */
+    :root, [data-theme="terracotta"], [data-theme="zen"], [data-theme="lumiere"] {
       --c-bg:       #FDFAF6;
       --c-surface:  #F4EFE8;
       --c-dark:     #1A1A18;
@@ -32,6 +33,62 @@
       --ff-serif:   'Playfair Display', Georgia, serif;
       --ff-sans:    'DM Sans', 'Helvetica Neue', sans-serif;
       --ease:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ─── THÈME SAUGE ─── */
+    [data-theme="sauge"], [data-theme="nature"] {
+      --c-bg:       #F8FAF6;
+      --c-surface:  #EDF2E8;
+      --c-dark:     #1C2418;
+      --c-accent:   #6B8F5E;
+      --c-accent-d: #567548;
+      --c-text:     #2C3527;
+      --c-muted:    #7A8A72;
+      --c-border:   #D4DDD0;
+      --ff-serif:   'Lora', Georgia, serif;
+      --ff-sans:    'Inter', 'Helvetica Neue', sans-serif;
+    }
+
+    /* ─── THÈME OCÉAN ─── */
+    [data-theme="ocean"] {
+      --c-bg:       #F5F8FC;
+      --c-surface:  #E8EEF6;
+      --c-dark:     #0F1B2D;
+      --c-accent:   #2E6B8A;
+      --c-accent-d: #1E4F6A;
+      --c-text:     #1A2B3C;
+      --c-muted:    #6B7F92;
+      --c-border:   #CEDAE6;
+      --ff-serif:   'Cormorant Garamond', Georgia, serif;
+      --ff-sans:    'Outfit', 'Helvetica Neue', sans-serif;
+    }
+
+    /* ─── THÈME LAVANDE ─── */
+    [data-theme="lavande"] {
+      --c-bg:       #FAF7FC;
+      --c-surface:  #F0EAF4;
+      --c-dark:     #1E1428;
+      --c-accent:   #8B6DAF;
+      --c-accent-d: #6F5490;
+      --c-text:     #2A1F34;
+      --c-muted:    #8A7F92;
+      --c-border:   #DDD4E6;
+      --ff-serif:   'Libre Baskerville', Georgia, serif;
+      --ff-sans:    'Nunito', 'Helvetica Neue', sans-serif;
+    }
+
+    /* ─── THÈME CHARBON ─── */
+    [data-theme="charbon"] {
+      --c-bg:       #FAFAFA;
+      --c-surface:  #F0F0F0;
+      --c-dark:     #1A1A1A;
+      --c-accent:   #3D3D3D;
+      --c-accent-d: #2A2A2A;
+      --c-text:     #1A1A1A;
+      --c-muted:    #737373;
+      --c-border:   #DCDCDC;
+      --ff-serif:   'Prata', Georgia, serif;
+      --ff-sans:    'Work Sans', 'Helvetica Neue', sans-serif;
     }
 
     /* ─── RESET ─── */
