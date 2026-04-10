@@ -1,0 +1,32 @@
+{
+  "slug": "aurelie-bouleau-sophrologue-wiwersheim",
+  "prenom": "Aurélie",
+  "nom": "Bouleau",
+  "metier": "Sophrologue",
+  "ville": "Wiwersheim",
+  "departement": "67",
+  "email": "",
+  "description": "",
+  "email_confirme": false,
+  "photo_url": "https://places.googleapis.com/v1/places/ChIJmY_65LJwkYoRodFXyZRwnE8/photos/AU_ZVEHybZfICFWSJRsEehIRl9eqORfSB4d8vP9JqH8-o5ykvvdV32FfeW19aZMT1iCGEx_6RdIgdWUyREIaLeXIZ_eHG6MBKW0v7rGb7XE_c0yB-9pm54B6Twx7wE_GiBusXP-jv11IvZaReEjfnoz54f1oDBqcTpcJc9qOVGzWahK-czMdfsG0ny9HzA5MX0_wzU2-56UjQD6G_Hr8Ibi2CRE7YIqdUVLuUSSdp6kcfs_F3DaBIeDNxt-Oli9pPq4oOegM1FlFlUbNnJ_SwiHEmIYDrCPBXjc72hbRBbyEEhjbUA/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
+  "theme": "",
+  "telephone": "06 87 37 83 61",
+  "adresse": "31 All. de L'economie, 67370 Wiwersheim, France",
+  "zone_intervention": "",
+  "horaires": "lundi: 09:00 – 19:00 | mardi: 09:00 – 19:00 | mercredi: 09:00 – 19:00",
+  "tarif": "",
+  "duree_seance": "",
+  "approche": "",
+  "specialites": [],
+  "formations": [],
+  "certifications": [],
+  "publics": [],
+  "annees_experience": null,
+  "avis_google_note": 5,
+  "avis_google_nb": 33,
+  "langues": [
+    "fr"
+  ],
+  "instagram_url": "",
+  "notes": ""
+}
