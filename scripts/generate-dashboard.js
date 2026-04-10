@@ -523,26 +523,36 @@ function buildHtml(prospectsJson, total, withPage, withPhone) {
       if (!csvPending.length) return;
       const btn = document.getElementById('btn-csv-confirm');
       btn.disabled = true;
-      btn.textContent = 'Import en cours...';
+
+      const BATCH_SIZE = 20;
+      let totalCreated = 0;
+      let totalSkipped = 0;
 
       try {
-        const res = await fetch(WORKER_URL + '/api/import', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prospects: csvPending }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+        for (let i = 0; i < csvPending.length; i += BATCH_SIZE) {
+          const batch = csvPending.slice(i, i + BATCH_SIZE);
+          const progress = Math.min(i + BATCH_SIZE, csvPending.length);
+          btn.textContent = 'Import ' + progress + '/' + csvPending.length + '...';
 
-        // Ajouter les nouveaux prospects à la liste locale
+          const res = await fetch(WORKER_URL + '/api/import', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prospects: batch }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+          totalCreated += data.created || 0;
+          totalSkipped += data.skipped || 0;
+        }
+
         PROSPECTS = PROSPECTS.concat(csvPending);
-        csvStats.innerHTML = '<strong style="color:var(--green)">&check; ' + csvPending.length + ' prospects import&eacute;s.</strong> Le dashboard sera mis &agrave; jour au prochain d&eacute;ploiement.';
+        csvStats.innerHTML = '<strong style="color:var(--green)">&check; ' + totalCreated + ' prospects import&eacute;s, ' + totalSkipped + ' doublons ignor&eacute;s.</strong> Le dashboard sera mis &agrave; jour au prochain d&eacute;ploiement.';
         csvPending = [];
         btn.style.display = 'none';
         document.getElementById('btn-csv-cancel').textContent = 'Fermer';
         render();
       } catch (err) {
-        alert('Erreur import : ' + err.message);
+        alert('Erreur import : ' + err.message + ' (' + totalCreated + ' cr&eacute;&eacute;s avant erreur)');
         btn.disabled = false;
         btn.textContent = 'Importer';
       }
