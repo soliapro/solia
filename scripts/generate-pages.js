@@ -463,7 +463,13 @@ function injectPreviewBanner(html, slug, demoCreatedAt) {
     editableFields.forEach(function(el){
       var field = el.dataset.field;
       var text = el.innerText.trim();
-      payload[field === 'description' ? 'description' : field] = text;
+      if (field === 'nom_complet') {
+        var parts = text.split(' ');
+        payload.prenom = parts[0] || '';
+        payload.nom = parts.slice(1).join(' ') || '';
+      } else {
+        payload[field] = text;
+      }
     });
     payload.theme = current;
 
