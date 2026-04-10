@@ -326,7 +326,7 @@ function injectPreviewBanner(html, slug) {
   const bannerHtml = `
 <div id="solia-preview-banner">
   <span>Ceci est un aperçu de votre future page &bull; Personnalisez-la gratuitement</span>
-  <a href="${formUrl}" class="banner-btn">Activer ma page →</a>
+  <a href="${formUrl}" class="banner-btn">Personnaliser ma page →</a>
 </div>`;
 
   html = html.replace('</head>', `${bannerCss}\n</head>`);

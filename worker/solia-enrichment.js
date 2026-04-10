@@ -603,7 +603,7 @@ function buildDemoPage(p) {
 <body>
   <div class="banner">
     <span>Ceci est un aper&ccedil;u de votre future page &bull; Personnalisez-la gratuitement</span>
-    <a href="${formUrl}" class="banner-btn">Activer ma page &rarr;</a>
+    <a href="${formUrl}" class="banner-btn">Personnaliser ma page &rarr;</a>
   </div>
 
   <div style="max-width:600px;margin:0 auto;padding:60px 24px 80px;text-align:center">
@@ -616,7 +616,7 @@ function buildDemoPage(p) {
 
     <div style="margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:12px">
       <a href="${formUrl}" style="display:inline-flex;align-items:center;gap:10px;background:#C4704F;color:#fff;font-weight:600;padding:16px 36px;border-radius:100px;font-size:1rem;transition:background 0.2s">
-        Activer ma page &rarr;
+        Personnaliser ma page &rarr;
       </a>
       ${telHtml}
     </div>
