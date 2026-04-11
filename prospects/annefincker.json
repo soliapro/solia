@@ -31,5 +31,7 @@
   "source": "prospected",
   "prospected_at": "2026-04-11T12:19:18.330Z",
   "priorite": "HAUTE",
-  "paid": false
+  "paid": false,
+  "page_active": true,
+  "demo_created_at": "2026-04-11T14:44:47.310Z"
 }
