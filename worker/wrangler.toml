@@ -7,9 +7,15 @@ compatibility_date = "2024-09-23"
 REPO_OWNER = "soliapro"
 REPO_NAME  = "solia"
 
+# ─── Cron Trigger — séquence emails J1/J3/J6 ───
+[triggers]
+crons = ["0 9 * * *"]
+
 # ─── Secrets à configurer via CLI (ne jamais mettre ici) ───
 # wrangler secret put ANTHROPIC_API_KEY
 # wrangler secret put GITHUB_TOKEN
+# wrangler secret put STRIPE_WEBHOOK_SECRET
+# wrangler secret put BREVO_API_KEY
 #
 # GitHub Token requis : Personal Access Token (classic)
 #   Scopes : repo (lecture + écriture), workflow (trigger dispatch)
