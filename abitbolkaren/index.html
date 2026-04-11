@@ -677,7 +677,7 @@
       var mi=0;sts.textContent=msgs[0];var timer=setInterval(function(){mi++;if(mi<msgs.length)sts.textContent=msgs[mi]},3e3);
 
       var payload={slug:SLUG,email:'update@solia.me',theme:current};
-      fields.forEach(function(el){var f=el.dataset.field;var isph=el.classList.contains('field-placeholder');var txt=isph?'':el.innerText.replace(/[\r\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt?txt.split(',').map(function(s){return s.trim()}).filter(Boolean):[]}else{payload[f]=txt}});
+      fields.forEach(function(el){var f=el.dataset.field;var isph=el.classList.contains('field-placeholder');var txt=isph?'':el.innerText.replace(/[\r\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt?txt.split(',').map(function(s){return s.trim()}).filter(Boolean):[]}else if(f==='email'){if(txt)payload[f]=txt}else{payload[f]=txt}});
       if(specRow){var sp=[];specRow.querySelectorAll('.specialite-tag').forEach(function(t){sp.push(t.textContent.trim())});payload.services=sp.join('\n')}
       socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',whatsapp:'whatsapp_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
       if(photoDataUri)payload.photo_profil=photoDataUri;
