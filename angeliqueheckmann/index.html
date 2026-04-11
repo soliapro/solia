@@ -27,7 +27,7 @@
     "addressCountry": "FR",
     "streetAddress": "1 Rue du Paradis, 67670 Wittersheim, France"
   },
-  "email": "update@solia.me",
+  "email": "",
   "telephone": "06 76 86 56 86",
   "image": "https://places.googleapis.com/v1/places/ChIJRZPuk6iVlkcRYztlgCO5sEs/photos/AU_ZVEEjlB9gOkpVu-9LB3fRZI7AjDD4Z257He-rE_545JndGoSxau2MysCnwSziyjDlnqXizi8xnR94FkGTzzFZ58PBDgUNu3vvg1HVoj-L5yljZjL8gpDqQ7jlFCJXNb-7-suL6otnBzvi0U481VWYhmV4zUXKRGO4_Y4hf7xyYnX7BfVZBQGSsJuJfpNmoreaKKjOwPEv4JTpM5OIdN_ZZkdaQsrYX_9vPY5FUJLtBI1yLK5rQQwnqYi58bHedLi10s3w0EgukSwbtU7wXIabv0Im0ma_IlbsIB7ADM8FKXQFiQ/media?maxWidthPx=600&key=AIzaSyDCPeIotTue7DScRJJ7RPpMMBvYRbkYEp0&skipHttpRedirect=false",
   "aggregateRating": {
@@ -677,7 +677,7 @@
       var msgs=['Sauvegarde en cours...','Vos mots prennent forme...','Un instant, la magie op\u00e8re...','Presque pr\u00eat...'];
       var mi=0;sts.textContent=msgs[0];var timer=setInterval(function(){mi++;if(mi<msgs.length)sts.textContent=msgs[mi]},3e3);
 
-      var payload={slug:SLUG,email:'update@solia.me',theme:current};
+      var payload={slug:SLUG,theme:current};
       fields.forEach(function(el){var f=el.dataset.field;var isph=el.classList.contains('field-placeholder');var txt=isph?'':el.innerText.replace(/[\r\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt?txt.split(',').map(function(s){return s.trim()}).filter(Boolean):[]}else if(f==='email'){if(txt)payload[f]=txt}else{payload[f]=txt}});
       if(specRow){var sp=[];specRow.querySelectorAll('.specialite-tag').forEach(function(t){sp.push(t.textContent.trim())});payload.services=sp.join('\n')}
       socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',whatsapp:'whatsapp_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
@@ -882,7 +882,7 @@
         <ul class="contact-list">
           <li class="contact-row">
             <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:update@solia.me" id="contact-email-link"><span data-field="email">update@solia.me</span></a>
+            <a href="mailto:" id="contact-email-link"><span data-field="email"></span></a>
           </li>
           
           <li class="contact-row">
