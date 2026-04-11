@@ -340,7 +340,7 @@ function htmlBlock(stats) {
       <button class="fbtn" data-f="paid">Payes</button>
       <button class="fbtn" data-f="not-paid">Non payes</button>
       <button class="fbtn" data-f="organic">Organiques</button>
-      <button class="fbtn" data-f="prospected">Prospectes</button>
+      <button class="fbtn" data-f="prospected">Scrap</button>
       <button class="fbtn" data-f="contacted">Contactes</button>
       <button class="fbtn" data-f="not-contacted">Non contactes</button>
       <button class="fbtn" data-f="trial-active">Essai actif</button>
@@ -629,7 +629,7 @@ function jsBlock() {
         /* Status badges */
         var statusBadges = '';
         if (p.source === 'organic') statusBadges += '<span class="badge b-organic">organique</span> ';
-        else if (p.source === 'prospected') statusBadges += '<span class="badge b-prospected">prospecte</span> ';
+        else if (p.source === 'prospected') statusBadges += '<span class="badge b-prospected">scrap</span> ';
         if (p.has_page) statusBadges += '<span class="badge b-online">en ligne</span> ';
         else statusBadges += '<span class="badge b-offline">hors ligne</span> ';
         if (p.paid) statusBadges += '<span class="badge b-paid">paye</span> ';
