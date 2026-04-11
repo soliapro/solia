@@ -796,6 +796,7 @@
     /* ─── INIT ─── */
     const params = new URLSearchParams(location.search);
     const slug   = params.get('prospect') || '';
+    const editToken = params.get('token') || '';
 
     document.getElementById('f-slug').value = slug;
     if (slug) {
@@ -808,9 +809,17 @@
     /* ─── Chargement des données prospect via le Worker ─── */
     async function loadProspectData(slug) {
       try {
-        const res = await fetch(`${WORKER_URL}/api/prospect/${slug}`, {
+        let apiUrl = `${WORKER_URL}/api/prospect/${slug}`;
+        if (editToken) apiUrl += `?token=${encodeURIComponent(editToken)}`;
+        const res = await fetch(apiUrl, {
           signal: AbortSignal.timeout(5000)
         });
+        if (res.status === 403) {
+          // Token invalide pour page publiée
+          const err = await res.json().catch(() => ({}));
+          showError('Cette page est publiée. Un lien d\\'édition valide est nécessaire pour la modifier.');
+          return;
+        }
         if (!res.ok) return;
         const p = await res.json();
         prefillForm(p);
