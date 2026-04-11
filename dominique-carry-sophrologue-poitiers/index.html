@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="zen">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600&family=Prata&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 
   <script type="application/ld+json">
   {
@@ -41,8 +41,7 @@
 
   <style>
     /* ─── VARIABLES ─── */
-    /* ─── THÈME TERRACOTTA (défaut) ─── */
-    :root, [data-theme="terracotta"], [data-theme="zen"], [data-theme="lumiere"] {
+    :root {
       --c-bg:       #FDFAF6;
       --c-surface:  #F4EFE8;
       --c-dark:     #1A1A18;
@@ -54,62 +53,6 @@
       --ff-serif:   'Playfair Display', Georgia, serif;
       --ff-sans:    'DM Sans', 'Helvetica Neue', sans-serif;
       --ease:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    /* ─── THÈME SAUGE ─── */
-    [data-theme="sauge"], [data-theme="nature"] {
-      --c-bg:       #F8FAF6;
-      --c-surface:  #EDF2E8;
-      --c-dark:     #1C2418;
-      --c-accent:   #6B8F5E;
-      --c-accent-d: #567548;
-      --c-text:     #2C3527;
-      --c-muted:    #7A8A72;
-      --c-border:   #D4DDD0;
-      --ff-serif:   'Lora', Georgia, serif;
-      --ff-sans:    'Inter', 'Helvetica Neue', sans-serif;
-    }
-
-    /* ─── THÈME OCÉAN ─── */
-    [data-theme="ocean"] {
-      --c-bg:       #F5F8FC;
-      --c-surface:  #E8EEF6;
-      --c-dark:     #0F1B2D;
-      --c-accent:   #2E6B8A;
-      --c-accent-d: #1E4F6A;
-      --c-text:     #1A2B3C;
-      --c-muted:    #6B7F92;
-      --c-border:   #CEDAE6;
-      --ff-serif:   'Cormorant Garamond', Georgia, serif;
-      --ff-sans:    'Outfit', 'Helvetica Neue', sans-serif;
-    }
-
-    /* ─── THÈME LAVANDE ─── */
-    [data-theme="lavande"] {
-      --c-bg:       #FAF7FC;
-      --c-surface:  #F0EAF4;
-      --c-dark:     #1E1428;
-      --c-accent:   #8B6DAF;
-      --c-accent-d: #6F5490;
-      --c-text:     #2A1F34;
-      --c-muted:    #8A7F92;
-      --c-border:   #DDD4E6;
-      --ff-serif:   'Libre Baskerville', Georgia, serif;
-      --ff-sans:    'Nunito', 'Helvetica Neue', sans-serif;
-    }
-
-    /* ─── THÈME CHARBON ─── */
-    [data-theme="charbon"] {
-      --c-bg:       #FAFAFA;
-      --c-surface:  #F0F0F0;
-      --c-dark:     #1A1A1A;
-      --c-accent:   #3D3D3D;
-      --c-accent-d: #2A2A2A;
-      --c-text:     #1A1A1A;
-      --c-muted:    #737373;
-      --c-border:   #DCDCDC;
-      --ff-serif:   'Prata', Georgia, serif;
-      --ff-sans:    'Work Sans', 'Helvetica Neue', sans-serif;
     }
 
     /* ─── RESET ─── */
@@ -147,7 +90,7 @@
       padding: clamp(32px, 5vw, 60px);
     }
     .hero-visual--initials {
-      background: linear-gradient(160deg, var(--c-dark), var(--c-accent));
+      background: linear-gradient(160deg, #251208, #6B3218);
       display: flex; align-items: center; justify-content: center;
     }
     /* Cercle photo */
@@ -217,11 +160,6 @@
     .hero-rating-star { color: var(--c-accent); }
     .hero-rating-count { color: var(--c-muted); font-weight: 400; font-size: 0.78rem; }
 
-    .hero-socials { display:flex; gap:10px; margin-bottom:18px; }
-    .hero-soc { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; color:var(--c-muted); transition:color 0.2s, transform 0.15s; text-decoration:none; }
-    .hero-soc:hover { color:var(--c-accent); transform:scale(1.1); }
-    .hero-soc[href=""] { display:none; }
-
     .hero-chips {
       display: flex; flex-wrap: wrap; gap: 8px;
       margin-bottom: 32px;
@@ -290,15 +228,15 @@
     }
 
     /* ─── SPÉCIALITÉS ─── */
-    .tags-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 560px; margin: 0 auto; }
-    @media(max-width:500px){ .tags-row { grid-template-columns: 1fr; } }
+    .tags-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
     .specialite-tag {
-      font-size: 0.88rem; font-weight: 400; padding: 14px 18px;
-      color: var(--c-text); background: var(--c-bg); border-radius: 10px;
-      border-left: 3px solid var(--c-accent);
-      transition: box-shadow 0.25s ease, border-color 0.25s ease; cursor: default;
+      font-size: 0.85rem; font-weight: 400; padding: 9px 20px;
+      border-radius: 100px; background: var(--c-bg);
+      color: var(--c-text); border: 1px solid var(--c-border);
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      cursor: default;
     }
-    .specialite-tag:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .specialite-tag:hover { background: var(--c-accent); border-color: var(--c-accent); color: #fff; }
 
     /* ─── INFOS ─── */
     .infos-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 16px; }
@@ -403,7 +341,7 @@
       }
       .hero-content { padding: 36px 24px 52px; align-items: center; text-align: center; }
       .hero-name { text-align: center; }
-      .hero-meta, .hero-chips, .hero-socials { justify-content: center; }
+      .hero-meta, .hero-chips { justify-content: center; }
       .btn-cta { align-self: center; }
       .timeline li::before { box-shadow: 0 0 0 3px var(--c-bg), 0 0 0 5px var(--c-accent); }
     }
@@ -427,7 +365,7 @@
   <header class="hero" id="hero">
 
     
-    <div class="hero-visual hero-visual--photo" id="heroVisual" data-photo-upload>
+    <div class="hero-visual hero-visual--photo" id="heroVisual">
       <div class="hero-photo-circle">
         <img class="hero-photo-img" id="heroImg"
              src="https://api.liberlo.com/storage/49390/conversions/7ce1dd70-b6e9-41ee-bcd7-26c61fd7b640-thumb.webp" alt="Portrait de Dominique Carry" loading="eager">
@@ -437,13 +375,13 @@
     
 
     <div class="hero-content">
-      <p class="hero-eyebrow" data-field="metier">Sophrologue</p>
-      <h1 class="hero-name" id="heroName" data-field="nom_complet">Dominique Carry</h1>
+      <p class="hero-eyebrow">Sophrologue</p>
+      <h1 class="hero-name" id="heroName">Dominique Carry</h1>
 
       <div class="hero-meta" id="heroMeta">
         <span class="hero-loc">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span data-field="ville">Poitiers, 86</span>
+          Poitiers, 86
         </span>
         
         <span class="hero-rating">
@@ -454,23 +392,15 @@
         
       </div>
 
-      <div class="hero-socials" id="heroSocials">
-        <a class="hero-soc" data-soc="instagram" data-prefix="https://instagram.com/" href="" target="_blank" rel="noopener" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
-        <a class="hero-soc" data-soc="facebook" data-prefix="https://facebook.com/" href="" target="_blank" rel="noopener" title="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
-        <a class="hero-soc" data-soc="linkedin" data-prefix="https://linkedin.com/in/" href="" target="_blank" rel="noopener" title="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
-        <a class="hero-soc" data-soc="whatsapp" data-prefix="https://wa.me/" href="" target="_blank" rel="noopener" title="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></a>
-        <a class="hero-soc" data-soc="site" data-prefix="" href="" target="_blank" rel="noopener" title="Site web"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></a>
-      </div>
-
       <div class="hero-chips" id="heroChips">
-        <span class="chip" id="chip-exp" data-val="35"><span class="count" data-to="35">35</span> ans d'expérience</span>
-        <span class="chip" id="chip-zone" data-val="les deux">Cabinet &amp; domicile</span>
+        <span class="chip"><span class="count" data-to="35">35</span> ans d'expérience</span>
+        <span class="chip">Cabinet &amp; domicile</span>
         
       </div>
 
       
       <a href="https://www.resalib.fr/praticien/95624-carrysophroconseil-ei-sophrologue-poitiers" class="btn-cta" id="heroCta" target="_blank" rel="noopener">
-        <span class="cta-label">Prendre rendez-vous</span>
+        Prendre rendez-vous
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
       
@@ -483,14 +413,18 @@
     <section class="s-about fade-s" id="about">
       <div class="wrap" style="text-align:center">
         <span class="s-label">À propos</span>
-        <blockquote class="bio-quote" data-field="description">Sophrologue certifiée RNCP, Dominique vous accompagne avec bienveillance et plus de 35 ans d'expérience en sciences humaines. Passionnée par le bien-être et la qualité de vie au travail, elle propose des séances individuelles et collectives adaptées à vos besoins. Que ce soit pour gérer le stress, préparer un événement important ou retrouver un sommeil réparateur, Dominique met son expertise à votre service.</blockquote>
+        <blockquote class="bio-quote">Sophrologue certifiée RNCP, Dominique vous accompagne avec bienveillance et plus de 35 ans d'expérience en sciences humaines. Passionnée par le bien-être et la qualité de vie au travail, elle propose des séances individuelles et collectives adaptées à vos besoins. Que ce soit pour gérer le stress, préparer un événement important ou retrouver un sommeil réparateur, Dominique met son expertise à votre service.</blockquote>
         
         <div class="sep">
           <span class="sep-line"></span>
-          <span class="sep-icon" aria-hidden="true" style="font-family:var(--ff-serif);font-size:1.2rem;color:var(--c-accent)">✦</span>
+          <span class="sep-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M2 22c4-4 8-8 20-20 0 12-4 16-8 18-2 1-5 2-7 2-2 0-4-2-5-4z"/><path d="M11 20V9"/>
+            </svg>
+          </span>
           <span class="sep-line"></span>
         </div>
-        <p class="approche-txt" data-field="approche">Séances disponibles en visio et à domicile sur Poitiers et ses environs. Chaque accompagnement est construit autour de vos besoins : relaxation dynamique, respiration guidée, visualisation et sophronisation pour un lâcher-prise profond.</p>
+        <p class="approche-txt">Séances disponibles en visio et à domicile sur Poitiers et ses environs. Chaque accompagnement est construit autour de vos besoins : relaxation dynamique, respiration guidée, visualisation et sophronisation pour un lâcher-prise profond.</p>
         
       </div>
     </section>
@@ -500,7 +434,7 @@
     <section class="s-specialites s-surface fade-s">
       <div class="wrap" style="text-align:center">
         <span class="s-label">Spécialités</span>
-        <div class="tags-row" id="specialites-row"><span class="specialite-tag">stress &amp; anxiété</span>
+        <div class="tags-row"><span class="specialite-tag">stress &amp; anxiété</span>
           <span class="specialite-tag">troubles du sommeil</span>
           <span class="specialite-tag">préparation mentale</span>
           <span class="specialite-tag">bien-être au travail</span>
@@ -519,7 +453,7 @@
           <div class="info-card">
             <div class="info-icon" aria-hidden="true" style="font-family:var(--ff-serif);font-size:1.7rem;font-weight:400;line-height:1">€</div>
             <div class="info-label">Tarif</div>
-            <div class="info-value" data-field="tarif">50€ / séance</div>
+            <div class="info-value">50€ / séance</div>
           </div>
 
           
@@ -528,7 +462,7 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
             <div class="info-label">Durée</div>
-            <div class="info-value" data-field="duree_seance">1h</div>
+            <div class="info-value">1h</div>
           </div>
           
 
@@ -537,7 +471,7 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
             <div class="info-label">Horaires</div>
-            <div class="info-value" data-field="horaires">Sur rendez-vous — contactez-moi</div>
+            <div class="info-value">Sur rendez-vous — contactez-moi</div>
           </div>
 
           
@@ -546,7 +480,7 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
             <div class="info-label">Lieu</div>
-            <div class="info-value" id="zone-value" data-val="les deux">Cabinet &amp; domicile</div>
+            <div class="info-value">Cabinet &amp; domicile</div>
           </div>
           
 
@@ -556,7 +490,7 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
             </div>
             <div class="info-label">Publics</div>
-            <div class="info-value" id="publics-value" data-field="publics">adultes, entreprises</div>
+            <div class="info-value">adultes, entreprises</div>
           </div>
           
 
@@ -569,7 +503,7 @@
     <section class="s-formations s-surface fade-s">
       <div class="wrap">
         <span class="s-label">Formation &amp; parcours</span>
-        <ul class="timeline" id="formations-list"><li>Sophrologue certifiée RNCP</li>
+        <ul class="timeline"><li>Sophrologue certifiée RNCP</li>
           <li>Qualité de Vie &amp; Conditions de Travail</li></ul>
       </div>
     </section>
@@ -597,38 +531,37 @@
     <section class="s-contact fade-s" id="contact">
       <div class="wrap contact-wrap">
         <span class="s-label">Contact</span>
-        <h2 class="s-title" style="text-align:center" data-field="contact_title">Prenons rendez-vous</h2>
+        <h2 class="s-title" style="text-align:center">Prenons rendez-vous</h2>
 
         <ul class="contact-list">
           <li class="contact-row">
             <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:contact@carrysophroconseil.fr" id="contact-email-link"><span data-field="email">contact@carrysophroconseil.fr</span></a>
+            <a href="mailto:contact@carrysophroconseil.fr">contact@carrysophroconseil.fr</a>
           </li>
           
           <li class="contact-row">
             <svg class="contact-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.8a2 2 0 012-2.18h2.96a2 2 0 012 1.72c.128.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            <a href="tel:+33622243866" id="contact-phone-link"><span data-field="telephone">+33 6 22 24 38 66</span></a>
+            <a href="tel:+33622243866">+33 6 22 24 38 66</a>
           </li>
           
           
         </ul>
 
         
-
-        
         <a href="https://www.resalib.fr/praticien/95624-carrysophroconseil-ei-sophrologue-poitiers" class="btn-cta btn-cta--lg" id="ctaMain" target="_blank" rel="noopener">
-          <span class="cta-label">Prendre rendez-vous</span>
+          Prendre rendez-vous
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         
 
+        
       </div>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <div class="wrap"><p>Page propulsée par <a href="https://solia.me" rel="noopener">Solia</a> — votre vitrine bien-être</p></div>
+    <div class="wrap"><p>Créé avec <a href="https://solia.fr" rel="noopener">Solia</a></p></div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
