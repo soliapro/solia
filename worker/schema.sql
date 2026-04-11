@@ -19,5 +19,11 @@ CREATE TABLE IF NOT EXISTS notes (
 CREATE TABLE IF NOT EXISTS page_status (
   slug TEXT PRIMARY KEY,
   active INTEGER NOT NULL DEFAULT 1,
+  paid INTEGER NOT NULL DEFAULT 0,
+  prenom TEXT DEFAULT '',
+  nom TEXT DEFAULT '',
+  metier TEXT DEFAULT '',
+  ville TEXT DEFAULT '',
+  demo_created_at TEXT DEFAULT '',
   updated_at INTEGER NOT NULL DEFAULT (unixepoch() * 1000)
 );

@@ -568,29 +568,40 @@ async function handleTogglePage(request, env) {
   const { slug, active } = body;
   if (!slug) return jsonResponse({ error: 'Champ "slug" requis' }, 400);
 
-  // Ecrire dans D1 IMMEDIATEMENT (le subdomain worker verifie D1)
+  // Charger le prospect depuis GitHub
+  const { prospect, sha } = await getProspectFromGitHub(slug, env);
+
+  // Ecrire dans D1 IMMEDIATEMENT avec infos completes
   if (env.DB) {
     const now = Date.now();
-    await env.DB.prepare(
-      'INSERT OR REPLACE INTO page_status (slug, active, updated_at) VALUES (?, ?, ?)'
-    ).bind(slug, active ? 1 : 0, now).run();
+    await env.DB.prepare(`
+      INSERT OR REPLACE INTO page_status
+        (slug, active, paid, prenom, nom, metier, ville, demo_created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      slug,
+      active ? 1 : 0,
+      prospect.paid ? 1 : 0,
+      prospect.prenom || '',
+      prospect.nom || '',
+      prospect.metier || '',
+      prospect.ville || '',
+      prospect.demo_created_at || '',
+      now
+    ).run();
   }
 
   if (active) {
-    // ── METTRE EN LIGNE : activer le prospect → GitHub Actions génère avec le vrai template ──
-    const { prospect, sha } = await getProspectFromGitHub(slug, env);
     prospect.page_active = true;
     if (!prospect.demo_created_at) prospect.demo_created_at = new Date().toISOString();
     await commitProspectToGitHub(slug, prospect, sha, env);
     await triggerRebuild(slug, env);
-    return jsonResponse({ status: 'online', slug, message: 'Page en ligne instantanement. Rebuild en fond.' });
+    return jsonResponse({ status: 'online', slug });
   } else {
-    // ── HORS LIGNE : désactiver ──
-    const { prospect, sha } = await getProspectFromGitHub(slug, env);
     prospect.page_active = false;
     await commitProspectToGitHub(slug, prospect, sha, env);
     await triggerRebuild(slug, env);
-    return jsonResponse({ status: 'offline', slug, message: 'Page hors ligne instantanement.' });
+    return jsonResponse({ status: 'offline', slug });
   }
 }
 
@@ -1254,20 +1265,44 @@ async function handleDashboard(env) {
 }
 
 async function handlePageActive(slug, env) {
-  // Verification rapide D1 — pas de page_status = page active par defaut
-  if (!env.DB) return jsonResponse({ active: true });
+  if (!env.DB) return jsonResponse({ active: true, reason: 'no_db' });
 
   try {
     const row = await env.DB.prepare(
-      'SELECT active FROM page_status WHERE slug = ?'
+      'SELECT active, paid, prenom, nom, metier, ville, demo_created_at FROM page_status WHERE slug = ?'
     ).bind(slug).first();
 
-    // Pas d'entree = jamais toggle = actif par defaut (si la page existe)
-    if (!row) return jsonResponse({ active: true });
-    return jsonResponse({ active: row.active === 1 });
+    // Pas d'entree D1 = jamais toggle = on laisse passer
+    if (!row) return jsonResponse({ active: true, reason: 'no_record' });
+
+    const paid = row.paid === 1;
+    const manuallyDeactivated = row.active === 0;
+
+    // Verifier expiration trial (7 jours)
+    let trialExpired = false;
+    if (!paid && row.demo_created_at) {
+      const created = new Date(row.demo_created_at).getTime();
+      const daysSince = Math.floor((Date.now() - created) / 86400000);
+      trialExpired = daysSince >= 7;
+    }
+
+    const isActive = !manuallyDeactivated && !trialExpired;
+
+    let reason = 'active';
+    if (manuallyDeactivated) reason = 'deactivated';
+    else if (trialExpired) reason = 'trial_expired';
+
+    return jsonResponse({
+      active: isActive,
+      reason,
+      paid,
+      prenom: row.prenom || '',
+      nom: row.nom || '',
+      metier: row.metier || '',
+      ville: row.ville || '',
+    });
   } catch (e) {
-    // En cas d'erreur D1, laisser passer (ne pas bloquer les pages)
-    return jsonResponse({ active: true });
+    return jsonResponse({ active: true, reason: 'error' });
   }
 }
 

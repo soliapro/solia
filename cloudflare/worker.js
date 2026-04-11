@@ -3,42 +3,151 @@
  * Cloudflare Worker — intercepte *.solia.me et sert la bonne page
  *
  * Routing :
- *   solia.me                          → landing page (demos/index.html)
- *   solia.me/formulaire/*             → formulaire de contact
+ *   solia.me                          → landing page
  *   www.solia.me                      → landing page
  *   dashboard.solia.me                → dashboard
- *   formulaire.solia.me               → formulaire de contact
- *   [slug].solia.me                   → page praticien (demos/[slug]/index.html)
+ *   formulaire.solia.me               → formulaire
+ *   [slug].solia.me                   → page praticien (verifie D1 avant)
  *
- * Les fichiers sont servis depuis GitHub Pages :
- *   https://soliapro.github.io/solia-site/[path]
+ * Verification en temps reel :
+ *   Avant de servir une page praticien, le worker verifie le statut
+ *   via /api/page-active/:slug. Si la page est desactivee ou le trial
+ *   expire, une page "desactivee" est affichee avec le bon CTA.
  */
 
 const GITHUB_BASE = 'https://soliapro.github.io/solia';
 const ENRICHMENT_API = 'https://solia-enrichment.damien-reiss.workers.dev';
 
-// Sous-domaines réservés (pas des slugs praticiens)
 const RESERVED = new Set(['www', 'dashboard', 'formulaire', 'mail', 'smtp', 'ftp', 'api']);
 
-// Page affichée quand un site est hors ligne
-function offlinePage(slug) {
-  return new Response(`<!DOCTYPE html>
-<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Page hors ligne</title>
-<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f5f5f5;color:#333;text-align:center}
-.box{max-width:400px;padding:40px}.logo{font-size:1.5rem;font-weight:700;margin-bottom:16px;color:#C4704F}p{color:#888;font-size:0.95rem}</style>
-</head><body><div class="box"><div class="logo">Solia</div><p>Cette page n'est pas disponible pour le moment.</p></div></body></html>`, {
-    status: 404,
+/* ─── Page desactivee ─── */
+
+function deactivatedPage(data) {
+  const name = [data.prenom, data.nom].filter(Boolean).join(' ') || 'Ce praticien';
+  const metier = data.metier || '';
+  const ville = data.ville || '';
+  const subtitle = [metier, ville].filter(Boolean).join(' à ');
+
+  const isTrialExpired = data.reason === 'trial_expired';
+  const isPaid = data.paid === true;
+
+  let message, ctaHtml;
+
+  if (isPaid) {
+    // Deja paye → bouton de reactivation directe
+    message = 'Votre page a été temporairement désactivée.';
+    ctaHtml = `<a href="${ENRICHMENT_API}/api/reactivate/${data.slug || ''}" class="btn btn-primary">Réactiver ma page</a>`;
+  } else if (isTrialExpired) {
+    // Trial expire → lien vers paiement
+    message = 'Votre période d\'essai gratuite est terminée.';
+    ctaHtml = `
+      <p class="sub">Pour continuer à profiter de votre page professionnelle, activez votre abonnement.</p>
+      <a href="https://solia.me/formulaire/?prospect=${data.slug || ''}" class="btn btn-primary">Activer ma page — 9,90€/mois</a>
+      <p class="note">Sans engagement · Annulation en 1 clic</p>
+    `;
+  } else {
+    // Desactive manuellement (admin)
+    message = 'Cette page n\'est pas disponible pour le moment.';
+    ctaHtml = `<a href="https://solia.me" class="btn">Découvrir Solia</a>`;
+  }
+
+  const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${esc(name)} — Page désactivée</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #F4EFE8;
+      color: #1A1A18;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 36px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(26,26,24,0.08);
+    }
+    .logo { color: #C4704F; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; }
+    .initials {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: #C4704F;
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+    .subtitle { font-size: 0.85rem; color: #8A8074; margin-bottom: 24px; }
+    .message { font-size: 0.95rem; color: #1A1A18; margin-bottom: 24px; line-height: 1.5; }
+    .sub { font-size: 0.85rem; color: #8A8074; margin-bottom: 16px; line-height: 1.4; }
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary { background: #C4704F; color: #fff; }
+    .btn-primary:hover { background: #A85C3E; }
+    .btn { background: #F4EFE8; color: #1A1A18; }
+    .btn:hover { background: #E4DDD4; }
+    .note { font-size: 0.75rem; color: #aaa; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">Solia</div>
+    <div class="initials">${esc(initials(data.prenom, data.nom))}</div>
+    <h1>${esc(name)}</h1>
+    ${subtitle ? `<div class="subtitle">${esc(subtitle)}</div>` : ''}
+    <p class="message">${message}</p>
+    ${ctaHtml}
+  </div>
+</body>
+</html>`;
+
+  return new Response(html, {
+    status: 200,
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' },
   });
 }
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function initials(prenom, nom) {
+  return ((prenom || '').charAt(0) + (nom || '').charAt(0)).toUpperCase() || '?';
+}
+
+/* ─── Worker ─── */
 
 export default {
   async fetch(request) {
     const url  = new URL(request.url);
     const host = url.hostname;
-
-    // Extraire le sous-domaine (ex: "slug" depuis "slug.solia.me")
     const subdomain = host.replace(/\.solia\.me$/, '');
 
     let basePath;
@@ -53,38 +162,33 @@ export default {
     } else if (RESERVED.has(subdomain)) {
       return new Response('Not found', { status: 404 });
     } else {
-      // Slug praticien → verifier si la page est active
       basePath = `/${subdomain}`;
       isPractitionerPage = true;
     }
 
-    // Verification instantanee D1 : la page est-elle active ?
+    // Verification instantanee : page active ?
     if (isPractitionerPage) {
       try {
         const check = await fetch(`${ENRICHMENT_API}/api/page-active/${subdomain}`);
         if (check.ok) {
           const data = await check.json();
-          if (data.active === false) return offlinePage(subdomain);
+          if (data.active === false) {
+            data.slug = subdomain;
+            return deactivatedPage(data);
+          }
         }
       } catch (e) {
-        // Si l'API est down, on laisse passer (ne pas bloquer les pages)
+        // API down → on laisse passer
       }
     }
 
-    // Construire le chemin final sur GitHub Pages
-    // Pour les sous-domaines praticiens : sert uniquement index.html (pas de sous-chemins)
-    // Pour le domaine racine : passe le pathname complet (pour /formulaire/, assets, etc.)
+    // Servir depuis GitHub Pages
     let fetchPath;
-    if (!RESERVED.has(subdomain) && subdomain !== host && subdomain !== 'www') {
-      // Sous-domaine praticien → toujours servir index.html
+    if (isPractitionerPage) {
       fetchPath = `${basePath}/index.html`;
     } else {
-      // Domaine racine ou sous-domaine réservé → passer le chemin tel quel
       const pathname = url.pathname === '/' ? '/index.html' : url.pathname;
-      // Ajouter /index.html si le chemin finit par /
-      const resolvedPath = pathname.endsWith('/')
-        ? `${pathname}index.html`
-        : pathname;
+      const resolvedPath = pathname.endsWith('/') ? `${pathname}index.html` : pathname;
       fetchPath = `${basePath}${resolvedPath}`;
     }
 
@@ -101,29 +205,18 @@ export default {
       });
     }
 
-    // Retransmettre la réponse avec headers corrigés
     const newHeaders = new Headers(response.headers);
     newHeaders.set('X-Served-By', 'Solia-Worker');
 
-    // Content-Type correct selon l'extension
     const ext = fetchPath.split('.').pop();
     const MIME = {
-      html: 'text/html; charset=utf-8',
-      css:  'text/css',
-      js:   'application/javascript',
-      json: 'application/json',
-      png:  'image/png',
-      jpg:  'image/jpeg',
-      jpeg: 'image/jpeg',
-      webp: 'image/webp',
-      svg:  'image/svg+xml',
-      ico:  'image/x-icon',
-      woff: 'font/woff',
-      woff2:'font/woff2',
+      html: 'text/html; charset=utf-8', css: 'text/css', js: 'application/javascript',
+      json: 'application/json', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
+      webp: 'image/webp', svg: 'image/svg+xml', ico: 'image/x-icon',
+      woff: 'font/woff', woff2: 'font/woff2',
     };
     if (MIME[ext]) newHeaders.set('Content-Type', MIME[ext]);
 
-    // Cache 10 min pour les assets statiques
     if (ext && ext !== 'html') {
       newHeaders.set('Cache-Control', 'public, max-age=600');
     } else {
