@@ -105,16 +105,22 @@ function generate() {
   const paidCount = prospects.filter(p => p.paid).length;
   const organicCount = prospects.filter(p => p.source === 'organic').length;
 
-  const prospectsJson = JSON.stringify(prospects);
-  const html = buildHtml(prospectsJson, { total, withPage, withPhone, paidCount, organicCount });
+  // Ecrire les donnees dans un fichier JSON separe (pas dans le HTML)
+  const DATA_FILE = path.join(DASHBOARD_DIR, 'data.json');
+  fs.writeFileSync(DATA_FILE, JSON.stringify(prospects), 'utf8');
+
+  const html = buildHtml({ total, withPage, withPhone, paidCount, organicCount });
 
   fs.writeFileSync(OUT_FILE, html, 'utf8');
+  const htmlSize = Math.round(fs.statSync(OUT_FILE).size / 1024);
+  const dataSize = Math.round(fs.statSync(DATA_FILE).size / 1024);
   console.log(`Dashboard genere - ${total} prospect(s), ${withPage} page(s) en ligne.`);
+  console.log(`  HTML: ${htmlSize}KB | data.json: ${dataSize}KB`);
 }
 
 /* --- HTML Builder --- */
 
-function buildHtml(prospectsJson, stats) {
+function buildHtml(stats) {
   return `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -132,7 +138,7 @@ ${cssBlock()}
 <body>
 ${htmlBlock(stats)}
   <script>
-${jsBlock(prospectsJson)}
+${jsBlock()}
   </script>
 </body>
 </html>`;
@@ -379,7 +385,7 @@ function htmlBlock(stats) {
    JS
 ========================================================= */
 
-function jsBlock(prospectsJson) {
+function jsBlock() {
   return `'use strict';
 
     /* ==== CONFIG ==== */
@@ -399,8 +405,8 @@ function jsBlock(prospectsJson) {
       return { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() };
     }
 
-    /* ==== DATA — fallback statique, remplace par API si dispo ==== */
-    var PROSPECTS = ${prospectsJson};
+    /* ==== DATA — charge depuis data.json + D1 ==== */
+    var PROSPECTS = [];
     var apiMode = false;
 
     /* ==== URL PARAMS (persist filters on refresh) ==== */
@@ -456,11 +462,26 @@ function jsBlock(prospectsJson) {
       return data;
     }
 
-    /* ==== LOAD TRACKING + NOTES FROM API ==== */
-    async function loadFromAPI() {
+    /* ==== LOAD DATA ==== */
+    async function loadData() {
+      document.getElementById('result-count').textContent = 'Chargement...';
+
+      /* 1. Charger les prospects depuis data.json */
+      try {
+        var res = await fetch('data.json');
+        if (res.ok) {
+          PROSPECTS = await res.json();
+          /* Initialiser contacted_at et note */
+          PROSPECTS.forEach(function(p) { p.contacted_at = null; p.note = ''; });
+          render();
+        }
+      } catch (e) {
+        console.warn('Erreur chargement data.json:', e.message);
+      }
+
+      /* 2. Fusionner tracking + notes depuis D1 */
       try {
         var data = await api('/api/dashboard');
-        /* Fusionner tracking + notes dans les prospects statiques */
         PROSPECTS.forEach(function(p) {
           if (data.tracking && data.tracking[p.slug]) p.contacted_at = data.tracking[p.slug];
           if (data.notes && data.notes[p.slug]) p.note = data.notes[p.slug];
@@ -468,7 +489,7 @@ function jsBlock(prospectsJson) {
         apiMode = true;
         render();
       } catch (e) {
-        console.warn('API indisponible, mode statique :', e.message);
+        console.warn('API D1 indisponible :', e.message);
       }
     }
 
@@ -905,8 +926,7 @@ function jsBlock(prospectsJson) {
     });
 
     /* ==== INIT ==== */
-    render();          /* Affichage immediat avec donnees statiques */
-    loadFromAPI();     /* Puis refresh avec donnees live du serveur */
+    loadData();        /* Charge data.json puis fusionne avec D1 */
 `;
 }
 
