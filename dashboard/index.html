@@ -160,8 +160,8 @@
   <main class="main">
     <!-- STATS -->
     <div class="stats">
-      <div class="stat"><strong id="s-total">1127</strong> prospects</div>
-      <div class="stat"><strong id="s-pages">2</strong> en ligne</div>
+      <div class="stat"><strong id="s-total">2</strong> prospects</div>
+      <div class="stat"><strong id="s-pages">1</strong> en ligne</div>
       <div class="stat"><strong id="s-paid">0</strong> payes</div>
       <div class="stat"><strong id="s-organic">0</strong> organiques</div>
       <div class="stat"><strong id="s-contacted">0</strong> contactes</div>
@@ -171,7 +171,7 @@
     <div class="csv-zone" id="csv-zone">
       <input type="file" id="csv-file" accept=".csv">
       <div class="csv-label"><strong>Glisser un CSV</strong> ou cliquer pour importer des prospects</div>
-      <div class="csv-sub">Colonnes attendues : slug, prenom, nom, metier, ville, telephone, etc.</div>
+      <div class="csv-sub">Colonnes attendues : prenom, nom, metier, ville, telephone, etc. (le slug est genere automatiquement)</div>
     </div>
     <div class="csv-result" id="csv-result">
       <div id="csv-stats"></div>
@@ -297,6 +297,22 @@
         c = c.toLowerCase().replace(/(^|\s|-|')(\S)/g, function(_, s, l) { return s + l.toUpperCase(); });
       }
       return c;
+    }
+
+    /* ==== SLUG GENERATION ==== */
+    function removeAccents(str) {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    function generateSlug(prenom, nom, ville) {
+      var base = removeAccents(((prenom || '') + (nom || '')).toLowerCase())
+        .replace(/[^a-z0-9]/g, '');
+      if (!base) return '';
+      /* Si doublon, on ajoutera -ville */
+      var existing = {};
+      PROSPECTS.forEach(function(p) { existing[p.slug] = true; });
+      if (!existing[base]) return base;
+      var withVille = base + '-' + removeAccents((ville || '').toLowerCase()).replace(/[^a-z0-9]/g, '');
+      return withVille;
     }
 
     /* ==== API CALL HELPER ==== */
@@ -698,7 +714,9 @@
     }
 
     function csvRowToProspect(row) {
-      var slug = row.slug;
+      var prenom = row.prenom || '';
+      var nom = cleanName(row.nom || row.nom_complet || '', row.metier || '');
+      var slug = row.slug || generateSlug(prenom, nom, row.ville || '');
       if (!slug) return null;
       return {
         slug: slug,
