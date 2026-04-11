@@ -32,7 +32,7 @@ const GITHUB_API     = 'https://api.github.com';
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
 };
 
 /* ═══════════════════════════════════════════════════════
@@ -60,18 +60,24 @@ export default {
         return await handlePersonalize(request, env);
       }
 
-      // POST /api/toggle-page
+      // POST /api/toggle-page (admin only)
       if (request.method === 'POST' && path === '/api/toggle-page') {
+        const authErr = checkAdminKey(request, env);
+        if (authErr) return authErr;
         return await handleTogglePage(request, env);
       }
 
-      // POST /api/publish
+      // POST /api/publish (admin only)
       if (request.method === 'POST' && path === '/api/publish') {
+        const authErr = checkAdminKey(request, env);
+        if (authErr) return authErr;
         return await handlePublish(request, env);
       }
 
-      // POST /api/import
+      // POST /api/import (admin only)
       if (request.method === 'POST' && path === '/api/import') {
+        const authErr = checkAdminKey(request, env);
+        if (authErr) return authErr;
         return await handleImport(request, env);
       }
 
@@ -123,6 +129,12 @@ async function handlePersonalize(request, env) {
   let isNewProspect = false;
   try {
     ({ prospect, sha } = await getProspectFromGitHub(slug, env));
+
+    // Sécurité : vérifier que l'email correspond au prospect existant
+    // (empêche un tiers de modifier la page de quelqu'un d'autre)
+    if (prospect.email && prospect.email.toLowerCase() !== email.toLowerCase()) {
+      return jsonResponse({ error: 'Email invalide pour ce prospect' }, 403);
+    }
   } catch {
     // Nouveau prospect (inscription organique depuis le formulaire)
     prospect = { slug, source: 'organic' };
@@ -1190,6 +1202,15 @@ function jsonResponse(data, status = 200) {
 function parseLines(str) {
   if (!str) return [];
   return str.split('\n').map(s => s.trim()).filter(Boolean);
+}
+
+function checkAdminKey(request, env) {
+  if (!env.ADMIN_API_KEY) return null; // pas configuré = pas de protection (dev)
+  const key = request.headers.get('X-Admin-Key');
+  if (key !== env.ADMIN_API_KEY) {
+    return jsonResponse({ error: 'Accès non autorisé' }, 401);
+  }
+  return null; // OK
 }
 
 function generateToken() {

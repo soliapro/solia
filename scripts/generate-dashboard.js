@@ -317,6 +317,20 @@ function buildHtml(prospectsJson, total, withPage, withPhone, paidCount, organic
 
     const WORKER_URL  = 'https://solia-enrichment.damien-reiss.workers.dev';
     const STORAGE_KEY = 'solia_prospection';
+    const ADMIN_KEY_STORAGE = 'solia_admin_key';
+
+    /* ---- ADMIN AUTH ---- */
+    function getAdminKey() {
+      let key = sessionStorage.getItem(ADMIN_KEY_STORAGE);
+      if (!key) {
+        key = prompt('Cl\\xe9 admin Solia :');
+        if (key) sessionStorage.setItem(ADMIN_KEY_STORAGE, key);
+      }
+      return key || '';
+    }
+    function adminHeaders() {
+      return { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() };
+    }
 
     /* ---- DATA ---- */
     let PROSPECTS = ${prospectsJson};
@@ -462,7 +476,7 @@ function buildHtml(prospectsJson, total, withPage, withPhone, paidCount, organic
       try {
         const res = await fetch(WORKER_URL + '/api/toggle-page', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: adminHeaders(),
           body: JSON.stringify({ slug, active: activate }),
         });
         const data = await res.json();
@@ -622,7 +636,7 @@ function buildHtml(prospectsJson, total, withPage, withPhone, paidCount, organic
 
           const res = await fetch(WORKER_URL + '/api/import', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: adminHeaders(),
             body: JSON.stringify({ prospects: batch }),
           });
           const data = await res.json();
