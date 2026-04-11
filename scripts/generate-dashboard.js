@@ -495,12 +495,13 @@ function jsBlock() {
         console.warn('Erreur chargement data.json:', e.message);
       }
 
-      /* 2. Fusionner tracking + notes depuis D1 */
+      /* 2. Fusionner tracking + notes + statut pages depuis D1 */
       try {
         var data = await api('/api/dashboard');
         PROSPECTS.forEach(function(p) {
           if (data.tracking && data.tracking[p.slug]) p.contacted_at = data.tracking[p.slug];
           if (data.notes && data.notes[p.slug]) p.note = data.notes[p.slug];
+          if (data.pageStatus && data.pageStatus[p.slug] !== undefined) p.has_page = data.pageStatus[p.slug];
         });
         apiMode = true;
         render();

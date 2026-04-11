@@ -1242,19 +1242,20 @@ async function scheduledHandler(env) {
 ═══════════════════════════════════════════════════════ */
 
 async function handleDashboard(env) {
-  // Retourne uniquement tracking + notes depuis D1
-  // Les données prospects restent dans le HTML statique (build time)
   let trackingRows = [];
   let notesRows = [];
+  let pageStatusRows = [];
 
   if (env.DB) {
     try {
-      const [tRes, nRes] = await Promise.all([
+      const [tRes, nRes, pRes] = await Promise.all([
         env.DB.prepare('SELECT slug, contacted_at FROM tracking').all(),
         env.DB.prepare('SELECT slug, content FROM notes').all(),
+        env.DB.prepare('SELECT slug, active FROM page_status').all(),
       ]);
       trackingRows = tRes.results || [];
       notesRows = nRes.results || [];
+      pageStatusRows = pRes.results || [];
     } catch (e) {
       console.warn('D1 read error:', e.message);
     }
@@ -1264,8 +1265,10 @@ async function handleDashboard(env) {
   for (const r of trackingRows) tracking[r.slug] = r.contacted_at;
   const notes = {};
   for (const r of notesRows) notes[r.slug] = r.content;
+  const pageStatus = {};
+  for (const r of pageStatusRows) pageStatus[r.slug] = r.active === 1;
 
-  return jsonResponse({ tracking, notes });
+  return jsonResponse({ tracking, notes, pageStatus });
 }
 
 async function handlePageActive(slug, env) {
