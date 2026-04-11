@@ -384,12 +384,9 @@ function jsBlock(prospectsJson) {
 
     /* ==== CONFIG ==== */
     var WORKER_URL  = 'https://solia-enrichment.damien-reiss.workers.dev';
-    var STORAGE_KEY = 'solia_prospection';
-    var NOTES_KEY   = 'solia_notes';
-    var TOGGLES_KEY = 'solia_toggles';
     var ADMIN_KEY_STORAGE = 'solia_admin_key';
 
-    /* ==== ADMIN AUTH ==== */
+    /* ==== ADMIN AUTH (seul usage de sessionStorage : la cle admin) ==== */
     function getAdminKey() {
       var key = sessionStorage.getItem(ADMIN_KEY_STORAGE);
       if (!key) {
@@ -402,23 +399,9 @@ function jsBlock(prospectsJson) {
       return { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() };
     }
 
-    /* ==== DATA ==== */
+    /* ==== DATA — fallback statique, remplace par API si dispo ==== */
     var PROSPECTS = ${prospectsJson};
-
-    /* ==== LOCALSTORAGE HELPERS ==== */
-    function loadJSON(key) { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch(e) { return {}; } }
-    function saveJSON(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
-
-    var tracking = loadJSON(STORAGE_KEY);
-    var notes    = loadJSON(NOTES_KEY);
-    var toggles  = loadJSON(TOGGLES_KEY);
-
-    /* Apply local toggle overrides to prospects */
-    PROSPECTS.forEach(function(p) {
-      if (toggles[p.slug] !== undefined) {
-        p.has_page = toggles[p.slug];
-      }
-    });
+    var apiMode = false;
 
     /* ==== URL PARAMS (persist filters on refresh) ==== */
     function getParams() {
@@ -460,9 +443,35 @@ function jsBlock(prospectsJson) {
       return c;
     }
 
+    /* ==== API CALL HELPER ==== */
+    async function api(path, body) {
+      var opts = { headers: adminHeaders() };
+      if (body !== undefined) {
+        opts.method = 'POST';
+        opts.body = JSON.stringify(body);
+      }
+      var res = await fetch(WORKER_URL + path, opts);
+      var data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      return data;
+    }
+
+    /* ==== LOAD DATA FROM API ==== */
+    async function loadFromAPI() {
+      try {
+        document.getElementById('result-count').textContent = 'Chargement depuis le serveur...';
+        var data = await api('/api/dashboard');
+        PROSPECTS = data.prospects;
+        apiMode = true;
+        render();
+      } catch (e) {
+        console.warn('API indisponible, fallback statique :', e.message);
+        document.getElementById('result-count').textContent = 'Mode hors-ligne (donnees du dernier build)';
+      }
+    }
+
     /* ==== SORT ==== */
     function getSortValue(p, key) {
-      var t = tracking[p.slug];
       switch(key) {
         case 'name': return ((p.prenom || '') + ' ' + (p.nom || '')).trim().toLowerCase();
         case 'priorite': return p.priorite === 'HAUTE' ? 0 : p.priorite === 'BASSE' ? 2 : 1;
@@ -475,13 +484,11 @@ function jsBlock(prospectsJson) {
 
     /* ==== FILTER LOGIC ==== */
     function applyFilter(p) {
-      /* Search */
       if (state.q) {
         var q = state.q.toLowerCase();
         var hay = (p.prenom + ' ' + p.nom + ' ' + p.metier + ' ' + p.ville + ' ' + p.departement + ' ' + p.email + ' ' + p.slug).toLowerCase();
         if (hay.indexOf(q) === -1) return false;
       }
-      var t = tracking[p.slug];
       var f = state.filter;
       if (f === 'all') return true;
       if (f === 'haute') return p.priorite === 'HAUTE';
@@ -492,8 +499,8 @@ function jsBlock(prospectsJson) {
       if (f === 'not-paid') return !p.paid;
       if (f === 'organic') return p.source === 'organic';
       if (f === 'prospected') return p.source !== 'organic';
-      if (f === 'contacted') return !!t;
-      if (f === 'not-contacted') return !t;
+      if (f === 'contacted') return !!p.contacted_at;
+      if (f === 'not-contacted') return !p.contacted_at;
       if (f === 'trial-active') return !p.paid && p.has_page && p.trial_days_left !== null && p.trial_days_left > 0;
       if (f === 'trial-expired') return !p.paid && p.trial_days_left !== null && p.trial_days_left <= 0;
       if (f === 'has-phone') return !!p.telephone;
@@ -504,8 +511,7 @@ function jsBlock(prospectsJson) {
     function updateFilterCounts() {
       var counts = {};
       PROSPECTS.forEach(function(p) {
-        var t = tracking[p.slug];
-        if (true) counts['all'] = (counts['all'] || 0) + 1;
+        counts['all'] = (counts['all'] || 0) + 1;
         if (p.priorite === 'HAUTE') counts['haute'] = (counts['haute'] || 0) + 1;
         if (p.priorite === 'BASSE') counts['basse'] = (counts['basse'] || 0) + 1;
         if (p.has_page) counts['has-page'] = (counts['has-page'] || 0) + 1;
@@ -514,8 +520,8 @@ function jsBlock(prospectsJson) {
         if (!p.paid) counts['not-paid'] = (counts['not-paid'] || 0) + 1;
         if (p.source === 'organic') counts['organic'] = (counts['organic'] || 0) + 1;
         if (p.source !== 'organic') counts['prospected'] = (counts['prospected'] || 0) + 1;
-        if (t) counts['contacted'] = (counts['contacted'] || 0) + 1;
-        if (!t) counts['not-contacted'] = (counts['not-contacted'] || 0) + 1;
+        if (p.contacted_at) counts['contacted'] = (counts['contacted'] || 0) + 1;
+        if (!p.contacted_at) counts['not-contacted'] = (counts['not-contacted'] || 0) + 1;
         if (!p.paid && p.has_page && p.trial_days_left !== null && p.trial_days_left > 0) counts['trial-active'] = (counts['trial-active'] || 0) + 1;
         if (!p.paid && p.trial_days_left !== null && p.trial_days_left <= 0) counts['trial-expired'] = (counts['trial-expired'] || 0) + 1;
         if (p.telephone) counts['has-phone'] = (counts['has-phone'] || 0) + 1;
@@ -532,7 +538,6 @@ function jsBlock(prospectsJson) {
     function render() {
       var filtered = PROSPECTS.filter(applyFilter);
 
-      /* Sort */
       var sortKey = state.sort;
       var dir = state.dir === 'desc' ? -1 : 1;
       filtered.sort(function(a, b) {
@@ -542,17 +547,18 @@ function jsBlock(prospectsJson) {
         return (va - vb) * dir;
       });
 
-      /* Update stats */
+      /* Stats */
       document.getElementById('s-total').textContent = PROSPECTS.length;
       document.getElementById('s-pages').textContent = PROSPECTS.filter(function(p) { return p.has_page; }).length;
       document.getElementById('s-paid').textContent = PROSPECTS.filter(function(p) { return p.paid; }).length;
       document.getElementById('s-organic').textContent = PROSPECTS.filter(function(p) { return p.source === 'organic'; }).length;
-      document.getElementById('s-contacted').textContent = Object.keys(tracking).length;
+      document.getElementById('s-contacted').textContent = PROSPECTS.filter(function(p) { return p.contacted_at; }).length;
 
       /* Result count */
-      document.getElementById('result-count').textContent = filtered.length + ' resultat(s) sur ' + PROSPECTS.length;
+      var modeLabel = apiMode ? '' : ' (hors-ligne)';
+      document.getElementById('result-count').textContent = filtered.length + ' resultat(s) sur ' + PROSPECTS.length + modeLabel;
 
-      /* Update sort arrows */
+      /* Sort arrows */
       document.querySelectorAll('thead th[data-sort]').forEach(function(th) {
         th.classList.toggle('sorted', th.dataset.sort === sortKey);
         var arrow = th.querySelector('.sort-arrow');
@@ -571,10 +577,9 @@ function jsBlock(prospectsJson) {
       for (var i = 0; i < filtered.length; i++) {
         var p = filtered[i];
         var name = ((p.prenom || '') + ' ' + (p.nom || '')).trim() || p.slug;
-        var t = tracking[p.slug];
-        var dateStr = t ? new Date(t).toLocaleDateString('fr-FR') : '';
+        var contactDate = p.contacted_at ? new Date(p.contacted_at).toLocaleDateString('fr-FR') : '';
         var phoneRaw = p.telephone ? p.telephone.replace(/\\s/g, '') : '';
-        var hasNote = !!notes[p.slug];
+        var hasNote = !!(p.note);
 
         /* Priority badge */
         var priBadge = '';
@@ -594,7 +599,7 @@ function jsBlock(prospectsJson) {
           if (p.trial_days_left > 0) statusBadges += '<span class="badge b-trial">J-' + p.trial_days_left + '</span> ';
           else statusBadges += '<span class="badge b-expired">expire</span> ';
         }
-        if (t) statusBadges += '<span class="badge b-contacted">' + dateStr + '</span> ';
+        if (p.contacted_at) statusBadges += '<span class="badge b-contacted">' + contactDate + '</span> ';
 
         /* Actions */
         var acts = '';
@@ -604,8 +609,8 @@ function jsBlock(prospectsJson) {
         } else {
           acts += '<button class="btn btn-primary" onclick="togglePage(\\'' + esc(p.slug) + '\\',true)">En ligne</button>';
         }
-        if (t) {
-          acts += '<button class="btn btn-success" onclick="unmark(\\'' + esc(p.slug) + '\\')">\\u2713 ' + dateStr + '</button>';
+        if (p.contacted_at) {
+          acts += '<button class="btn btn-success" onclick="unmark(\\'' + esc(p.slug) + '\\')">\\u2713 ' + contactDate + '</button>';
         } else {
           acts += '<button class="btn" onclick="mark(\\'' + esc(p.slug) + '\\')">Contacter</button>';
         }
@@ -633,22 +638,11 @@ function jsBlock(prospectsJson) {
       btn.textContent = activate ? 'Creation...' : 'Suppression...';
 
       try {
-        var res = await fetch(WORKER_URL + '/api/toggle-page', {
-          method: 'POST',
-          headers: adminHeaders(),
-          body: JSON.stringify({ slug: slug, active: activate }),
-        });
-        var data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+        await api('/api/toggle-page', { slug: slug, active: activate });
 
-        /* Update local state */
+        /* Update local state immediately */
         var p = PROSPECTS.find(function(pr) { return pr.slug === slug; });
         if (p) p.has_page = activate;
-
-        /* Persist toggle locally so it survives refresh */
-        toggles[slug] = activate;
-        saveJSON(TOGGLES_KEY, toggles);
-
         render();
       } catch (err) {
         alert('Erreur : ' + err.message);
@@ -657,40 +651,65 @@ function jsBlock(prospectsJson) {
       }
     };
 
-    /* ==== MARK / UNMARK CONTACTED ==== */
-    window.mark = function(slug) {
-      tracking[slug] = Date.now();
-      saveJSON(STORAGE_KEY, tracking);
-      render();
+    /* ==== MARK / UNMARK CONTACTED (via API D1) ==== */
+    window.mark = async function(slug) {
+      /* Optimistic update */
+      var p = PROSPECTS.find(function(pr) { return pr.slug === slug; });
+      if (p) { p.contacted_at = Date.now(); render(); }
+
+      try {
+        await api('/api/track', { slug: slug, contacted: true });
+      } catch (e) {
+        alert('Erreur sauvegarde : ' + e.message);
+        if (p) { p.contacted_at = null; render(); }
+      }
     };
-    window.unmark = function(slug) {
-      delete tracking[slug];
-      saveJSON(STORAGE_KEY, tracking);
-      render();
+    window.unmark = async function(slug) {
+      var p = PROSPECTS.find(function(pr) { return pr.slug === slug; });
+      var backup = p ? p.contacted_at : null;
+      if (p) { p.contacted_at = null; render(); }
+
+      try {
+        await api('/api/track', { slug: slug, contacted: false });
+      } catch (e) {
+        alert('Erreur sauvegarde : ' + e.message);
+        if (p) { p.contacted_at = backup; render(); }
+      }
     };
 
-    /* ==== NOTES ==== */
+    /* ==== NOTES (via API D1) ==== */
     var noteSlug = null;
     window.openNote = function(slug) {
       noteSlug = slug;
-      var name = PROSPECTS.find(function(p) { return p.slug === slug; });
-      document.getElementById('note-title').textContent = 'Note - ' + (name ? (name.prenom + ' ' + name.nom).trim() : slug);
-      document.getElementById('note-text').value = notes[slug] || '';
+      var p = PROSPECTS.find(function(pr) { return pr.slug === slug; });
+      document.getElementById('note-title').textContent = 'Note - ' + (p ? (p.prenom + ' ' + p.nom).trim() : slug);
+      document.getElementById('note-text').value = (p && p.note) || '';
       document.getElementById('note-modal').classList.add('open');
     };
-    document.getElementById('note-save').addEventListener('click', function() {
+    document.getElementById('note-save').addEventListener('click', async function() {
       var val = document.getElementById('note-text').value.trim();
-      if (val) notes[noteSlug] = val;
-      else delete notes[noteSlug];
-      saveJSON(NOTES_KEY, notes);
+      var p = PROSPECTS.find(function(pr) { return pr.slug === noteSlug; });
+      if (p) p.note = val || '';
       document.getElementById('note-modal').classList.remove('open');
       render();
+
+      try {
+        await api('/api/note', { slug: noteSlug, content: val });
+      } catch (e) {
+        alert('Erreur sauvegarde note : ' + e.message);
+      }
     });
-    document.getElementById('note-delete').addEventListener('click', function() {
-      delete notes[noteSlug];
-      saveJSON(NOTES_KEY, notes);
+    document.getElementById('note-delete').addEventListener('click', async function() {
+      var p = PROSPECTS.find(function(pr) { return pr.slug === noteSlug; });
+      if (p) p.note = '';
       document.getElementById('note-modal').classList.remove('open');
       render();
+
+      try {
+        await api('/api/note', { slug: noteSlug, content: '' });
+      } catch (e) {
+        alert('Erreur suppression note : ' + e.message);
+      }
     });
     document.getElementById('note-cancel').addEventListener('click', function() {
       document.getElementById('note-modal').classList.remove('open');
@@ -832,6 +851,8 @@ function jsBlock(prospectsJson) {
         demo_created_at: '',
         trial_days_left: null,
         cancelled_at: '',
+        contacted_at: null,
+        note: '',
       };
     }
 
@@ -863,7 +884,7 @@ function jsBlock(prospectsJson) {
         }
 
         PROSPECTS = PROSPECTS.concat(csvPending);
-        csvStats.innerHTML = '<strong style="color:var(--green)">\\u2713 ' + totalCreated + ' prospects importes, ' + totalSkipped + ' doublons ignores.</strong> Dashboard mis a jour localement.';
+        csvStats.innerHTML = '<strong style="color:var(--green)">\\u2713 ' + totalCreated + ' prospects importes, ' + totalSkipped + ' doublons ignores.</strong>';
         csvPending = [];
         btn.style.display = 'none';
         document.getElementById('btn-csv-cancel').textContent = 'Fermer';
@@ -882,7 +903,8 @@ function jsBlock(prospectsJson) {
     });
 
     /* ==== INIT ==== */
-    render();
+    render();          /* Affichage immediat avec donnees statiques */
+    loadFromAPI();     /* Puis refresh avec donnees live du serveur */
 `;
 }
 

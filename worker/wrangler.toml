@@ -11,6 +11,14 @@ REPO_NAME  = "solia"
 [triggers]
 crons = ["0 9 * * *"]
 
+# ─── D1 Database (dashboard temps réel) ───
+# Créer la base : npx wrangler d1 create solia-db
+# Appliquer le schéma : npx wrangler d1 execute solia-db --file=schema.sql
+[[d1_databases]]
+binding = "DB"
+database_name = "solia-db"
+database_id = "TODO_REMPLACER_APRES_CREATION"
+
 # ─── Secrets à configurer via CLI (ne jamais mettre ici) ───
 # wrangler secret put ANTHROPIC_API_KEY
 # wrangler secret put GITHUB_TOKEN

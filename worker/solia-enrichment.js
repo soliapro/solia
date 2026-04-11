@@ -86,6 +86,29 @@ export default {
         return await handleStripeWebhook(request, env);
       }
 
+      // ─── DASHBOARD API (D1) ───
+
+      // GET /api/dashboard (admin only) — all prospects + tracking + notes
+      if (request.method === 'GET' && path === '/api/dashboard') {
+        const authErr = checkAdminKey(request, env);
+        if (authErr) return authErr;
+        return await handleDashboard(env);
+      }
+
+      // POST /api/track (admin only) — mark/unmark contacted
+      if (request.method === 'POST' && path === '/api/track') {
+        const authErr = checkAdminKey(request, env);
+        if (authErr) return authErr;
+        return await handleTrack(request, env);
+      }
+
+      // POST /api/note (admin only) — save/delete note
+      if (request.method === 'POST' && path === '/api/note') {
+        const authErr = checkAdminKey(request, env);
+        if (authErr) return authErr;
+        return await handleNote(request, env);
+      }
+
       // GET /api/status/:slug
       if (request.method === 'GET' && path.startsWith('/api/status/')) {
         const slug = path.replace('/api/status/', '').replace(/\/$/, '');
@@ -1182,6 +1205,145 @@ async function scheduledHandler(env) {
     } catch (err) {
       console.error(`Cron email error for ${file.name}:`, err);
     }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   DASHBOARD API — D1 Routes
+═══════════════════════════════════════════════════════ */
+
+async function handleDashboard(env) {
+  // 1. Charger tous les prospects depuis GitHub
+  const listUrl = `${GITHUB_API}/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/prospects`;
+  const listRes = await githubFetch(listUrl, env);
+  if (!listRes.ok) return jsonResponse({ error: 'Impossible de lister les prospects' }, 500);
+
+  const files = await listRes.json();
+  const jsonFiles = files.filter(f => f.name.endsWith('.json'));
+
+  // 2. Charger tous les prospects en parallèle (batches de 30)
+  const BATCH = 30;
+  const prospects = [];
+  for (let i = 0; i < jsonFiles.length; i += BATCH) {
+    const batch = jsonFiles.slice(i, i + BATCH);
+    const results = await Promise.allSettled(
+      batch.map(async f => {
+        const slug = f.name.replace('.json', '');
+        try {
+          const { prospect } = await getProspectFromGitHub(slug, env);
+          return prospect;
+        } catch { return null; }
+      })
+    );
+    for (const r of results) {
+      if (r.status === 'fulfilled' && r.value) prospects.push(r.value);
+    }
+  }
+
+  // 3. Charger tracking + notes depuis D1
+  let trackingRows = [];
+  let notesRows = [];
+  if (env.DB) {
+    try {
+      const [tRes, nRes] = await Promise.all([
+        env.DB.prepare('SELECT slug, contacted_at FROM tracking').all(),
+        env.DB.prepare('SELECT slug, content FROM notes').all(),
+      ]);
+      trackingRows = tRes.results || [];
+      notesRows = nRes.results || [];
+    } catch (e) {
+      console.warn('D1 read error:', e.message);
+    }
+  }
+
+  const trackingMap = {};
+  for (const r of trackingRows) trackingMap[r.slug] = r.contacted_at;
+  const notesMap = {};
+  for (const r of notesRows) notesMap[r.slug] = r.content;
+
+  // 4. Assembler la réponse
+  const data = prospects.map(p => {
+    const slug = p.slug;
+    if (!slug) return null;
+
+    // Vérifier si la page existe via GitHub (check si le fichier demo existe)
+    const hasPage = p.page_active !== false && p.email_confirme === true;
+
+    let trial_days_left = null;
+    if (p.demo_created_at && !p.published) {
+      const created = new Date(p.demo_created_at).getTime();
+      const remaining = 7 - Math.floor((Date.now() - created) / 86400000);
+      trial_days_left = Math.max(0, remaining);
+    }
+
+    return {
+      slug,
+      prenom:         p.prenom         || '',
+      nom:            p.nom            || '',
+      metier:         p.metier         || '',
+      ville:          p.ville          || '',
+      departement:    p.departement    || '',
+      telephone:      p.telephone      || '',
+      email:          p.email          || '',
+      avis_note:      p.avis_google_note ?? null,
+      avis_nb:        p.avis_google_nb   ?? null,
+      has_page:       hasPage,
+      page_active:    p.page_active !== false,
+      priorite:       p.priorite || p.priorite_solia || '',
+      source:         p.source         || '',
+      paid:           p.paid === true,
+      published:      p.published === true,
+      prospected_at:  p.prospected_at  || '',
+      demo_created_at: p.demo_created_at || '',
+      trial_days_left,
+      cancelled_at:   p.cancelled_at   || '',
+      contacted_at:   trackingMap[slug] || null,
+      note:           notesMap[slug]    || '',
+    };
+  }).filter(Boolean);
+
+  return jsonResponse({ prospects: data, total: data.length });
+}
+
+async function handleTrack(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'JSON invalide' }, 400); }
+
+  const { slug, contacted } = body;
+  if (!slug) return jsonResponse({ error: 'Champ "slug" requis' }, 400);
+
+  if (!env.DB) return jsonResponse({ error: 'D1 non configuré' }, 500);
+
+  if (contacted) {
+    const now = Date.now();
+    await env.DB.prepare(
+      'INSERT OR REPLACE INTO tracking (slug, contacted_at, updated_at) VALUES (?, ?, ?)'
+    ).bind(slug, now, now).run();
+    return jsonResponse({ status: 'tracked', slug, contacted_at: now });
+  } else {
+    await env.DB.prepare('DELETE FROM tracking WHERE slug = ?').bind(slug).run();
+    return jsonResponse({ status: 'untracked', slug });
+  }
+}
+
+async function handleNote(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'JSON invalide' }, 400); }
+
+  const { slug, content } = body;
+  if (!slug) return jsonResponse({ error: 'Champ "slug" requis' }, 400);
+
+  if (!env.DB) return jsonResponse({ error: 'D1 non configuré' }, 500);
+
+  if (content && content.trim()) {
+    const now = Date.now();
+    await env.DB.prepare(
+      'INSERT OR REPLACE INTO notes (slug, content, updated_at) VALUES (?, ?, ?)'
+    ).bind(slug, content.trim(), now).run();
+    return jsonResponse({ status: 'saved', slug });
+  } else {
+    await env.DB.prepare('DELETE FROM notes WHERE slug = ?').bind(slug).run();
+    return jsonResponse({ status: 'deleted', slug });
   }
 }
 
