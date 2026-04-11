@@ -645,6 +645,10 @@ async function handleImport(request, env) {
   let created = 0, skipped = 0;
 
   for (const p of prospects) {
+    // Generer le slug si absent
+    if (!p.slug) {
+      p.slug = makeSlug(p.prenom, p.nom, p.ville);
+    }
     if (!p.slug) { skipped++; continue; }
 
     // Vérifier si le fichier existe déjà
@@ -1360,6 +1364,21 @@ function jsonResponse(data, status = 200) {
       'Content-Type': 'application/json',
     },
   });
+}
+
+function removeAccents(str) {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function makeSlug(prenom, nom, ville) {
+  const base = removeAccents(((prenom || '') + (nom || '')).toLowerCase())
+    .replace(/[^a-z0-9]/g, '');
+  if (!base) return '';
+  if (ville) {
+    const v = removeAccents(ville.toLowerCase()).replace(/[^a-z0-9]/g, '');
+    return base + '-' + v;
+  }
+  return base;
 }
 
 function parseLines(str) {

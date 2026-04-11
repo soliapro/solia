@@ -315,7 +315,7 @@ function htmlBlock(stats) {
     <div class="csv-zone" id="csv-zone">
       <input type="file" id="csv-file" accept=".csv">
       <div class="csv-label"><strong>Glisser un CSV</strong> ou cliquer pour importer des prospects</div>
-      <div class="csv-sub">Colonnes attendues : slug, prenom, nom, metier, ville, telephone, etc.</div>
+      <div class="csv-sub">Colonnes attendues : prenom, nom, metier, ville, telephone, etc. (le slug est genere automatiquement)</div>
     </div>
     <div class="csv-result" id="csv-result">
       <div id="csv-stats"></div>
@@ -447,6 +447,22 @@ function jsBlock() {
         c = c.toLowerCase().replace(/(^|\\s|-|')(\\S)/g, function(_, s, l) { return s + l.toUpperCase(); });
       }
       return c;
+    }
+
+    /* ==== SLUG GENERATION ==== */
+    function removeAccents(str) {
+      return str.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');
+    }
+    function generateSlug(prenom, nom, ville) {
+      var base = removeAccents(((prenom || '') + (nom || '')).toLowerCase())
+        .replace(/[^a-z0-9]/g, '');
+      if (!base) return '';
+      /* Si doublon, on ajoutera -ville */
+      var existing = {};
+      PROSPECTS.forEach(function(p) { existing[p.slug] = true; });
+      if (!existing[base]) return base;
+      var withVille = base + '-' + removeAccents((ville || '').toLowerCase()).replace(/[^a-z0-9]/g, '');
+      return withVille;
     }
 
     /* ==== API CALL HELPER ==== */
@@ -848,7 +864,9 @@ function jsBlock() {
     }
 
     function csvRowToProspect(row) {
-      var slug = row.slug;
+      var prenom = row.prenom || '';
+      var nom = cleanName(row.nom || row.nom_complet || '', row.metier || '');
+      var slug = row.slug || generateSlug(prenom, nom, row.ville || '');
       if (!slug) return null;
       return {
         slug: slug,
