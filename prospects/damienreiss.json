@@ -19,7 +19,7 @@
   "duree_seance": "",
   "theme": "charbon",
   "email_confirme": true,
-  "page_active": false,
+  "page_active": true,
   "photo_url": "https://soliapro.github.io/solia/damien-reiss-createur-de-solia-strategie-digitale-ingersheim/img/profil.jpg",
   "instagram_url": "https://instagram.com/damienreiss",
   "facebook_url": "",
