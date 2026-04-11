@@ -151,7 +151,6 @@ async function handlePersonalize(request, env) {
   const { slug, email } = body;
 
   if (!slug)  return jsonResponse({ error: 'Champ "slug" requis' }, 400);
-  if (!email) return jsonResponse({ error: 'Champ "email" requis' }, 400);
 
   // 1. Récupérer le JSON prospect depuis GitHub (ou créer un nouveau)
   let prospect, sha;

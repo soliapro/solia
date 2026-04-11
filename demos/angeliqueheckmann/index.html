@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="nature">
+<html lang="fr" data-theme="charbon">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Angélique Heckmann — Naturopathe à Wittersheim</title>
-  <meta name="description" content="Angélique Heckmann, naturopathe à Wittersheim. Prenez rendez-vous pour une consultation personnalisée.">
+  <title>Angélique Heckmann — NATUROPATHE à Wittersheim, 67</title>
+  <meta name="description" content="Angélique Heckmann, naturopathe à Wittersheim.">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Angélique Heckmann — Naturopathe à Wittersheim">
-  <meta property="og:description" content="Angélique Heckmann, naturopathe à Wittersheim. Prenez rendez-vous pour une consultation personnalisée.">
+  <meta property="og:title" content="Angélique Heckmann — NATUROPATHE à Wittersheim, 67">
+  <meta property="og:description" content="Angélique Heckmann, naturopathe à Wittersheim.">
   <meta property="og:type" content="website">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,10 +19,10 @@
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "Angélique Heckmann",
-  "description": "Angélique Heckmann, naturopathe à Wittersheim. Prenez rendez-vous pour une consultation personnalisée.",
+  "description": "Angélique Heckmann, naturopathe à Wittersheim.",
   "address": {
     "@type": "PostalAddress",
-    "addressLocality": "Wittersheim",
+    "addressLocality": "Wittersheim, 67",
     "addressRegion": "67",
     "addressCountry": "FR",
     "streetAddress": "1 Rue du Paradis, 67670 Wittersheim, France"
@@ -677,7 +677,7 @@
       var msgs=['Sauvegarde en cours...','Vos mots prennent forme...','Un instant, la magie op\u00e8re...','Presque pr\u00eat...'];
       var mi=0;sts.textContent=msgs[0];var timer=setInterval(function(){mi++;if(mi<msgs.length)sts.textContent=msgs[mi]},3e3);
 
-      var payload={slug:SLUG,email:'update@solia.me',theme:current};
+      var payload={slug:SLUG,theme:current};
       fields.forEach(function(el){var f=el.dataset.field;var isph=el.classList.contains('field-placeholder');var txt=isph?'':el.innerText.replace(/[\r\n]+/g,' ').replace(/  +/g,' ').trim();if(f==='nom_complet'){var p=txt.split(' ');payload.prenom=p[0]||'';payload.nom=p.slice(1).join(' ')||''}else if(f==='publics'){payload.publics=txt?txt.split(',').map(function(s){return s.trim()}).filter(Boolean):[]}else if(f==='email'){if(txt)payload[f]=txt}else{payload[f]=txt}});
       if(specRow){var sp=[];specRow.querySelectorAll('.specialite-tag').forEach(function(t){sp.push(t.textContent.trim())});payload.services=sp.join('\n')}
       socIcons.forEach(function(ic){var m={instagram:'instagram_url',facebook:'facebook_url',linkedin:'linkedin_url',whatsapp:'whatsapp_url',site:'site_actuel'};var k=m[ic.dataset.soc];if(k)payload[k]=ic.getAttribute('href')||''});
@@ -723,13 +723,13 @@
     
 
     <div class="hero-content">
-      <p class="hero-eyebrow" data-field="metier">Naturopathe</p>
+      <p class="hero-eyebrow" data-field="metier">NATUROPATHE</p>
       <h1 class="hero-name" id="heroName" data-field="nom_complet">Angélique Heckmann</h1>
 
       <div class="hero-meta" id="heroMeta">
         <span class="hero-loc">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span data-field="ville">Wittersheim, 67</span>
+          <span data-field="ville">Wittersheim, 67, 67</span>
         </span>
         
         <span class="hero-rating">
@@ -769,7 +769,7 @@
     <section class="s-about fade-s" id="about">
       <div class="wrap" style="text-align:center">
         <span class="s-label">À propos</span>
-        <blockquote class="bio-quote" data-field="description">Angélique Heckmann, naturopathe à Wittersheim. Prenez rendez-vous pour une consultation personnalisée.</blockquote>
+        <blockquote class="bio-quote" data-field="description">Angélique Heckmann, naturopathe à Wittersheim.</blockquote>
         
         <div class="sep">
           <span class="sep-line"></span>
