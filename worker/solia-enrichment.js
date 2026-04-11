@@ -999,7 +999,7 @@ async function sendBrevoEmail(env, { to, toName, subject, html }) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      sender: { name: 'Solia', email: 'contact@solia.me' },
+      sender: { name: 'Solia', email: 'contact@damienreiss.fr' },
       to: [{ email: to, name: toName || to }],
       subject,
       htmlContent: html,
