@@ -456,17 +456,19 @@ function jsBlock(prospectsJson) {
       return data;
     }
 
-    /* ==== LOAD DATA FROM API ==== */
+    /* ==== LOAD TRACKING + NOTES FROM API ==== */
     async function loadFromAPI() {
       try {
-        document.getElementById('result-count').textContent = 'Chargement depuis le serveur...';
         var data = await api('/api/dashboard');
-        PROSPECTS = data.prospects;
+        /* Fusionner tracking + notes dans les prospects statiques */
+        PROSPECTS.forEach(function(p) {
+          if (data.tracking && data.tracking[p.slug]) p.contacted_at = data.tracking[p.slug];
+          if (data.notes && data.notes[p.slug]) p.note = data.notes[p.slug];
+        });
         apiMode = true;
         render();
       } catch (e) {
-        console.warn('API indisponible, fallback statique :', e.message);
-        document.getElementById('result-count').textContent = 'Mode hors-ligne (donnees du dernier build)';
+        console.warn('API indisponible, mode statique :', e.message);
       }
     }
 

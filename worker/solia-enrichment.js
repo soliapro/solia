@@ -1213,36 +1213,11 @@ async function scheduledHandler(env) {
 ═══════════════════════════════════════════════════════ */
 
 async function handleDashboard(env) {
-  // 1. Charger tous les prospects depuis GitHub
-  const listUrl = `${GITHUB_API}/repos/${env.REPO_OWNER}/${env.REPO_NAME}/contents/prospects`;
-  const listRes = await githubFetch(listUrl, env);
-  if (!listRes.ok) return jsonResponse({ error: 'Impossible de lister les prospects' }, 500);
-
-  const files = await listRes.json();
-  const jsonFiles = files.filter(f => f.name.endsWith('.json'));
-
-  // 2. Charger tous les prospects en parallèle (batches de 30)
-  const BATCH = 30;
-  const prospects = [];
-  for (let i = 0; i < jsonFiles.length; i += BATCH) {
-    const batch = jsonFiles.slice(i, i + BATCH);
-    const results = await Promise.allSettled(
-      batch.map(async f => {
-        const slug = f.name.replace('.json', '');
-        try {
-          const { prospect } = await getProspectFromGitHub(slug, env);
-          return prospect;
-        } catch { return null; }
-      })
-    );
-    for (const r of results) {
-      if (r.status === 'fulfilled' && r.value) prospects.push(r.value);
-    }
-  }
-
-  // 3. Charger tracking + notes depuis D1
+  // Retourne uniquement tracking + notes depuis D1
+  // Les données prospects restent dans le HTML statique (build time)
   let trackingRows = [];
   let notesRows = [];
+
   if (env.DB) {
     try {
       const [tRes, nRes] = await Promise.all([
@@ -1256,53 +1231,12 @@ async function handleDashboard(env) {
     }
   }
 
-  const trackingMap = {};
-  for (const r of trackingRows) trackingMap[r.slug] = r.contacted_at;
-  const notesMap = {};
-  for (const r of notesRows) notesMap[r.slug] = r.content;
+  const tracking = {};
+  for (const r of trackingRows) tracking[r.slug] = r.contacted_at;
+  const notes = {};
+  for (const r of notesRows) notes[r.slug] = r.content;
 
-  // 4. Assembler la réponse
-  const data = prospects.map(p => {
-    const slug = p.slug;
-    if (!slug) return null;
-
-    // Vérifier si la page existe via GitHub (check si le fichier demo existe)
-    const hasPage = p.page_active !== false && p.email_confirme === true;
-
-    let trial_days_left = null;
-    if (p.demo_created_at && !p.published) {
-      const created = new Date(p.demo_created_at).getTime();
-      const remaining = 7 - Math.floor((Date.now() - created) / 86400000);
-      trial_days_left = Math.max(0, remaining);
-    }
-
-    return {
-      slug,
-      prenom:         p.prenom         || '',
-      nom:            p.nom            || '',
-      metier:         p.metier         || '',
-      ville:          p.ville          || '',
-      departement:    p.departement    || '',
-      telephone:      p.telephone      || '',
-      email:          p.email          || '',
-      avis_note:      p.avis_google_note ?? null,
-      avis_nb:        p.avis_google_nb   ?? null,
-      has_page:       hasPage,
-      page_active:    p.page_active !== false,
-      priorite:       p.priorite || p.priorite_solia || '',
-      source:         p.source         || '',
-      paid:           p.paid === true,
-      published:      p.published === true,
-      prospected_at:  p.prospected_at  || '',
-      demo_created_at: p.demo_created_at || '',
-      trial_days_left,
-      cancelled_at:   p.cancelled_at   || '',
-      contacted_at:   trackingMap[slug] || null,
-      note:           notesMap[slug]    || '',
-    };
-  }).filter(Boolean);
-
-  return jsonResponse({ prospects: data, total: data.length });
+  return jsonResponse({ tracking, notes });
 }
 
 async function handleTrack(request, env) {
