@@ -161,7 +161,7 @@
     <!-- STATS -->
     <div class="stats">
       <div class="stat"><strong id="s-total">1401</strong> prospects</div>
-      <div class="stat"><strong id="s-pages">3</strong> en ligne</div>
+      <div class="stat"><strong id="s-pages">12</strong> en ligne</div>
       <div class="stat"><strong id="s-paid">0</strong> payes</div>
       <div class="stat"><strong id="s-organic">0</strong> organiques</div>
       <div class="stat"><strong id="s-contacted">0</strong> contactes</div>
@@ -345,12 +345,13 @@
         console.warn('Erreur chargement data.json:', e.message);
       }
 
-      /* 2. Fusionner tracking + notes depuis D1 */
+      /* 2. Fusionner tracking + notes + statut pages depuis D1 */
       try {
         var data = await api('/api/dashboard');
         PROSPECTS.forEach(function(p) {
           if (data.tracking && data.tracking[p.slug]) p.contacted_at = data.tracking[p.slug];
           if (data.notes && data.notes[p.slug]) p.note = data.notes[p.slug];
+          if (data.pageStatus && data.pageStatus[p.slug] !== undefined) p.has_page = data.pageStatus[p.slug];
         });
         apiMode = true;
         render();
