@@ -154,6 +154,14 @@ export default {
     let isPractitionerPage = false;
 
     if (subdomain === host || subdomain === 'www') {
+      // Bloquer l'acces a /dashboard et /formulaire depuis solia.me
+      // Rediriger vers les sous-domaines
+      if (url.pathname.startsWith('/dashboard')) {
+        return Response.redirect('https://dashboard.solia.me/', 301);
+      }
+      if (url.pathname.startsWith('/formulaire')) {
+        return Response.redirect('https://formulaire.solia.me/' + url.pathname.replace('/formulaire', '').replace(/^\//, '') + url.search, 301);
+      }
       basePath = '';
     } else if (subdomain === 'dashboard') {
       basePath = '/dashboard';
