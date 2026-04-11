@@ -1,7 +1,7 @@
 # Rapport Solia
 
-**Généré le** : 10/04/2026 21:50:50  
-**Source** : `prospects/damien-reiss-createur-de-solia-strategie-digitale-ingersheim.json`  
+**Généré le** : 11/04/2026 10:55:08  
+**Source** : `prospects/ilona-prud-homme-osteopathe-osteopathe-wintzenheim.json`  
 **Durée** : 0.01s
 
 ---
@@ -10,11 +10,7 @@
 
 | Statut | Nombre |
 |--------|--------|
-| ✓ Générées | 1 |
+| ✓ Générées | 0 |
 | ⏭ Ignorées | 0 |
 | ✗ Invalides | 0 |
 | **Total** | **1** |
-
-## Pages générées
-
-- [`damien-reiss-createur-de-solia-strategie-digitale-ingersheim`](demos/damien-reiss-createur-de-solia-strategie-digitale-ingersheim/index.html)

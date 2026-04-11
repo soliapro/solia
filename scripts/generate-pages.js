@@ -765,6 +765,17 @@ function main() {
   for (let i = 0; i < prospects.length; i++) {
     const p = prospects[i];
 
+    // Supprimer la page si page_active est explicitement false
+    if (p.page_active === false && p.slug) {
+      const pageDir = path.join(DEMOS_DIR, p.slug);
+      if (fs.existsSync(pageDir)) {
+        fs.rmSync(pageDir, { recursive: true });
+        results.push({ slug: p.slug, status: 'removed', reason: 'page_active: false' });
+        console.log(`🗑 ${p.slug} — page supprimée (hors ligne)`);
+      }
+      continue;
+    }
+
     if (!isValid(p)) {
       const reason = p.email_confirme === false
         ? 'email_confirme: false'
