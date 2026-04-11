@@ -6,7 +6,9 @@ on:
     paths:
       - 'templates/**'
       - 'scripts/**'
-      - 'prospects/**'
+      # prospects/** retire volontairement : l'import CSV declenche
+      # des dizaines de commits. Le rebuild se fait via repository_dispatch
+      # a la fin de l'import.
 
   # Trigger depuis le Worker Cloudflare (POST /api/personalize → triggerRebuild)
   repository_dispatch:
