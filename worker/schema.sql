@@ -14,3 +14,10 @@ CREATE TABLE IF NOT EXISTS notes (
   content TEXT NOT NULL,
   updated_at INTEGER NOT NULL DEFAULT (unixepoch() * 1000)
 );
+
+-- Statut des pages (en ligne / hors ligne — verifie en temps reel)
+CREATE TABLE IF NOT EXISTS page_status (
+  slug TEXT PRIMARY KEY,
+  active INTEGER NOT NULL DEFAULT 1,
+  updated_at INTEGER NOT NULL DEFAULT (unixepoch() * 1000)
+);

@@ -109,6 +109,12 @@ export default {
         return await handleNote(request, env);
       }
 
+      // GET /api/page-active/:slug (public, pour le subdomain worker)
+      if (request.method === 'GET' && path.startsWith('/api/page-active/')) {
+        const slug = path.replace('/api/page-active/', '').replace(/\/$/, '');
+        return await handlePageActive(slug, env);
+      }
+
       // GET /api/status/:slug
       if (request.method === 'GET' && path.startsWith('/api/status/')) {
         const slug = path.replace('/api/status/', '').replace(/\/$/, '');
@@ -562,6 +568,14 @@ async function handleTogglePage(request, env) {
   const { slug, active } = body;
   if (!slug) return jsonResponse({ error: 'Champ "slug" requis' }, 400);
 
+  // Ecrire dans D1 IMMEDIATEMENT (le subdomain worker verifie D1)
+  if (env.DB) {
+    const now = Date.now();
+    await env.DB.prepare(
+      'INSERT OR REPLACE INTO page_status (slug, active, updated_at) VALUES (?, ?, ?)'
+    ).bind(slug, active ? 1 : 0, now).run();
+  }
+
   if (active) {
     // ── METTRE EN LIGNE : activer le prospect → GitHub Actions génère avec le vrai template ──
     const { prospect, sha } = await getProspectFromGitHub(slug, env);
@@ -569,14 +583,14 @@ async function handleTogglePage(request, env) {
     if (!prospect.demo_created_at) prospect.demo_created_at = new Date().toISOString();
     await commitProspectToGitHub(slug, prospect, sha, env);
     await triggerRebuild(slug, env);
-    return jsonResponse({ status: 'online', slug, message: 'Page en cours de génération (~1 min)' });
+    return jsonResponse({ status: 'online', slug, message: 'Page en ligne instantanement. Rebuild en fond.' });
   } else {
     // ── HORS LIGNE : désactiver ──
     const { prospect, sha } = await getProspectFromGitHub(slug, env);
     prospect.page_active = false;
     await commitProspectToGitHub(slug, prospect, sha, env);
     await triggerRebuild(slug, env);
-    return jsonResponse({ status: 'offline', slug });
+    return jsonResponse({ status: 'offline', slug, message: 'Page hors ligne instantanement.' });
   }
 }
 
@@ -1237,6 +1251,24 @@ async function handleDashboard(env) {
   for (const r of notesRows) notes[r.slug] = r.content;
 
   return jsonResponse({ tracking, notes });
+}
+
+async function handlePageActive(slug, env) {
+  // Verification rapide D1 — pas de page_status = page active par defaut
+  if (!env.DB) return jsonResponse({ active: true });
+
+  try {
+    const row = await env.DB.prepare(
+      'SELECT active FROM page_status WHERE slug = ?'
+    ).bind(slug).first();
+
+    // Pas d'entree = jamais toggle = actif par defaut (si la page existe)
+    if (!row) return jsonResponse({ active: true });
+    return jsonResponse({ active: row.active === 1 });
+  } catch (e) {
+    // En cas d'erreur D1, laisser passer (ne pas bloquer les pages)
+    return jsonResponse({ active: true });
+  }
 }
 
 async function handleTrack(request, env) {

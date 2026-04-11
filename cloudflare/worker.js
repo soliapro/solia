@@ -15,9 +15,23 @@
  */
 
 const GITHUB_BASE = 'https://soliapro.github.io/solia';
+const ENRICHMENT_API = 'https://solia-enrichment.damien-reiss.workers.dev';
 
 // Sous-domaines réservés (pas des slugs praticiens)
 const RESERVED = new Set(['www', 'dashboard', 'formulaire', 'mail', 'smtp', 'ftp', 'api']);
+
+// Page affichée quand un site est hors ligne
+function offlinePage(slug) {
+  return new Response(`<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Page hors ligne</title>
+<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f5f5f5;color:#333;text-align:center}
+.box{max-width:400px;padding:40px}.logo{font-size:1.5rem;font-weight:700;margin-bottom:16px;color:#C4704F}p{color:#888;font-size:0.95rem}</style>
+</head><body><div class="box"><div class="logo">Solia</div><p>Cette page n'est pas disponible pour le moment.</p></div></body></html>`, {
+    status: 404,
+    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' },
+  });
+}
 
 export default {
   async fetch(request) {
@@ -28,9 +42,9 @@ export default {
     const subdomain = host.replace(/\.solia\.me$/, '');
 
     let basePath;
+    let isPractitionerPage = false;
 
     if (subdomain === host || subdomain === 'www') {
-      // Racine solia.me ou www.solia.me → sert depuis /demos/
       basePath = '';
     } else if (subdomain === 'dashboard') {
       basePath = '/dashboard';
@@ -39,8 +53,22 @@ export default {
     } else if (RESERVED.has(subdomain)) {
       return new Response('Not found', { status: 404 });
     } else {
-      // Slug praticien → sert depuis /demos/[slug]/
+      // Slug praticien → verifier si la page est active
       basePath = `/${subdomain}`;
+      isPractitionerPage = true;
+    }
+
+    // Verification instantanee D1 : la page est-elle active ?
+    if (isPractitionerPage) {
+      try {
+        const check = await fetch(`${ENRICHMENT_API}/api/page-active/${subdomain}`);
+        if (check.ok) {
+          const data = await check.json();
+          if (data.active === false) return offlinePage(subdomain);
+        }
+      } catch (e) {
+        // Si l'API est down, on laisse passer (ne pas bloquer les pages)
+      }
     }
 
     // Construire le chemin final sur GitHub Pages
